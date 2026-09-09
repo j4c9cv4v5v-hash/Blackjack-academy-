@@ -408,8 +408,8 @@ input{
 }
 
 button:disabled{
-  opacity:.28;
-  cursor:not-allowed;
+  opacity:.28 !important;
+  filter:grayscale(.35);
 }
 
 #homeButton{
@@ -430,58 +430,60 @@ button:disabled{
 
 #homeButton.hidden,
 #homeView.hidden{
-  display:none;
+  display:none !important;
 }
 
-.pageView{
+.pageScreen{
+  padding-top:52px;
   min-height:100vh;
-  padding-top:54px;
 }
 
+/* Make the blackjack trainer more compact on a phone without changing its HTML structure. */
 #realTrainer{
-  padding-top:62px;
+  padding-top:60px;
 }
 
-#realTrainer h2{
-  margin-bottom:4px;
+#realTrainer > .sub,
+#realTrainer > .trainerRule{
+  margin-top:4px;
+  margin-bottom:7px;
+  font-size:12px;
+  line-height:1.35;
 }
 
-.trainerIntroCompact{
-  margin:0 0 8px;
-}
-
-.trainerCompactGrid{
-  display:grid;
+#realTrainer .bankrollGrid{
   grid-template-columns:repeat(4,1fr);
-  gap:6px;
-  margin:8px 0;
-}
-
-.trainerCompactGrid .bankrollStat{
-  padding:7px 3px;
-  font-size:10px;
-}
-
-.trainerCompactGrid .bankrollStat b{
-  font-size:16px;
-}
-
-.compactBetRow{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
   gap:5px;
   margin:7px 0;
 }
 
-.compactBetRow button{
-  margin:0;
+#realTrainer .bankrollStat{
+  padding:7px 3px;
+  font-size:10px;
+}
+
+#realTrainer .bankrollStat b{
+  font-size:16px;
+}
+
+#realTrainer .lesson{
+  padding:9px;
+  margin-top:7px;
+}
+
+#realTrainer .betControls{
+  gap:4px;
+  margin-top:6px;
+}
+
+#realTrainer .betControls button{
   padding:8px 3px;
   font-size:12px;
 }
 
 #realTrainer .trainerTop{
-  margin:7px 0;
   gap:5px;
+  margin:7px 0;
 }
 
 #realTrainer .trainerStat{
@@ -515,13 +517,10 @@ button:disabled{
   margin:2px 0;
 }
 
-#realTrainer .dealerPlayerSpacer{
-  height:8px;
-}
-
-#realTrainer .actionGrid{
-  margin-top:7px;
+#realTrainer .actionGrid,
+#realTrainer .specialActions{
   gap:5px;
+  margin-top:6px;
 }
 
 #realTrainer .actionGrid button,
@@ -531,27 +530,15 @@ button:disabled{
 }
 
 #realTrainer .coachBox{
-  padding:10px;
   margin-top:7px;
+  padding:10px;
   font-size:14px;
 }
 
-.trainerDetails{
-  margin-top:8px;
-  border:1px solid #293855;
-  border-radius:12px;
-  background:#0c1627;
-  padding:9px 11px;
-}
-
-.trainerDetails summary{
-  cursor:pointer;
-  font-weight:800;
-}
-
 @media(max-width:520px){
-  .trainerCompactGrid{grid-template-columns:repeat(4,1fr)}
-  .compactBetRow{grid-template-columns:repeat(5,1fr)}
+  #realTrainer .bankrollGrid{
+    grid-template-columns:repeat(4,1fr);
+  }
 }
 
 </style>
@@ -628,27 +615,40 @@ button:disabled{
 
 <!-- REAL BLACKJACK TABLE TRAINER -->
 
-<div id="realTrainer" class="box hidden pageView">
+<div id="realTrainer" class="box hidden pageScreen">
 
   <h2>♣ Real Blackjack Table Practice</h2>
 
-  <p class="small trainerIntroCompact">
-    Make the best decision, then get an explanation immediately.
+  <p class="sub">
+    Play full blackjack hands while the coach checks your decisions.
+    After every move you will see whether it was correct, what the recommended play was, and why.
   </p>
 
-  <div class="trainerCompactGrid">
+  <p class="trainerRule">
+    Training rules: 6-deck shoe, dealer stands on soft 17, blackjack pays 3:2,
+    double after split allowed, late surrender available, insurance offered against a dealer Ace.
+    This is a practice simulator — no real money is used.
+  </p>
+
+  <div class="bankrollGrid">
     <div class="bankrollStat"><b id="trainerBankroll">$1000</b>Bankroll</div>
-    <div class="bankrollStat"><b id="trainerBet">$10</b>Bet</div>
-    <div class="bankrollStat"><b id="trainerProfit">$0</b>P/L</div>
-    <div class="bankrollStat"><b id="trainerDecisionAcc">—</b>Accuracy</div>
+    <div class="bankrollStat"><b id="trainerBet">$10</b>Current bet</div>
+    <div class="bankrollStat"><b id="trainerProfit">$0</b>Session P/L</div>
+    <div class="bankrollStat"><b id="trainerDecisionAcc">—</b>Decision accuracy</div>
   </div>
 
-  <div class="compactBetRow">
-    <button onclick="trainerSetBet(5)">$5</button>
-    <button onclick="trainerSetBet(10)">$10</button>
-    <button onclick="trainerSetBet(25)">$25</button>
-    <button onclick="trainerSetBet(50)">$50</button>
-    <button onclick="trainerSetBet(100)">$100</button>
+  <div class="lesson">
+    <b>Choose your bet</b>
+    <div class="betControls">
+      <button onclick="trainerSetBet(5)">$5</button>
+      <button onclick="trainerSetBet(10)">$10</button>
+      <button onclick="trainerSetBet(25)">$25</button>
+      <button onclick="trainerSetBet(50)">$50</button>
+      <button onclick="trainerSetBet(100)">$100</button>
+    </div>
+    <p class="small center" style="margin-bottom:0">
+      Betting is only for simulation. Your bankroll and statistics are saved on this device.
+    </p>
   </div>
 
   <div class="trainerTop">
@@ -672,7 +672,7 @@ button:disabled{
     <div id="trainerDealerCards" class="miniCards"></div>
     <div id="trainerDealerTotal" class="center small">Showing: —</div>
 
-    <div class="dealerPlayerSpacer"></div>
+    <div style="height:26px"></div>
 
     <div class="handLabel">PLAYER</div>
     <div id="trainerPlayerCards" class="miniCards"></div>
@@ -690,8 +690,8 @@ button:disabled{
   </div>
 
   <div id="trainerActions" class="actionGrid">
-    <button id="trainerHitBtn" onclick="trainerAction('hit')">Hit</button>
-    <button id="trainerStandBtn" onclick="trainerAction('stand')">Stand</button>
+    <button onclick="trainerAction('hit')">Hit</button>
+    <button onclick="trainerAction('stand')">Stand</button>
     <button id="trainerDoubleBtn" onclick="trainerAction('double')">Double</button>
     <button id="trainerSplitBtn" onclick="trainerAction('split')">Split</button>
   </div>
@@ -709,33 +709,28 @@ button:disabled{
     Make your decision. The explanation will appear here after you act.
   </div>
 
-  <details class="trainerDetails">
-    <summary>Stats & rules</summary>
+  <div class="trainerStatsGrid">
+    <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
+    <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
+    <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
+    <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
+    <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
+    <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
+  </div>
 
-    <p class="trainerRule">
-      6-deck shoe · dealer stands on soft 17 · blackjack pays 3:2 ·
-      double after split allowed · late surrender available · insurance against dealer Ace.
-    </p>
+  <button class="secondary" onclick="trainerResetStats()">
+    Reset Table Stats & Bankroll
+  </button>
 
-    <div class="trainerStatsGrid">
-      <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
-      <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
-      <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
-      <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
-      <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
-      <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
-    </div>
-
-    <button class="secondary" onclick="trainerResetStats()">
-      Reset Table Stats & Bankroll
-    </button>
-  </details>
+  <button class="secondary" onclick="showLesson(progress.stage||1)">
+    Back to Course
+  </button>
 
 </div>
 
 <!-- STAGE 1 LESSON -->
 
-<div id="l1" class="box pageView">
+<div id="l1" class="box pageScreen">
 
   <h2>Stage 1 — Quick Lesson</h2>
 
@@ -789,7 +784,7 @@ button:disabled{
 
 <!-- STAGE 1 PRACTICE -->
 
-<div id="s1" class="box pageView hidden">
+<div id="s1" class="box pageScreen hidden">
 
   <h2>1. Learn Hi-Lo</h2>
 
@@ -825,7 +820,7 @@ button:disabled{
 
 <!-- STAGE 2 LESSON -->
 
-<div id="l2" class="box pageView hidden">
+<div id="l2" class="box pageScreen hidden">
 
   <h2>Stage 2 — Quick Lesson</h2>
 
@@ -860,7 +855,7 @@ button:disabled{
 
 <!-- STAGE 2 PRACTICE -->
 
-<div id="s2" class="box pageView hidden">
+<div id="s2" class="box pageScreen hidden">
 
   <h2>2. Card Values</h2>
 
@@ -899,7 +894,7 @@ button:disabled{
 
 <!-- STAGE 3 LESSON -->
 
-<div id="l3" class="box pageView hidden">
+<div id="l3" class="box pageScreen hidden">
 
   <h2>Stage 3 — Quick Lesson</h2>
 
@@ -936,7 +931,7 @@ button:disabled{
 
 <!-- STAGE 3 PRACTICE -->
 
-<div id="s3" class="box pageView hidden">
+<div id="s3" class="box pageScreen hidden">
 
   <h2>3. Running Count</h2>
 
@@ -980,7 +975,7 @@ button:disabled{
 
 <!-- STAGE 4 LESSON -->
 
-<div id="l4" class="box pageView hidden">
+<div id="l4" class="box pageScreen hidden">
 
   <h2>Stage 4 — Quick Lesson</h2>
 
@@ -1014,7 +1009,7 @@ button:disabled{
 
 <!-- STAGE 4 PRACTICE -->
 
-<div id="s4" class="box pageView hidden">
+<div id="s4" class="box pageScreen hidden">
 
   <h2>4. Cancellation</h2>
 
@@ -1054,7 +1049,7 @@ button:disabled{
 
 <!-- STAGE 5 LESSON -->
 
-<div id="l5" class="box pageView hidden">
+<div id="l5" class="box pageScreen hidden">
 
   <h2>Stage 5 — Quick Lesson</h2>
 
@@ -1090,7 +1085,7 @@ button:disabled{
 
 <!-- STAGE 5 PRACTICE -->
 
-<div id="s5" class="box pageView hidden">
+<div id="s5" class="box pageScreen hidden">
 
   <h2>5. True Count</h2>
 
@@ -1136,7 +1131,7 @@ button:disabled{
 
 <!-- STAGE 6 LESSON -->
 
-<div id="l6" class="box pageView hidden">
+<div id="l6" class="box pageScreen hidden">
 
   <h2>Stage 6 — Quick Lesson</h2>
 
@@ -1168,7 +1163,7 @@ button:disabled{
 
 <!-- STAGE 6 PRACTICE -->
 
-<div id="s6" class="box pageView hidden">
+<div id="s6" class="box pageScreen hidden">
 
   <h2>6. Full Deck Test</h2>
 
@@ -1742,12 +1737,12 @@ function renderStageMenu(){
 
 }
 
-function setPageMode(isHome){
+function setPageMode(homeMode){
 
   var home=document.getElementById("homeView");
   var back=document.getElementById("homeButton");
 
-  if(isHome){
+  if(homeMode){
     home.classList.remove("hidden");
     back.classList.add("hidden");
   }else{
@@ -1762,10 +1757,12 @@ function showHome(){
   hideAll();
   setPageMode(true);
 
-  progress.mode='home';
+  progress.mode="home";
   save();
+  renderStageMenu();
+  renderDailyProgress();
 
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:"smooth"});
 
 }
 
@@ -3517,21 +3514,15 @@ function trainerRender(){
 
   document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
 
-  var hitBtn=document.getElementById('trainerHitBtn');
-  var standBtn=document.getElementById('trainerStandBtn');
   var splitBtn=document.getElementById('trainerSplitBtn');
   var doubleBtn=document.getElementById('trainerDoubleBtn');
   var surrenderBtn=document.getElementById('trainerSurrenderBtn');
 
-  if(current.length && !trainerRoundFinished && !trainerInsurancePending){
-    hitBtn.disabled=false;
-    standBtn.disabled=false;
+  if(current.length && !trainerRoundFinished){
     splitBtn.disabled=!(trainerIsPair(current) && !trainerSplitUsed && current.length===2);
     doubleBtn.disabled=current.length!==2 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
     surrenderBtn.disabled=!trainerCanSurrender(current);
   }else{
-    hitBtn.disabled=true;
-    standBtn.disabled=true;
     splitBtn.disabled=true;
     doubleBtn.disabled=true;
     surrenderBtn.disabled=true;
@@ -3545,21 +3536,20 @@ function openRealGame(){
   hideAll();
   setPageMode(false);
 
-  progress.mode='trainer';
+  progress.mode="trainer";
   save();
 
-  var el=document.getElementById('realTrainer');
-  el.classList.remove('hidden');
+  var el=document.getElementById("realTrainer");
+  el.classList.remove("hidden");
 
   if(trainerShoe.length===0){
     trainerBuildShoe();
   }
 
-  /* Always show an actual hand when the table is opened. */
   trainerNewRound();
 
   setTimeout(function(){
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({top:0,behavior:"smooth"});
   },50);
 
 }
