@@ -786,33 +786,32 @@ button:disabled{
 
 <div id="s1" class="box pageScreen hidden">
 
-  <h2>1. Learn Hi-Lo</h2>
+  <h2>1. Hi-Lo Basics Practice</h2>
 
   <p class="sub">
-    Review the three groups.
-    You can return to this stage anytime.
+    Identify the Hi-Lo value of each card.
+    Get 10 correct answers to pass Stage 1.
   </p>
 
   <div class="rules">
-
-    <div class="rule">
-      <b class="good">+1</b><br>
-      2, 3, 4, 5, 6
-    </div>
-
-    <div class="rule">
-      <b>0</b><br>
-      7, 8, 9
-    </div>
-
-    <div class="rule">
-      <b class="bad">−1</b><br>
-      10, J, Q, K, A
-    </div>
-
+    <div class="rule"><b class="good">+1</b><br>2, 3, 4, 5, 6</div>
+    <div class="rule"><b>0</b><br>7, 8, 9</div>
+    <div class="rule"><b class="bad">−1</b><br>10, J, Q, K, A</div>
   </div>
 
-  <button onclick="finishStageOne()">
+  <div id="stage1Card" class="card">?</div>
+
+  <div class="buttons">
+    <button onclick="answerStage1(1)">+1</button>
+    <button onclick="answerStage1(0)">0</button>
+    <button onclick="answerStage1(-1)">−1</button>
+  </div>
+
+  <p class="center">Score: <b id="stage1Score">0</b> / 10</p>
+  <p id="stage1Message" class="center"></p>
+  <div id="stage1Explain"></div>
+
+  <button id="stage1Continue" class="hidden" onclick="finishStageOne()">
     Continue to Stage 2
   </button>
 
@@ -1292,6 +1291,8 @@ var progress={
   mode:'lesson',
 
   completed:[],
+
+  stage1Score:0,
 
   valueScore:0,
 
@@ -1982,18 +1983,68 @@ function clearExplain(id){
 
 }
 
-function startStage1(){
+var currentStage1Card;
 
+function startStage1(){
   showPractice(1);
 
+  if(typeof progress.stage1Score!=="number"){
+    progress.stage1Score=0;
+  }
+
+  document.getElementById("stage1Score").innerText=Math.min(progress.stage1Score,10);
+  document.getElementById("stage1Message").innerText="";
+  clearExplain("stage1Explain");
+
+  var continueButton=document.getElementById("stage1Continue");
+  if(progress.completed.includes(1) || progress.stage1Score>=10){
+    continueButton.classList.remove("hidden");
+  }else{
+    continueButton.classList.add("hidden");
+  }
+
+  nextStage1Card();
+}
+
+function nextStage1Card(){
+  currentStage1Card=randomCard(document.getElementById("stage1Card"));
+}
+
+function answerStage1(answer){
+  if(progress.stage1Score>=10){ return; }
+
+  var correct=cardValue(currentStage1Card);
+  var isCorrect=answer===correct;
+  recordDailyAttempt(isCorrect);
+
+  if(isCorrect){
+    progress.stage1Score++;
+    document.getElementById("stage1Message").innerHTML='<span class="good">Correct ✓</span>';
+    setExplain("stage1Explain",false,'<b>Correct.</b> '+currentStage1Card+' has a Hi-Lo value of <b>'+valueText(correct)+'</b>.');
+  }else{
+    document.getElementById("stage1Message").innerHTML='<span class="bad">Not quite</span>';
+    var group=correct===1?'Low cards 2–6 are +1.':correct===0?'Neutral cards 7–9 are 0.':'High cards 10, J, Q, K and A are −1.';
+    setExplain("stage1Explain",true,'<b>Your answer:</b> '+valueText(answer)+'<br><b>Correct answer:</b> '+valueText(correct)+'<br><b>Why:</b> '+group+'<br><b>Do instead:</b> First identify which of the three Hi-Lo groups the card belongs to.');
+  }
+
+  document.getElementById("stage1Score").innerText=Math.min(progress.stage1Score,10);
+
+  if(progress.stage1Score>=10){
+    completeStage(1);
+    document.getElementById("stage1Continue").classList.remove("hidden");
+    setExplain("stage1Explain",false,'<b>Stage 1 passed ✓</b><br>You reached 10 correct answers. Stage 2 is now unlocked.');
+  }else{
+    setTimeout(nextStage1Card,450);
+  }
+
+  save();
+  renderDailyProgress();
 }
 
 function finishStageOne(){
-
+  if(!progress.completed.includes(1) && progress.stage1Score<10){ return; }
   completeStage(1);
-
   showLesson(2);
-
 }
 
 /* STAGE 2 */
