@@ -790,30 +790,57 @@ button:disabled{
 
   <p class="sub">
     Identify the Hi-Lo value of each card.
-    Get 10 correct answers to pass Stage 1.
+    Get 15 correct answers in a row to pass Stage 1.
   </p>
 
   <div class="rules">
-    <div class="rule"><b class="good">+1</b><br>2, 3, 4, 5, 6</div>
-    <div class="rule"><b>0</b><br>7, 8, 9</div>
-    <div class="rule"><b class="bad">−1</b><br>10, J, Q, K, A</div>
+
+    <div class="rule">
+      <b class="good">+1</b><br>
+      2, 3, 4, 5, 6
+    </div>
+
+    <div class="rule">
+      <b>0</b><br>
+      7, 8, 9
+    </div>
+
+    <div class="rule">
+      <b class="bad">−1</b><br>
+      10, J, Q, K, A
+    </div>
+
   </div>
 
   <div id="stage1Card" class="card">?</div>
 
   <div class="buttons">
-    <button onclick="answerStage1(1)">+1</button>
-    <button onclick="answerStage1(0)">0</button>
-    <button onclick="answerStage1(-1)">−1</button>
+
+    <button onclick="answerStage1(1)">
+      +1
+    </button>
+
+    <button onclick="answerStage1(0)">
+      0
+    </button>
+
+    <button onclick="answerStage1(-1)">
+      −1
+    </button>
+
   </div>
 
-  <p class="center">Score: <b id="stage1Score">0</b> / 10</p>
   <p id="stage1Message" class="center"></p>
+
   <div id="stage1Explain"></div>
 
-  <button id="stage1Continue" class="hidden" onclick="finishStageOne()">
-    Continue to Stage 2
-  </button>
+  <div class="center big">
+    <span id="stage1Score">0</span>/15 in a row
+  </div>
+
+  <p class="small center">
+    A wrong answer resets your streak to 0. Read the explanation and start the streak again.
+  </p>
 
 </div>
 
@@ -1228,6 +1255,26 @@ button:disabled{
 
 </div>
 
+<div id="passScreen" class="box pageScreen hidden">
+
+  <h2 id="passTitle" class="good center">
+    Stage Passed ✓
+  </h2>
+
+  <p id="passText" class="sub center">
+    Great work. You passed this stage.
+  </p>
+
+  <button id="passNextButton" onclick="continueAfterPass()">
+    Continue
+  </button>
+
+  <button id="passReviewButton" class="secondary" onclick="reviewPassedStage()">
+    Practice This Stage Again
+  </button>
+
+</div>
+
 <div class="box">
 
   <p class="small center">
@@ -1331,6 +1378,10 @@ try{
 
 if(!progress.completed){
   progress.completed=[];
+}
+
+if(typeof progress.stage1Score!=="number"){
+  progress.stage1Score=0;
 }
 
 if(!progress.daily){
@@ -1772,6 +1823,9 @@ function hideAll(){
   var trainer=document.getElementById("realTrainer");
   if(trainer){ trainer.classList.add("hidden"); }
 
+  var pass=document.getElementById("passScreen");
+  if(pass){ pass.classList.add("hidden"); }
+
   for(
     var i=1;
     i<=6;
@@ -1983,68 +2037,177 @@ function clearExplain(id){
 
 }
 
+var passedStage=0;
+
+function showStagePassed(stage){
+
+  completeStage(stage);
+
+  passedStage=stage;
+
+  hideAll();
+  setPageMode(false);
+
+  progress.stage=stage;
+  progress.mode="passed";
+  save();
+
+  var screen=document.getElementById("passScreen");
+  var title=document.getElementById("passTitle");
+  var textEl=document.getElementById("passText");
+  var next=document.getElementById("passNextButton");
+
+  if(stage<6){
+
+    title.innerText="Stage "+stage+" Passed ✓";
+
+    if(stage===1){
+      textEl.innerText=
+        "You got 15 Hi-Lo answers correct in a row. Stage 2 is now unlocked.";
+    }else{
+      textEl.innerText=
+        "You completed the practice requirement. Stage "+(stage+1)+" is now unlocked.";
+    }
+    next.innerText="Continue to Stage "+(stage+1);
+
+  }else{
+
+    title.innerText="Course Complete ✓";
+    textEl.innerText=
+      "You completed the core Hi-Lo learning path. Every stage remains available for review.";
+    next.innerText="Back to Home";
+
+  }
+
+  screen.classList.remove("hidden");
+
+  setTimeout(function(){
+    window.scrollTo({top:0,behavior:"smooth"});
+  },50);
+
+}
+
+function continueAfterPass(){
+
+  if(passedStage>=1 && passedStage<6){
+    showLesson(passedStage+1);
+  }else{
+    showHome();
+  }
+
+}
+
+function reviewPassedStage(){
+
+  if(passedStage>=1 && passedStage<=6){
+    showLesson(passedStage);
+  }else{
+    showHome();
+  }
+
+}
+
+/* STAGE 1 */
+
 var currentStage1Card;
 
 function startStage1(){
+
+  progress.stage1Score=0;
+  save();
+
   showPractice(1);
 
-  if(typeof progress.stage1Score!=="number"){
-    progress.stage1Score=0;
-  }
-
-  document.getElementById("stage1Score").innerText=Math.min(progress.stage1Score,10);
+  document.getElementById("stage1Score").innerText=0;
   document.getElementById("stage1Message").innerText="";
   clearExplain("stage1Explain");
 
-  var continueButton=document.getElementById("stage1Continue");
-  if(progress.completed.includes(1) || progress.stage1Score>=10){
-    continueButton.classList.remove("hidden");
-  }else{
-    continueButton.classList.add("hidden");
-  }
-
   nextStage1Card();
+
 }
 
 function nextStage1Card(){
-  currentStage1Card=randomCard(document.getElementById("stage1Card"));
+
+  currentStage1Card=
+    randomCard(
+      document.getElementById("stage1Card")
+    );
+
 }
 
 function answerStage1(answer){
-  if(progress.stage1Score>=10){ return; }
+
+  if(progress.stage1Score>=15){
+    return;
+  }
 
   var correct=cardValue(currentStage1Card);
   var isCorrect=answer===correct;
+
   recordDailyAttempt(isCorrect);
 
+  var msg=document.getElementById("stage1Message");
+
   if(isCorrect){
+
     progress.stage1Score++;
-    document.getElementById("stage1Message").innerHTML='<span class="good">Correct ✓</span>';
-    setExplain("stage1Explain",false,'<b>Correct.</b> '+currentStage1Card+' has a Hi-Lo value of <b>'+valueText(correct)+'</b>.');
+
+    msg.innerText="Correct ✓";
+    msg.className="center good";
+
+    var explanation="";
+
+    if(correct===1){
+      explanation=
+        "<b>"+currentStage1Card+"</b> is a low card (2–6), so Hi-Lo counts it as <b>+1</b>.";
+    }
+    else if(correct===0){
+      explanation=
+        "<b>"+currentStage1Card+"</b> is a neutral card (7–9), so Hi-Lo counts it as <b>0</b>.";
+    }
+    else{
+      explanation=
+        "<b>"+currentStage1Card+"</b> is a high card (10/J/Q/K/A), so Hi-Lo counts it as <b>−1</b>.";
+    }
+
+    setExplain("stage1Explain",explanation,false);
+
   }else{
-    document.getElementById("stage1Message").innerHTML='<span class="bad">Not quite</span>';
-    var group=correct===1?'Low cards 2–6 are +1.':correct===0?'Neutral cards 7–9 are 0.':'High cards 10, J, Q, K and A are −1.';
-    setExplain("stage1Explain",true,'<b>Your answer:</b> '+valueText(answer)+'<br><b>Correct answer:</b> '+valueText(correct)+'<br><b>Why:</b> '+group+'<br><b>Do instead:</b> First identify which of the three Hi-Lo groups the card belongs to.');
+
+    progress.stage1Score=0;
+
+    msg.innerText="Not quite — streak reset to 0";
+    msg.className="center bad";
+
+    setExplain(
+      "stage1Explain",
+      "You chose <b>"+valueText(answer)+"</b>, but <b>"+
+      currentStage1Card+"</b> is worth <b>"+valueText(correct)+"</b>."+
+      "<br><br><b>Your 15-card streak has restarted.</b>"+
+      "<br><br><b>What to do instead:</b> memorize the three groups: "+
+      "2–6 = +1, 7–9 = 0, and 10/J/Q/K/A = −1.",
+      true
+    );
+
   }
 
-  document.getElementById("stage1Score").innerText=Math.min(progress.stage1Score,10);
-
-  if(progress.stage1Score>=10){
-    completeStage(1);
-    document.getElementById("stage1Continue").classList.remove("hidden");
-    setExplain("stage1Explain",false,'<b>Stage 1 passed ✓</b><br>You reached 10 correct answers. Stage 2 is now unlocked.');
-  }else{
-    setTimeout(nextStage1Card,450);
-  }
+  document.getElementById("stage1Score").innerText=
+    Math.min(progress.stage1Score,15);
 
   save();
-  renderDailyProgress();
-}
 
-function finishStageOne(){
-  if(!progress.completed.includes(1) && progress.stage1Score<10){ return; }
-  completeStage(1);
-  showLesson(2);
+  if(progress.stage1Score>=15){
+
+    setTimeout(function(){
+      showStagePassed(1);
+    },800);
+
+  }else{
+
+    setTimeout(nextStage1Card,750);
+
+  }
+
 }
 
 /* STAGE 2 */
@@ -2052,6 +2215,9 @@ function finishStageOne(){
 var currentValueCard;
 
 function startValues(){
+
+  progress.valueScore=0;
+  save();
 
   showPractice(2);
 
@@ -2201,15 +2367,11 @@ function answerValue(answer){
     progress.valueScore>=15
   ){
 
-    completeStage(2);
-
     setTimeout(
       function(){
-
-        showLesson(3);
-
+        showStagePassed(2);
       },
-      900
+      800
     );
 
   }
@@ -2232,6 +2394,9 @@ var running=0;
 var currentRunningCard;
 
 function startRunning(){
+
+  progress.runningScore=0;
+  save();
 
   showPractice(3);
 
@@ -2463,15 +2628,11 @@ function checkRunning(){
     progress.runningScore>=15
   ){
 
-    completeStage(3);
-
     setTimeout(
       function(){
-
-        showLesson(4);
-
+        showStagePassed(3);
       },
-      1000
+      800
     );
 
   }
@@ -2492,6 +2653,9 @@ function checkRunning(){
 var group=[];
 
 function startGroups(){
+
+  progress.groupScore=0;
+  save();
 
   showPractice(4);
 
@@ -2706,15 +2870,11 @@ function checkGroup(){
     progress.groupScore>=10
   ){
 
-    completeStage(4);
-
     setTimeout(
       function(){
-
-        showLesson(5);
-
+        showStagePassed(4);
       },
-      1000
+      800
     );
 
   }
@@ -2737,6 +2897,9 @@ var tcRunning;
 var tcDecks;
 
 function startTC(){
+
+  progress.tcScore=0;
+  save();
 
   showPractice(5);
 
@@ -2937,15 +3100,11 @@ function checkTC(){
     progress.tcScore>=10
   ){
 
-    completeStage(5);
-
     setTimeout(
       function(){
-
-        showLesson(6);
-
+        showStagePassed(5);
       },
-      1000
+      800
     );
 
   }
@@ -3133,6 +3292,24 @@ function checkDeck(){
     return;
   }
 
+  if(deck.length>0){
+
+    document.getElementById("deckMessage").innerText=
+      "Finish the full deck first.";
+
+    document.getElementById("deckMessage").className=
+      "center bad";
+
+    setExplain(
+      "deckExplain",
+      "There are still <b>"+deck.length+"</b> cards remaining. "+
+      "Keep counting until all 52 cards have been shown, then enter your final Running Count.",
+      true
+    );
+
+    return;
+  }
+
   var answer=
   Number(
     input.value
@@ -3174,12 +3351,11 @@ function checkDeck(){
 
     );
 
-    document
-    .getElementById(
-      "completeMessage"
-    )
-    .classList.remove(
-      "hidden"
+    setTimeout(
+      function(){
+        showStagePassed(6);
+      },
+      900
     );
 
   }
