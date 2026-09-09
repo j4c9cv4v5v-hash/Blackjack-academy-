@@ -406,12 +406,171 @@ input{
   .stageMenu{grid-template-columns:repeat(2,1fr)}
   .dailyGrid{grid-template-columns:repeat(2,1fr)}
 }
+
+button:disabled{
+  opacity:.28;
+  cursor:not-allowed;
+}
+
+#homeButton{
+  position:fixed;
+  top:calc(env(safe-area-inset-top, 0px) + 10px);
+  left:12px;
+  z-index:9999;
+  width:auto;
+  min-width:88px;
+  margin:0;
+  padding:10px 14px;
+  border-radius:999px;
+  background:#22304a;
+  color:white;
+  border:1px solid #40506e;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+}
+
+#homeView.hidden,
+#homeButton.hidden{
+  display:none;
+}
+
+.pageView{
+  min-height:100vh;
+  padding-top:48px;
+}
+
+#realTrainer{
+  padding-top:16px;
+}
+
+#realTrainer h2{
+  margin-bottom:6px;
+}
+
+.trainerIntroCompact{
+  margin:0 0 8px;
+}
+
+.trainerCompactGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin:8px 0;
+}
+
+.trainerCompactGrid .bankrollStat{
+  padding:8px 4px;
+  font-size:11px;
+}
+
+.trainerCompactGrid .bankrollStat b{
+  font-size:17px;
+}
+
+.compactBetRow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  margin:7px 0;
+}
+
+.compactBetRow button{
+  margin:0;
+  padding:9px 3px;
+  font-size:13px;
+}
+
+#realTrainer .trainerTop{
+  margin:8px 0;
+  gap:6px;
+}
+
+#realTrainer .trainerStat{
+  padding:7px 4px;
+  font-size:11px;
+}
+
+#realTrainer .trainerStat b{
+  font-size:18px;
+}
+
+#realTrainer .tableArea{
+  min-height:0;
+  padding:12px;
+  margin:8px 0;
+  border-radius:16px;
+}
+
+#realTrainer .miniCards{
+  min-height:58px;
+  gap:6px;
+}
+
+#realTrainer .miniCard{
+  width:44px;
+  height:58px;
+  font-size:17px;
+}
+
+#realTrainer .handLabel{
+  margin:3px 0;
+}
+
+#realTrainer .tableArea > div[style*="height:26px"]{
+  height:10px !important;
+}
+
+#realTrainer .actionGrid{
+  margin-top:8px;
+  gap:6px;
+}
+
+#realTrainer .actionGrid button,
+#realTrainer .specialActions button{
+  padding:11px 6px;
+  font-size:15px;
+}
+
+#realTrainer .coachBox{
+  padding:11px;
+  margin-top:8px;
+  font-size:14px;
+}
+
+.trainerDetails{
+  margin-top:10px;
+  border:1px solid #293855;
+  border-radius:12px;
+  background:#0c1627;
+  padding:10px 12px;
+}
+
+.trainerDetails summary{
+  cursor:pointer;
+  font-weight:800;
+}
+
+@media(max-width:520px){
+  .trainerCompactGrid{
+    grid-template-columns:repeat(4,1fr);
+  }
+  .compactBetRow{
+    grid-template-columns:repeat(5,1fr);
+  }
+  #realTrainer{
+    margin-top:8px;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="app">
+
+<button id="homeButton" class="hidden" onclick="showHome()">← Home</button>
+
+<div id="homeView">
 
 <h1>♠ Blackjack Counting Academy</h1>
 <p class="sub">Complete Hi-Lo Card Counting Course</p>
@@ -472,41 +631,34 @@ input{
   </p>
 </div>
 
+</div>
 
 <!-- REAL BLACKJACK TABLE TRAINER -->
 
-<div id="realTrainer" class="box hidden">
+<div id="realTrainer" class="box hidden pageView">
 
   <h2>♣ Real Blackjack Table Practice</h2>
 
-  <p class="sub">
-    Play full blackjack hands while the coach checks your decisions.
-    After every move you will see whether it was correct, what the recommended play was, and why.
+  <p class="small trainerIntroCompact">
+    Make the best decision, then get an explanation immediately.
   </p>
 
-  <p class="trainerRule">
-    Training rules: 6-deck shoe, dealer stands on soft 17, blackjack pays 3:2,
-    double after split allowed, late surrender available, insurance offered against a dealer Ace.
-    This is a practice simulator — no real money is used.
-  </p>
-
-  <div class="bankrollGrid">
+  <div class="trainerCompactGrid">
     <div class="bankrollStat"><b id="trainerBankroll">$1000</b>Bankroll</div>
-    <div class="bankrollStat"><b id="trainerBet">$10</b>Current bet</div>
-    <div class="bankrollStat"><b id="trainerProfit">$0</b>Session P/L</div>
-    <div class="bankrollStat"><b id="trainerDecisionAcc">—</b>Decision accuracy</div>
+    <div class="bankrollStat"><b id="trainerBet">$10</b>Bet</div>
+    <div class="bankrollStat"><b id="trainerProfit">$0</b>P/L</div>
+    <div class="bankrollStat"><b id="trainerDecisionAcc">—</b>Accuracy</div>
   </div>
 
-  <div class="lesson">
-    <b>Choose your bet</b>
-    <div class="betControls">
-      <button onclick="trainerSetBet(5)">$5</button>
-      <button onclick="trainerSetBet(10)">$10</button>
-      <button onclick="trainerSetBet(25)">$25</button>
-      <button onclick="trainerSetBet(50)">$50</button>
-      <button onclick="trainerSetBet(100)">$100</button>
-    </div>
-    <p class="small center" style="margin-bottom:0">
+  <div class="compactBetRow">
+    <button onclick="trainerSetBet(5)">$5</button>
+    <button onclick="trainerSetBet(10)">$10</button>
+    <button onclick="trainerSetBet(25)">$25</button>
+    <button onclick="trainerSetBet(50)">$50</button>
+    <button onclick="trainerSetBet(100)">$100</button>
+  </div>
+
+<p class="small center" style="margin-bottom:0">
       Betting is only for simulation. Your bankroll and statistics are saved on this device.
     </p>
   </div>
@@ -569,28 +721,33 @@ input{
     Make your decision. The explanation will appear here after you act.
   </div>
 
-  <div class="trainerStatsGrid">
-    <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
-    <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
-    <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
-    <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
-    <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
-    <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
-  </div>
+  <details class="trainerDetails">
+    <summary>Stats & rules</summary>
 
-  <button class="secondary" onclick="trainerResetStats()">
-    Reset Table Stats & Bankroll
-  </button>
+    <p class="trainerRule">
+      6-deck shoe · dealer stands on soft 17 · blackjack pays 3:2 ·
+      double after split allowed · late surrender available · insurance against dealer Ace.
+    </p>
 
-  <button class="secondary" onclick="showLesson(progress.stage||1)">
-    Back to Course
-  </button>
+    <div class="trainerStatsGrid">
+      <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
+      <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
+      <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
+      <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
+      <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
+      <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
+    </div>
+
+    <button class="secondary" onclick="trainerResetStats()">
+      Reset Table Stats & Bankroll
+    </button>
+  </details>
 
 </div>
 
 <!-- STAGE 1 LESSON -->
 
-<div id="l1" class="box">
+<div id="l1" class="box pageView">
 
   <h2>Stage 1 — Quick Lesson</h2>
 
@@ -644,7 +801,7 @@ input{
 
 <!-- STAGE 1 PRACTICE -->
 
-<div id="s1" class="box hidden">
+<div id="s1" class="box pageView hidden">
 
   <h2>1. Learn Hi-Lo</h2>
 
@@ -680,7 +837,7 @@ input{
 
 <!-- STAGE 2 LESSON -->
 
-<div id="l2" class="box hidden">
+<div id="l2" class="box pageView hidden">
 
   <h2>Stage 2 — Quick Lesson</h2>
 
@@ -715,7 +872,7 @@ input{
 
 <!-- STAGE 2 PRACTICE -->
 
-<div id="s2" class="box hidden">
+<div id="s2" class="box pageView hidden">
 
   <h2>2. Card Values</h2>
 
@@ -754,7 +911,7 @@ input{
 
 <!-- STAGE 3 LESSON -->
 
-<div id="l3" class="box hidden">
+<div id="l3" class="box pageView hidden">
 
   <h2>Stage 3 — Quick Lesson</h2>
 
@@ -791,7 +948,7 @@ input{
 
 <!-- STAGE 3 PRACTICE -->
 
-<div id="s3" class="box hidden">
+<div id="s3" class="box pageView hidden">
 
   <h2>3. Running Count</h2>
 
@@ -835,7 +992,7 @@ input{
 
 <!-- STAGE 4 LESSON -->
 
-<div id="l4" class="box hidden">
+<div id="l4" class="box pageView hidden">
 
   <h2>Stage 4 — Quick Lesson</h2>
 
@@ -869,7 +1026,7 @@ input{
 
 <!-- STAGE 4 PRACTICE -->
 
-<div id="s4" class="box hidden">
+<div id="s4" class="box pageView hidden">
 
   <h2>4. Cancellation</h2>
 
@@ -909,7 +1066,7 @@ input{
 
 <!-- STAGE 5 LESSON -->
 
-<div id="l5" class="box hidden">
+<div id="l5" class="box pageView hidden">
 
   <h2>Stage 5 — Quick Lesson</h2>
 
@@ -945,7 +1102,7 @@ input{
 
 <!-- STAGE 5 PRACTICE -->
 
-<div id="s5" class="box hidden">
+<div id="s5" class="box pageView hidden">
 
   <h2>5. True Count</h2>
 
@@ -991,7 +1148,7 @@ input{
 
 <!-- STAGE 6 LESSON -->
 
-<div id="l6" class="box hidden">
+<div id="l6" class="box pageView hidden">
 
   <h2>Stage 6 — Quick Lesson</h2>
 
@@ -1023,7 +1180,7 @@ input{
 
 <!-- STAGE 6 PRACTICE -->
 
-<div id="s6" class="box hidden">
+<div id="s6" class="box pageView hidden">
 
   <h2>6. Full Deck Test</h2>
 
@@ -1597,6 +1754,33 @@ function renderStageMenu(){
 
 }
 
+function setPageMode(isHome){
+
+  var home=document.getElementById("homeView");
+  var back=document.getElementById("homeButton");
+
+  if(isHome){
+    home.classList.remove("hidden");
+    back.classList.add("hidden");
+  }else{
+    home.classList.add("hidden");
+    back.classList.remove("hidden");
+  }
+
+}
+
+function showHome(){
+
+  hideAll();
+  setPageMode(true);
+
+  progress.mode='home';
+  save();
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+}
+
 function hideAll(){
 
   var trainer=document.getElementById("realTrainer");
@@ -1662,6 +1846,7 @@ function showLesson(stage){
   }
 
   hideAll();
+  setPageMode(false);
 
   progress.stage=
   stage;
@@ -1684,8 +1869,7 @@ function showLesson(stage){
   save();
 
   setTimeout(function(){
-    var el=document.getElementById("l"+stage);
-    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
+    window.scrollTo({top:0,behavior:"smooth"});
   },50);
 
 }
@@ -1696,30 +1880,14 @@ function openStage(stage){
     return;
   }
 
-  if(stage===1){
-    startStage1();
-  }
-  else if(stage===2){
-    startValues();
-  }
-  else if(stage===3){
-    startRunning();
-  }
-  else if(stage===4){
-    startGroups();
-  }
-  else if(stage===5){
-    startTC();
-  }
-  else if(stage===6){
-    startDeck();
-  }
+  showLesson(stage);
 
 }
 
 function showPractice(stage){
 
   hideAll();
+  setPageMode(false);
 
   progress.stage=
   stage;
@@ -1742,8 +1910,7 @@ function showPractice(stage){
   save();
 
   setTimeout(function(){
-    var el=document.getElementById("s"+stage);
-    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
+    window.scrollTo({top:0,behavior:"smooth"});
   },50);
 
 }
@@ -3381,6 +3548,7 @@ function trainerRender(){
 
 function openRealGame(){
   hideAll();
+  setPageMode(false);
 
   progress.mode='trainer';
   save();
@@ -3399,7 +3567,7 @@ function openRealGame(){
   }
 
   setTimeout(function(){
-    el.scrollIntoView({behavior:'smooth',block:'start'});
+    window.scrollTo({top:0,behavior:'smooth'});
   },50);
 }
 
@@ -3645,6 +3813,7 @@ function trainerAction(action){
     '<br><br><b>Why:</b> '+trainerDecisionWhy(recommended,oldHand);
 
   trainerFirstDecision=false;
+  trainerRender();
 
   if(action==='surrender'){
     if(oldHand.length!==2 || trainerHands.length!==1 || trainerHandIndex!==0){
@@ -3892,7 +4061,7 @@ function resetCourse(){
 
     initDailyTracking();
 
-    showLesson(1);
+    showHome();
 
   }
 
@@ -3925,67 +4094,8 @@ if(
 /* START APP */
 
 initDailyTracking();
-
 renderStageMenu();
-
-if(progress.mode==='trainer'){
-
-  openRealGame();
-
-}
-
-else if(
-  progress.mode==='practice'
-){
-
-  var s=
-  progress.stage||1;
-
-  if(s===1){
-
-    startStage1();
-
-  }
-
-  else if(s===2){
-
-    startValues();
-
-  }
-
-  else if(s===3){
-
-    startRunning();
-
-  }
-
-  else if(s===4){
-
-    startGroups();
-
-  }
-
-  else if(s===5){
-
-    startTC();
-
-  }
-
-  else{
-
-    startDeck();
-
-  }
-
-}
-
-else{
-
-  showLesson(
-    progress.stage||1
-  );
-
-}
+showHome();
 
 </script>
 
