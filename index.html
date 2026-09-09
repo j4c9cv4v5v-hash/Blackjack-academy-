@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#08111f">
+<title>Blackjack Counting Academy</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#08111f;color:white;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.app{max-width:650px;margin:auto;padding:20px}
+h1{font-size:24px;margin:10px 0 5px}
+h2{margin-top:0}
+.sub{color:#a6b0c5;line-height:1.5}
+.box{
+ background:#121c30;border:1px solid #293855;
+ border-radius:18px;padding:20px;margin:15px 0;
+}
+.progress{height:10px;background:#07101e;border-radius:20px;overflow:hidden}
+.bar{height:100%;background:#5eead4;width:0;transition:.3s}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rule{
+ background:#0c1627;border-radius:12px;padding:14px;
+ text-align:center;border:1px solid #293855
+}
+.rule b{font-size:25px}
+button{
+ background:#5eead4;color:#05201c;border:0;border-radius:12px;
+ padding:14px;font-size:16px;font-weight:800;width:100%;
+ margin-top:10px
+}
+.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.buttons button{background:#22304a;color:white}
+.card{
+ height:190px;background:white;color:#111;border-radius:18px;
+ display:flex;align-items:center;justify-content:center;
+ font-size:70px;font-weight:900;margin:18px 0;
+}
+.red{color:#c8203b}
+.center{text-align:center}
+.big{font-size:40px;font-weight:900}
+input{
+ width:100%;padding:14px;border-radius:12px;
+ border:1px solid #34425e;background:#091322;
+ color:white;font-size:20px;text-align:center
+}
+.hidden{display:none}
+.good{color:#5eead4}.bad{color:#fb7185}
+.small{font-size:13px;color:#a6b0c5}
+@media(max-width:500px){
+ .rules{grid-template-columns:1fr}
+ .card{height:160px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<h1>♠ Blackjack Counting Academy</h1>
+<p class="sub">Complete Hi-Lo Card Counting Course</p>
+
+<div class="box">
+<div id="stageText" class="small">Stage 1 of 6</div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+</div>
+
+<!-- STAGE 1 -->
+<div id="s1" class="box">
+<h2>1. Learn Hi-Lo</h2>
+<p class="sub">Every card has one simple counting value.</p>
+
+<div class="rules">
+<div class="rule">
+<b class="good">+1</b><br>
+2, 3, 4, 5, 6
+</div>
+
+<div class="rule">
+<b>0</b><br>
+7, 8, 9
+</div>
+
+<div class="rule">
+<b class="bad">−1</b><br>
+10, J, Q, K, A
+</div>
+</div>
+
+<p class="sub">
+Start your Running Count at <b>0</b>.
+Add the value of every card you see.
+</p>
+
+<button onclick="startValues()">Start Training</button>
+</div>
+
+<!-- STAGE 2 -->
+<div id="s2" class="box hidden">
+<h2>2. Card Values</h2>
+<p class="sub">Identify each card instantly. Get 15 correct.</p>
+
+<div id="valueCard" class="card">?</div>
+
+<div class="buttons">
+<button onclick="answerValue(1)">+1</button>
+<button onclick="answerValue(0)">0</button>
+<button onclick="answerValue(-1)">−1</button>
+</div>
+
+<p id="valueMessage" class="center"></p>
+
+<div class="center big">
+<span id="valueScore">0</span>/15
+</div>
+</div>
+
+<!-- STAGE 3 -->
+<div id="s3" class="box hidden">
+<h2>3. Running Count</h2>
+
+<p class="sub">
+Keep a continuous Running Count.
+Enter the new count after each card.
+</p>
+
+<div class="center small">CURRENT COUNT</div>
+<div id="runningCount" class="center big">0</div>
+
+<div id="runningCard" class="card">?</div>
+
+<input id="runningInput"
+type="number"
+inputmode="numeric"
+placeholder="Enter new count">
+
+<button onclick="checkRunning()">Check</button>
+
+<p id="runningMessage" class="center"></p>
+
+<div class="center big">
+<span id="runningScore">0</span>/15
+</div>
+</div>
+
+<!-- STAGE 4 -->
+<div id="s4" class="box hidden">
+<h2>4. Cancellation</h2>
+
+<p class="sub">
+Learn to process groups instead of individual cards.
+A +1 and −1 cancel each other.
+</p>
+
+<p class="sub">
+Example: <b>5 + K = 0</b>
+</p>
+
+<div id="groupCards" class="card" style="font-size:40px">?</div>
+
+<input id="groupInput"
+type="number"
+inputmode="numeric"
+placeholder="Total value">
+
+<button onclick="checkGroup()">Check</button>
+
+<p id="groupMessage" class="center"></p>
+
+<div class="center big">
+<span id="groupScore">0</span>/10
+</div>
+</div>
+
+<!-- STAGE 5 -->
+<div id="s5" class="box hidden">
+<h2>5. True Count</h2>
+
+<p class="sub">
+When multiple decks are used:
+</p>
+
+<div class="box center">
+<b>True Count</b><br><br>
+Running Count ÷ Decks Remaining
+</div>
+
+<div class="rules">
+
+<div class="rule">
+Running Count
+<br>
+<b id="tcRunning">0</b>
+</div>
+
+<div class="rule">
+Decks Remaining
+<br>
+<b id="tcDecks">0</b>
+</div>
+
+<div class="rule">
+True Count
+<br>
+<b>?</b>
+</div>
+
+</div>
+
+<input id="tcInput"
+type="number"
+inputmode="decimal"
+placeholder="Enter True Count">
+
+<button onclick="checkTC()">Check</button>
+
+<p id="tcMessage" class="center"></p>
+
+<div class="center big">
+<span id="tcScore">0</span>/10
+</div>
+</div>
+
+<!-- STAGE 6 -->
+<div id="s6" class="box hidden">
+<h2>6. Full Deck Test</h2>
+
+<p class="sub">
+Now count an entire shuffled 52-card deck.
+Keep the count in your head.
+</p>
+
+<div class="center small">CARDS REMAINING</div>
+<div id="cardsRemaining" class="center big">52</div>
+
+<div id="deckCard" class="card">Ready</div>
+
+<button onclick="startDeck()">Start / Restart Deck</button>
+<button onclick="nextDeck()">Next Card</button>
+
+<div style="margin-top:20px">
+<input id="deckAnswer"
+type="number"
+inputmode="numeric"
+placeholder="Your final Running Count">
+
+<button onclick="checkDeck()">Check My Count</button>
+</div>
+
+<p id="deckMessage" class="center"></p>
+
+<div id="completeMessage" class="hidden">
+
+<h2 class="good center">Course Complete ✓</h2>
+
+<p class="sub center">
+You completed the core Hi-Lo Card Counting course.
+Repeat the Full Deck Test until counting becomes automatic.
+</p>
+
+</div>
+</div>
+
+<div class="box">
+<p class="small center">
+Your progress is automatically saved on this device.
+</p>
+
+<button onclick="resetCourse()"
+style="background:#22304a;color:white">
+Reset Course
+</button>
+</div>
+
+</div>
+
+<script>
+
+var ranks=[
+'2','3','4','5','6',
+'7','8','9',
+'10','J','Q','K','A'
+];
+
+var suits=['♠','♥','♦','♣'];
+
+function cardValue(r){
+ if(['2','3','4','5','6'].includes(r)) return 1;
+ if(['7','8','9'].includes(r)) return 0;
+ return -1;
+}
+
+var progress={
+ stage:1,
+ valueScore:0,
+ runningScore:0,
+ groupScore:0,
+ tcScore:0
+};
+
+try{
+ var saved=localStorage.getItem("blackjackCourse");
+ if(saved){
+  progress=JSON.parse(saved);
+ }
+}catch(e){}
+
+function save(){
+ try{
+  localStorage.setItem(
+   "blackjackCourse",
+   JSON.stringify(progress)
+  );
+ }catch(e){}
+}
+
+function showStage(stage){
+
+ for(var i=1;i<=6;i++){
+  document
+  .getElementById("s"+i)
+  .classList.add("hidden");
+ }
+
+ document
+ .getElementById("s"+stage)
+ .classList.remove("hidden");
+
+ progress.stage=stage;
+
+ document.getElementById("stageText")
+ .innerText="Stage "+stage+" of 6";
+
+ document.getElementById("bar")
+ .style.width=((stage-1)/5*100)+"%";
+
+ save();
+
+ window.scrollTo(0,0);
+}
+
+function randomCard(element){
+
+ var rank=
+ ranks[Math.floor(Math.random()*ranks.length)];
+
+ var suit=
+ suits[Math.floor(Math.random()*suits.length)];
+
+ element.innerText=rank+suit;
+
+ if(suit==="♥" || suit==="♦"){
+  element.className="card red";
+ }else{
+  element.className="card";
+ }
+
+ return rank;
+}
+
+/* CARD VALUES */
+
+var currentValueCard;
+
+function startValues(){
+
+ showStage(2);
+
+ document.getElementById("valueScore")
+ .innerText=progress.valueScore;
+
+ nextValueCard();
+}
+
+function nextValueCard(){
+
+ currentValueCard=
+ randomCard(
+ document.getElementById("valueCard")
+ );
+}
+
+function answerValue(answer){
+
+ var correct=
+ cardValue(currentValueCard);
+
+ var msg=
+ document.getElementById("valueMessage");
+
+ if(answer===correct){
+
+  progress.valueScore++;
+
+  msg.innerText="Correct ✓";
+  msg.className="center good";
+
+ }else{
+
+  msg.innerText=
+  "Correct answer: "+
+  (correct>0?"+":"")+correct;
+
+  msg.className="center bad";
+ }
+
+ document.getElementById("valueScore")
+ .innerText=
+ Math.min(progress.valueScore,15);
+
+ save();
+
+ if(progress.valueScore>=15){
+
+  setTimeout(startRunning,500);
+
+ }else{
+
+  setTimeout(nextValueCard,300);
+ }
+}
+
+/* RUNNING COUNT */
+
+var running=0;
+var currentRunningCard;
+
+function startRunning(){
+
+ showStage(3);
+
+ running=0;
+
+ document.getElementById("runningCount")
+ .innerText=0;
+
+ document.getElementById("runningScore")
+ .innerText=progress.runningScore;
+
+ nextRunningCard();
+}
+
+function nextRunningCard(){
+
+ currentRunningCard=
+ randomCard(
+ document.getElementById("runningCard")
+ );
+}
+
+function checkRunning(){
+
+ var input=
+ document.getElementById("runningInput");
+
+ if(input.value==="") return;
+
+ var expected=
+ running+
+ cardValue(currentRunningCard);
+
+ var msg=
+ document.getElementById("runningMessage");
+
+ if(Number(input.value)===expected){
+
+  progress.runningScore++;
+
+  msg.innerText="Correct ✓";
+  msg.className="center good";
+
+ }else{
+
+  msg.innerText=
+  "Correct count: "+expected;
+
+  msg.className="center bad";
+ }
+
+ running=expected;
+
+ document.getElementById("runningCount")
+ .innerText=running;
+
+ document.getElementById("runningScore")
+ .innerText=
+ Math.min(progress.runningScore,15);
+
+ input.value="";
+
+ save();
+
+ if(progress.runningScore>=15){
+
+  setTimeout(startGroups,500);
+
+ }else{
+
+  nextRunningCard();
+ }
+}
+
+/* CANCELLATION */
+
+var group=[];
+
+function startGroups(){
+
+ showStage(4);
+
+ document.getElementById("groupScore")
+ .innerText=progress.groupScore;
+
+ nextGroup();
+}
+
+function nextGroup(){
+
+ group=[];
+
+ var amount=
+ 2+Math.floor(Math.random()*3);
+
+ for(var i=0;i<amount;i++){
+
+  group.push(
+   ranks[
+    Math.floor(Math.random()*ranks.length)
+   ]
+  );
+ }
+
+ document.getElementById("groupCards")
+ .innerText=group.join("   ");
+}
+
+function checkGroup(){
+
+ var input=
+ document.getElementById("groupInput");
+
+ if(input.value==="") return;
+
+ var expected=0;
+
+ group.forEach(function(r){
+  expected+=cardValue(r);
+ });
+
+ var msg=
+ document.getElementById("groupMessage");
+
+ if(Number(input.value)===expected){
+
+  progress.groupScore++;
+
+  msg.innerText="Correct ✓";
+  msg.className="center good";
+
+ }else{
+
+  msg.innerText=
+  "Correct total: "+expected;
+
+  msg.className="center bad";
+ }
+
+ document.getElementById("groupScore")
+ .innerText=
+ Math.min(progress.groupScore,10);
+
+ input.value="";
+
+ save();
+
+ if(progress.groupScore>=10){
+
+  setTimeout(startTC,500);
+
+ }else{
+
+  nextGroup();
+ }
+}
+
+/* TRUE COUNT */
+
+var tcRunning;
+var tcDecks;
+
+function startTC(){
+
+ showStage(5);
+
+ document.getElementById("tcScore")
+ .innerText=progress.tcScore;
+
+ nextTC();
+}
+
+function nextTC(){
+
+ var decks=[1,2,3,4,5];
+
+ tcDecks=
+ decks[
+  Math.floor(Math.random()*decks.length)
+ ];
+
+ var trueCount=
+ Math.floor(Math.random()*9)-4;
+
+ tcRunning=
+ trueCount*tcDecks;
+
+ document.getElementById("tcRunning")
+ .innerText=
+ (tcRunning>0?"+":"")+tcRunning;
+
+ document.getElementById("tcDecks")
+ .innerText=tcDecks;
+}
+
+function checkTC(){
+
+ var input=
+ document.getElementById("tcInput");
+
+ if(input.value==="") return;
+
+ var expected=
+ tcRunning/tcDecks;
+
+ var msg=
+ document.getElementById("tcMessage");
+
+ if(Number(input.value)===expected){
+
+  progress.tcScore++;
+
+  msg.innerText="Correct ✓";
+  msg.className="center good";
+
+ }else{
+
+  msg.innerText=
+  "Correct True Count: "+expected;
+
+  msg.className="center bad";
+ }
+
+ document.getElementById("tcScore")
+ .innerText=
+ Math.min(progress.tcScore,10);
+
+ input.value="";
+
+ save();
+
+ if(progress.tcScore>=10){
+
+  setTimeout(function(){
+   showStage(6);
+  },500);
+
+ }else{
+
+  nextTC();
+ }
+}
+
+/* FULL DECK */
+
+var deck=[];
+var deckRunning=0;
+
+function startDeck(){
+
+ showStage(6);
+
+ deck=[];
+
+ for(var s=0;s<4;s++){
+
+  for(var r=0;r<ranks.length;r++){
+
+   deck.push(ranks[r]);
+  }
+ }
+
+ for(var i=deck.length-1;i>0;i--){
+
+  var j=
+  Math.floor(
+   Math.random()*(i+1)
+  );
+
+  var temp=deck[i];
+
+  deck[i]=deck[j];
+
+  deck[j]=temp;
+ }
+
+ deckRunning=0;
+
+ document.getElementById("cardsRemaining")
+ .innerText=52;
+
+ document.getElementById("deckCard")
+ .innerText="Ready";
+
+ document.getElementById("deckMessage")
+ .innerText="";
+}
+
+function nextDeck(){
+
+ if(deck.length===0){
+
+  document.getElementById("deckCard")
+  .innerText="Deck Complete";
+
+  return;
+ }
+
+ var rank=deck.pop();
+
+ deckRunning+=cardValue(rank);
+
+ var suit=
+ suits[
+  Math.floor(Math.random()*4)
+ ];
+
+ var card=
+ document.getElementById("deckCard");
+
+ card.innerText=rank+suit;
+
+ if(suit==="♥" || suit==="♦"){
+  card.className="card red";
+ }else{
+  card.className="card";
+ }
+
+ document.getElementById("cardsRemaining")
+ .innerText=deck.length;
+}
+
+function checkDeck(){
+
+ var input=
+ document.getElementById("deckAnswer");
+
+ if(input.value==="") return;
+
+ var msg=
+ document.getElementById("deckMessage");
+
+ if(Number(input.value)===deckRunning){
+
+  msg.innerText="Perfect ✓";
+  msg.className="center good";
+
+  document.getElementById("completeMessage")
+  .classList.remove("hidden");
+
+ }else{
+
+  msg.innerText=
+  "Correct final count: "+deckRunning;
+
+  msg.className="center bad";
+ }
+
+ input.value="";
+}
+
+/* RESET */
+
+function resetCourse(){
+
+ if(confirm("Reset all course progress?")){
+
+  progress={
+   stage:1,
+   valueScore:0,
+   runningScore:0,
+   groupScore:0,
+   tcScore:0
+  };
+
+  save();
+
+  showStage(1);
+ }
+}
+
+/* RESUME */
+
+if(progress.stage===1){
+
+ showStage(1);
+
+}else if(progress.stage===2){
+
+ startValues();
+
+}else if(progress.stage===3){
+
+ startRunning();
+
+}else if(progress.stage===4){
+
+ startGroups();
+
+}else if(progress.stage===5){
+
+ startTC();
+
+}else{
+
+ showStage(6);
+}
+
+</script>
+
+</body>
+</html>
