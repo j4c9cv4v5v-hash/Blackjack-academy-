@@ -557,6 +557,62 @@ button:disabled{
   }
 }
 
+
+
+.shoeNotice{
+  background:#173b35;
+  border:1px solid #5eead4;
+  border-radius:12px;
+  padding:10px 12px;
+  margin:10px 0;
+  text-align:center;
+  font-weight:800;
+}
+
+.stage7Phase{
+  display:inline-block;
+  background:#22304a;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.stage7ChoiceGrid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:7px;
+  margin-top:10px;
+}
+
+.stage7ChoiceGrid button{
+  margin:0;
+  padding:11px 5px;
+  font-size:14px;
+}
+
+.stage7ActionGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.stage7ActionGrid button{margin:0}
+
+.stage7Scenario{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+}
+
+@media(max-width:520px){
+  .stage7ChoiceGrid{grid-template-columns:repeat(3,1fr)}
+}
+
 </style>
 </head>
 
@@ -572,7 +628,7 @@ button:disabled{
 <p class="sub">Complete Hi-Lo Card Counting Course</p>
 
 <div class="box">
-  <div id="stageText" class="small">Stage 1 of 6</div>
+  <div id="stageText" class="small">Stage 1 of 7</div>
 
   <div class="progress">
     <div id="bar" class="bar"></div>
@@ -645,6 +701,10 @@ button:disabled{
     double after split allowed, late surrender available, insurance offered against a dealer Ace.
     This is a practice simulator — no real money is used.
   </p>
+
+  <div id="trainerShoeNotice" class="shoeNotice hidden">
+    New shoe shuffled — Running Count reset to 0
+  </div>
 
   <div class="bankrollGrid">
     <div class="bankrollStat"><b id="trainerBankroll">$1000</b>Bankroll</div>
@@ -1021,6 +1081,10 @@ button:disabled{
 
   <div id="runningExplain"></div>
 
+  <button id="runningNextBtn" class="secondary hidden" onclick="continueRunningPractice()">
+    Next Card
+  </button>
+
   <div class="center big">
     <span id="runningScore">0</span>/15 in a row
   </div>
@@ -1098,6 +1162,10 @@ button:disabled{
   <p id="groupMessage" class="center"></p>
 
   <div id="groupExplain"></div>
+
+  <button id="groupNextBtn" class="secondary hidden" onclick="continueGroupPractice()">
+    Next Group
+  </button>
 
   <div class="center big">
     <span id="groupScore">0</span>/10 in a row
@@ -1189,6 +1257,10 @@ button:disabled{
 
   <div id="tcExplain"></div>
 
+  <button id="tcNextBtn" class="secondary hidden" onclick="continueTCPractice()">
+    Next Question
+  </button>
+
   <div class="center big">
     <span id="tcScore">0</span>/10 in a row
   </div>
@@ -1236,7 +1308,7 @@ button:disabled{
 
   <p class="sub">
     Count the deck in your head. At four random checkpoints, enter the current Running Count.
-    Pass all checkpoints and finish the deck to complete the course.
+    Pass all checkpoints and finish the deck to unlock Stage 7.
   </p>
 
   <div id="deckCheckpointStatus" class="example">
@@ -1292,15 +1364,118 @@ button:disabled{
   <div id="completeMessage" class="hidden">
 
     <h2 class="good center">
-      Course Complete ✓
+      Stage 6 Complete ✓
     </h2>
 
     <p class="sub center">
-      You completed the core Hi-Lo learning path.
-      All stages remain available for review.
+      You passed the full-deck checkpoint test. Stage 7 is now unlocked.
     </p>
 
   </div>
+
+</div>
+
+
+
+<!-- STAGE 7 LESSON -->
+
+<div id="l7" class="box pageScreen hidden">
+
+  <h2>Stage 7 — Quick Lesson</h2>
+
+  <div class="lesson">
+
+    <h3>Using the Count at the Table</h3>
+
+    <p class="sub">
+      Up to now you learned how to keep a Running Count and convert it to a True Count.
+      This stage teaches what those numbers actually change during a blackjack game.
+    </p>
+
+    <div class="example">
+      <b>1. Keep the Running Count continuously</b><br>
+      Never restart after each hand. Keep counting every exposed card until the shoe is shuffled.<br><br>
+      <b>2. Convert to True Count before using the information</b><br>
+      True Count = Running Count ÷ decks remaining.<br><br>
+      <b>3. Use the True Count mainly to size your bet</b><br>
+      A higher positive True Count means the remaining shoe is richer in high cards.
+      In this trainer we use a simple learning ramp:<br>
+      TC ≤ 0 → 1 unit · +1 → 2 units · +2 → 4 units · +3 → 6 units · +4 or higher → 8 units.
+    </div>
+
+    <p class="tip">
+      Count information does <b>not</b> mean changing every blackjack decision.
+      Most hands still follow Basic Strategy. A few well-known count-aware deviations are introduced here,
+      including Insurance around True Count +3 or higher, 16 vs 10 at TC 0+, 15 vs 10 at TC +4,
+      12 vs 3 at TC +2, and 12 vs 2 at TC +3.
+    </p>
+
+    <div class="example">
+      <b>This stage has three parts:</b><br>
+      Part A — Count → Bet<br>
+      Part B — Count → Decision<br>
+      Part C — Full Table Integration
+    </div>
+
+    <p class="small">
+      The bet ramp is a training example for learning how the count connects to wager size. It is not a promise of profit.
+    </p>
+
+  </div>
+
+  <button onclick="startStage7()">
+    Got it — Start Stage 7
+  </button>
+
+</div>
+
+<!-- STAGE 7 PRACTICE -->
+
+<div id="s7" class="box pageScreen hidden">
+
+  <h2>7. Using the Count at the Table</h2>
+
+  <div id="stage7PhaseLabel" class="stage7Phase">Part A — Count → Bet</div>
+  <p id="stage7Instructions" class="sub"></p>
+
+  <div id="stage7Scenario" class="stage7Scenario"></div>
+
+  <div id="stage7TCSection">
+    <input id="stage7TCInput" type="number" inputmode="decimal" placeholder="Enter True Count">
+    <div class="inputAssist">
+      <button type="button" onclick="toggleInputSign('stage7TCInput')">± Change Sign</button>
+    </div>
+    <button id="stage7CheckTCBtn" onclick="stage7CheckTrueCount()">Check True Count</button>
+  </div>
+
+  <div id="stage7BetSection" class="hidden">
+    <p class="small center">Choose the training bet size:</p>
+    <div class="stage7ChoiceGrid">
+      <button onclick="stage7ChooseBet(1)">1 unit</button>
+      <button onclick="stage7ChooseBet(2)">2 units</button>
+      <button onclick="stage7ChooseBet(4)">4 units</button>
+      <button onclick="stage7ChooseBet(6)">6 units</button>
+      <button onclick="stage7ChooseBet(8)">8 units</button>
+    </div>
+  </div>
+
+  <div id="stage7DecisionSection" class="hidden">
+    <p class="small center">Choose the correct play:</p>
+    <div id="stage7DecisionButtons" class="stage7ActionGrid"></div>
+  </div>
+
+  <p id="stage7Message" class="center"></p>
+  <div id="stage7Explain"></div>
+
+  <button id="stage7NextBtn" class="secondary hidden" onclick="stage7NextAfterMistake()">
+    Next Scenario
+  </button>
+
+  <div class="center big">
+    <span id="stage7Score">0</span>/<span id="stage7Target">5</span>
+  </div>
+
+  <p class="small center" id="stage7ScoreLabel">Correct scenarios in this part</p>
 
 </div>
 
@@ -1398,6 +1573,9 @@ var progress={
 
   tcScore:0,
 
+  stage7Part:1,
+  stage7Score:0,
+
   daily:{
     lastVisit:null,
     streak:0,
@@ -1432,6 +1610,8 @@ if(!progress.completed){
 if(typeof progress.stage1Score!=="number"){
   progress.stage1Score=0;
 }
+if(typeof progress.stage7Part!=="number"){ progress.stage7Part=1; }
+if(typeof progress.stage7Score!=="number"){ progress.stage7Score=0; }
 
 if(!progress.daily){
 
@@ -1781,7 +1961,7 @@ function renderStageMenu(){
 
   for(
     let i=1;
-    i<=6;
+    i<=7;
     i++
   ){
 
@@ -1877,7 +2057,7 @@ function hideAll(){
 
   for(
     var i=1;
-    i<=6;
+    i<=7;
     i++
   ){
 
@@ -1912,14 +2092,14 @@ function updateHeader(stage){
   +
   stage
   +
-  " of 6";
+  " of 7";
 
   document
   .getElementById(
     "bar"
   )
   .style.width=
-  ((stage-1)/5*100)
+  ((stage-1)/6*100)
   +
   "%";
 
@@ -2106,13 +2286,16 @@ function showStagePassed(stage){
   var textEl=document.getElementById("passText");
   var next=document.getElementById("passNextButton");
 
-  if(stage<6){
+  if(stage<7){
 
     title.innerText="Stage "+stage+" Passed ✓";
 
     if(stage===1){
       textEl.innerText=
         "You got 15 Hi-Lo answers correct in a row. Stage 2 is now unlocked.";
+    }else if(stage===6){
+      textEl.innerText=
+        "You passed the full-deck checkpoint test. Stage 7 — Using the Count at the Table — is now unlocked.";
     }else{
       textEl.innerText=
         "You completed the practice requirement. Stage "+(stage+1)+" is now unlocked.";
@@ -2123,7 +2306,7 @@ function showStagePassed(stage){
 
     title.innerText="Course Complete ✓";
     textEl.innerText=
-      "You completed the core Hi-Lo learning path. Every stage remains available for review.";
+      "You completed the full Hi-Lo course, including using the count at the table. Every stage remains available for review.";
     next.innerText="Back to Home";
 
   }
@@ -2138,7 +2321,7 @@ function showStagePassed(stage){
 
 function continueAfterPass(){
 
-  if(passedStage>=1 && passedStage<6){
+  if(passedStage>=1 && passedStage<7){
     showLesson(passedStage+1);
   }else{
     showHome();
@@ -2148,7 +2331,7 @@ function continueAfterPass(){
 
 function reviewPassedStage(){
 
-  if(passedStage>=1 && passedStage<=6){
+  if(passedStage>=1 && passedStage<=7){
     showLesson(passedStage);
   }else{
     showHome();
@@ -2222,16 +2405,7 @@ function answerStage1(answer){
     progress.stage1Score++;
     msg.innerText="Correct ✓";
     msg.className="center good";
-
-    var explanation="";
-    if(correct===1){
-      explanation="<b>"+answeredCard+"</b> is a low card (2–6), so Hi-Lo counts it as <b>+1</b>.";
-    }else if(correct===0){
-      explanation="<b>"+answeredCard+"</b> is a neutral card (7–9), so Hi-Lo counts it as <b>0</b>.";
-    }else{
-      explanation="<b>"+answeredCard+"</b> is a high card (10/J/Q/K/A), so Hi-Lo counts it as <b>−1</b>.";
-    }
-    setExplain("stage1Explain",explanation,false);
+    clearExplain("stage1Explain");
   }else{
     progress.stage1Score=0;
     msg.innerText="Not quite — streak reset to 0";
@@ -2252,7 +2426,14 @@ function answerStage1(answer){
 
   if(progress.stage1Score>=15){
     setStage1AnswerButtonsDisabled(true);
-    setTimeout(function(){ showStagePassed(1); },800);
+    setTimeout(function(){ showStagePassed(1); },500);
+  }else if(isCorrect){
+    setStage1AnswerButtonsDisabled(true);
+    setTimeout(function(){
+      msg.innerText="";
+      setStage1AnswerButtonsDisabled(false);
+      nextStage1Card();
+    },350);
   }else{
     stage1WaitingForNext=true;
     setStage1AnswerButtonsDisabled(true);
@@ -2312,16 +2493,7 @@ function answerValue(answer){
     progress.valueScore++;
     msg.innerText="Correct ✓";
     msg.className="center good";
-
-    var explanation="";
-    if(correct===1){
-      explanation=answeredCard+' belongs to the low-card group 2–6, so its value is <b>+1</b>.';
-    }else if(correct===0){
-      explanation=answeredCard+' belongs to the neutral group 7–9, so its value is <b>0</b>.';
-    }else{
-      explanation=answeredCard+' belongs to the high-card group 10/J/Q/K/A, so its value is <b>−1</b>.';
-    }
-    setExplain("valueExplain",explanation,false);
+    clearExplain("valueExplain");
   }else{
     progress.valueScore=0;
     msg.innerText="Not quite — streak reset to 0";
@@ -2341,7 +2513,14 @@ function answerValue(answer){
 
   if(progress.valueScore>=15){
     setValueAnswerButtonsDisabled(true);
-    setTimeout(function(){ showStagePassed(2); },800);
+    setTimeout(function(){ showStagePassed(2); },500);
+  }else if(isCorrect){
+    setValueAnswerButtonsDisabled(true);
+    setTimeout(function(){
+      msg.innerText="";
+      setValueAnswerButtonsDisabled(false);
+      nextValueCard();
+    },350);
   }else{
     valueWaitingForNext=true;
     setValueAnswerButtonsDisabled(true);
@@ -2352,743 +2531,266 @@ function answerValue(answer){
 /* STAGE 3 */
 
 var running=0;
-
 var currentRunningCard;
+var runningWaitingForNext=false;
 
 function startRunning(){
-
   progress.runningScore=0;
+  runningWaitingForNext=false;
   save();
-
   showPractice(3);
-
   running=0;
-
-  document
-  .getElementById(
-    "runningCount"
-  )
-  .innerText=0;
-
-  document
-  .getElementById(
-    "runningScore"
-  )
-  .innerText=
-  Math.min(
-    progress.runningScore,
-    15
-  );
-
-  clearExplain(
-    'runningExplain'
-  );
-
+  document.getElementById("runningCount").innerText=0;
+  document.getElementById("runningScore").innerText=0;
+  document.getElementById("runningMessage").innerText="";
+  document.getElementById("runningInput").value="";
+  document.getElementById("runningNextBtn").classList.add("hidden");
+  clearExplain('runningExplain');
   nextRunningCard();
-
 }
 
 function nextRunningCard(){
+  currentRunningCard=randomCard(document.getElementById("runningCard"));
+  document.getElementById("runningInput").disabled=false;
+}
 
-  currentRunningCard=
-  randomCard(
-    document.getElementById(
-      "runningCard"
-    )
-  );
-
+function continueRunningPractice(){
+  if(!runningWaitingForNext){ return; }
+  runningWaitingForNext=false;
+  document.getElementById("runningMessage").innerText="";
+  document.getElementById("runningNextBtn").classList.add("hidden");
+  clearExplain('runningExplain');
+  nextRunningCard();
 }
 
 function checkRunning(){
+  if(runningWaitingForNext){ return; }
+  var input=document.getElementById("runningInput");
+  if(input.value===""){ return; }
 
-  var input=
-  document.getElementById(
-    "runningInput"
-  );
-
-  if(
-    input.value===""
-  ){
-    return;
-  }
-
-  var before=
-  running;
-
-  var delta=
-  cardValue(
-    currentRunningCard
-  );
-
-  var expected=
-  before+delta;
-
-  var answer=
-  Number(
-    input.value
-  );
-
-  var msg=
-  document.getElementById(
-    "runningMessage"
-  );
-
-  var isCorrect=
-  answer===expected;
-
-  recordDailyAttempt(
-    isCorrect
-  );
+  var before=running;
+  var delta=cardValue(currentRunningCard);
+  var expected=before+delta;
+  var answer=Number(input.value);
+  var msg=document.getElementById("runningMessage");
+  var isCorrect=answer===expected;
+  recordDailyAttempt(isCorrect);
 
   if(isCorrect){
-
     progress.runningScore++;
-
-    msg.innerText=
-    "Correct ✓";
-
-    msg.className=
-    "center good";
-
-    setExplain(
-
-      'runningExplain',
-
-      'Previous count: <b>'
-      +
-      before
-      +
-      '</b><br>'
-      +
-      currentRunningCard
-      +
-      ' is worth <b>'
-      +
-      valueText(delta)
-      +
-      '</b><br>'
-      +
-      'New count: <b>'
-      +
-      before
-      +
-      (
-        delta>=0
-        ?
-        ' + '
-        :
-        ' − '
-      )
-      +
-      Math.abs(delta)
-      +
-      ' = '
-      +
-      expected
-      +
-      '</b>.',
-
-      false
-
-    );
-
-  }
-
-  else{
-
+    msg.innerText="Correct ✓";
+    msg.className="center good";
+    clearExplain('runningExplain');
+  }else{
     progress.runningScore=0;
-
-    msg.innerText=
-    "Not quite — streak reset to 0";
-
-    msg.className=
-    "center bad";
-
+    msg.innerText="Not quite — streak reset to 0";
+    msg.className="center bad";
     setExplain(
-
       'runningExplain',
-
-      'You entered <b>'
-      +
-      answer
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      'The previous Running Count was <b>'
-      +
-      before
-      +
-      '</b>, and '
-      +
-      currentRunningCard
-      +
-      ' is worth <b>'
-      +
-      valueText(delta)
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>Correct step:</b> '
-      +
-      before
-      +
-      (
-        delta>=0
-        ?
-        ' + '
-        :
-        ' − '
-      )
-      +
-      Math.abs(delta)
-      +
-      ' = <b>'
-      +
-      expected
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>Your 15-answer streak has restarted.</b><br><br>'+
-      '<b>What to do instead:</b> '
-      +
-      'always update from the previous total. Do not restart from 0.',
-
+      'You entered <b>'+answer+'</b>.<br><br>'+ 
+      'The previous Running Count was <b>'+before+'</b>, and '+currentRunningCard+
+      ' is worth <b>'+valueText(delta)+'</b>.<br><br>'+ 
+      '<b>Correct step:</b> '+before+(delta>=0?' + ':' − ')+Math.abs(delta)+' = <b>'+expected+'</b>.'+
+      '<br><br><b>Your 15-answer streak has restarted.</b><br><br>'+ 
+      '<b>What to do instead:</b> always update from the previous total. Do not restart from 0.',
       true
-
     );
-
   }
 
-  running=
-  expected;
-
-  document
-  .getElementById(
-    "runningCount"
-  )
-  .innerText=
-  running;
-
-  document
-  .getElementById(
-    "runningScore"
-  )
-  .innerText=
-  Math.min(
-    progress.runningScore,
-    15
-  );
-
+  running=expected;
+  document.getElementById("runningCount").innerText=running;
+  document.getElementById("runningScore").innerText=Math.min(progress.runningScore,15);
   input.value="";
-
   save();
 
-  if(
-    progress.runningScore>=15
-  ){
-
-    setTimeout(
-      function(){
-        showStagePassed(3);
-      },
-      800
-    );
-
+  if(progress.runningScore>=15){
+    input.disabled=true;
+    setTimeout(function(){ showStagePassed(3); },500);
+  }else if(isCorrect){
+    input.disabled=true;
+    setTimeout(function(){
+      msg.innerText="";
+      nextRunningCard();
+    },350);
+  }else{
+    runningWaitingForNext=true;
+    input.disabled=true;
+    document.getElementById("runningNextBtn").classList.remove("hidden");
   }
-
-  else{
-
-    setTimeout(
-      nextRunningCard,
-      900
-    );
-
-  }
-
 }
 
 /* STAGE 4 */
 
 var group=[];
+var groupWaitingForNext=false;
 
 function startGroups(){
-
   progress.groupScore=0;
+  groupWaitingForNext=false;
   save();
-
   showPractice(4);
-
-  document
-  .getElementById(
-    "groupScore"
-  )
-  .innerText=
-  Math.min(
-    progress.groupScore,
-    10
-  );
-
-  clearExplain(
-    'groupExplain'
-  );
-
+  document.getElementById("groupScore").innerText=0;
+  document.getElementById("groupMessage").innerText="";
+  document.getElementById("groupInput").value="";
+  document.getElementById("groupNextBtn").classList.add("hidden");
+  clearExplain('groupExplain');
   nextGroup();
-
 }
 
 function nextGroup(){
-
   group=[];
-
-  var amount=
-  2+
-  Math.floor(
-    Math.random()*3
-  );
-
-  for(
-    var i=0;
-    i<amount;
-    i++
-  ){
-
-    group.push(
-
-      ranks[
-        Math.floor(
-          Math.random()*
-          ranks.length
-        )
-      ]
-
-    );
-
+  var amount=2+Math.floor(Math.random()*3);
+  for(var i=0;i<amount;i++){
+    group.push(ranks[Math.floor(Math.random()*ranks.length)]);
   }
+  document.getElementById("groupCards").innerText=group.join("   ");
+  document.getElementById("groupInput").disabled=false;
+}
 
-  document
-  .getElementById(
-    "groupCards"
-  )
-  .innerText=
-  group.join(
-    "   "
-  );
-
+function continueGroupPractice(){
+  if(!groupWaitingForNext){ return; }
+  groupWaitingForNext=false;
+  document.getElementById("groupMessage").innerText="";
+  document.getElementById("groupNextBtn").classList.add("hidden");
+  clearExplain('groupExplain');
+  nextGroup();
 }
 
 function checkGroup(){
-
-  var input=
-  document.getElementById(
-    "groupInput"
-  );
-
-  if(
-    input.value===""
-  ){
-    return;
-  }
-
-  var vals=
-  group.map(
-    cardValue
-  );
-
-  var expected=
-  vals.reduce(
-    function(a,b){
-      return a+b;
-    },
-    0
-  );
-
-  var answer=
-  Number(
-    input.value
-  );
-
-  var msg=
-  document.getElementById(
-    "groupMessage"
-  );
-
-  var breakdown=
-  group
-  .map(
-    function(r,i){
-
-      return r+
-      ' ('+
-      valueText(
-        vals[i]
-      )
-      +')';
-
-    }
-  )
-  .join(
-    ' + '
-  );
-
-  var isCorrect=
-  answer===expected;
-
-  recordDailyAttempt(
-    isCorrect
-  );
+  if(groupWaitingForNext){ return; }
+  var input=document.getElementById("groupInput");
+  if(input.value===""){ return; }
+  var vals=group.map(cardValue);
+  var expected=vals.reduce(function(a,b){ return a+b; },0);
+  var answer=Number(input.value);
+  var msg=document.getElementById("groupMessage");
+  var breakdown=group.map(function(r,i){ return r+' ('+valueText(vals[i])+')'; }).join(' + ');
+  var isCorrect=answer===expected;
+  recordDailyAttempt(isCorrect);
 
   if(isCorrect){
-
     progress.groupScore++;
-
-    msg.innerText=
-    "Correct ✓";
-
-    msg.className=
-    "center good";
-
-    setExplain(
-
-      'groupExplain',
-
-      breakdown
-      +
-      ' = <b>'
-      +
-      expected
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      'Look for +1 and −1 pairs that cancel each other.',
-
-      false
-
-    );
-
-  }
-
-  else{
-
+    msg.innerText="Correct ✓";
+    msg.className="center good";
+    clearExplain('groupExplain');
+  }else{
     progress.groupScore=0;
-
-    msg.innerText=
-    "Not quite — streak reset to 0";
-
-    msg.className=
-    "center bad";
-
+    msg.innerText="Not quite — streak reset to 0";
+    msg.className="center bad";
     setExplain(
-
       'groupExplain',
-
-      'You entered <b>'
-      +
-      answer
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>Card values:</b><br>'
-      +
-      breakdown
-      +
-      '<br><br>'
-      +
-      '<b>Correct total:</b> '
-      +
-      expected
-      +
-      '<br><br>'
-      +
-      '<b>Your 10-answer streak has restarted.</b><br><br>'+
-      '<b>What to do instead:</b> '
-      +
-      'first cancel any +1 with a −1, then add what remains.',
-
+      'You entered <b>'+answer+'</b>.<br><br><b>Card values:</b><br>'+breakdown+
+      '<br><br><b>Correct total:</b> '+expected+
+      '<br><br><b>Your 10-answer streak has restarted.</b><br><br>'+ 
+      '<b>What to do instead:</b> first cancel any +1 with a −1, then add what remains.',
       true
-
     );
-
   }
 
-  document
-  .getElementById(
-    "groupScore"
-  )
-  .innerText=
-  Math.min(
-    progress.groupScore,
-    10
-  );
-
+  document.getElementById("groupScore").innerText=Math.min(progress.groupScore,10);
   input.value="";
-
   save();
 
-  if(
-    progress.groupScore>=10
-  ){
-
-    setTimeout(
-      function(){
-        showStagePassed(4);
-      },
-      800
-    );
-
+  if(progress.groupScore>=10){
+    input.disabled=true;
+    setTimeout(function(){ showStagePassed(4); },500);
+  }else if(isCorrect){
+    input.disabled=true;
+    setTimeout(function(){
+      msg.innerText="";
+      nextGroup();
+    },350);
+  }else{
+    groupWaitingForNext=true;
+    input.disabled=true;
+    document.getElementById("groupNextBtn").classList.remove("hidden");
   }
-
-  else{
-
-    setTimeout(
-      nextGroup,
-      900
-    );
-
-  }
-
 }
 
 /* STAGE 5 */
 
 var tcRunning;
-
 var tcDecks;
+var tcWaitingForNext=false;
 
 function startTC(){
-
   progress.tcScore=0;
+  tcWaitingForNext=false;
   save();
-
   showPractice(5);
-
-  document
-  .getElementById(
-    "tcScore"
-  )
-  .innerText=
-  Math.min(
-    progress.tcScore,
-    10
-  );
-
-  clearExplain(
-    'tcExplain'
-  );
-
+  document.getElementById("tcScore").innerText=0;
+  document.getElementById("tcMessage").innerText="";
+  document.getElementById("tcInput").value="";
+  document.getElementById("tcNextBtn").classList.add("hidden");
+  clearExplain('tcExplain');
   nextTC();
-
 }
 
 function nextTC(){
+  var decks=[1,2,3,4,5];
+  tcDecks=decks[Math.floor(Math.random()*decks.length)];
+  var trueCount=Math.floor(Math.random()*9)-4;
+  tcRunning=trueCount*tcDecks;
+  document.getElementById("tcRunning").innerText=(tcRunning>0?"+":"")+tcRunning;
+  document.getElementById("tcDecks").innerText=tcDecks;
+  document.getElementById("tcInput").disabled=false;
+}
 
-  var decks=[
-    1,2,3,4,5
-  ];
-
-  tcDecks=
-  decks[
-    Math.floor(
-      Math.random()*
-      decks.length
-    )
-  ];
-
-  var trueCount=
-  Math.floor(
-    Math.random()*9
-  )-4;
-
-  tcRunning=
-  trueCount*
-  tcDecks;
-
-  document
-  .getElementById(
-    "tcRunning"
-  )
-  .innerText=
-  (
-    tcRunning>0
-    ?
-    "+"
-    :
-    ""
-  )
-  +
-  tcRunning;
-
-  document
-  .getElementById(
-    "tcDecks"
-  )
-  .innerText=
-  tcDecks;
-
+function continueTCPractice(){
+  if(!tcWaitingForNext){ return; }
+  tcWaitingForNext=false;
+  document.getElementById("tcMessage").innerText="";
+  document.getElementById("tcNextBtn").classList.add("hidden");
+  clearExplain('tcExplain');
+  nextTC();
 }
 
 function checkTC(){
-
-  var input=
-  document.getElementById(
-    "tcInput"
-  );
-
-  if(
-    input.value===""
-  ){
-    return;
-  }
-
-  var expected=
-  tcRunning/
-  tcDecks;
-
-  var answer=
-  Number(
-    input.value
-  );
-
-  var msg=
-  document.getElementById(
-    "tcMessage"
-  );
-
-  var isCorrect=
-  answer===expected;
-
-  recordDailyAttempt(
-    isCorrect
-  );
+  if(tcWaitingForNext){ return; }
+  var input=document.getElementById("tcInput");
+  if(input.value===""){ return; }
+  var expected=tcRunning/tcDecks;
+  var answer=Number(input.value);
+  var msg=document.getElementById("tcMessage");
+  var isCorrect=answer===expected;
+  recordDailyAttempt(isCorrect);
 
   if(isCorrect){
-
     progress.tcScore++;
-
-    msg.innerText=
-    "Correct ✓";
-
-    msg.className=
-    "center good";
-
-    setExplain(
-
-      'tcExplain',
-
-      'Running Count <b>'
-      +
-      tcRunning
-      +
-      '</b> ÷ <b>'
-      +
-      tcDecks
-      +
-      '</b> decks = True Count <b>'
-      +
-      expected
-      +
-      '</b>.',
-
-      false
-
-    );
-
-  }
-
-  else{
-
+    msg.innerText="Correct ✓";
+    msg.className="center good";
+    clearExplain('tcExplain');
+  }else{
     progress.tcScore=0;
-
-    msg.innerText=
-    "Not quite — streak reset to 0";
-
-    msg.className=
-    "center bad";
-
+    msg.innerText="Not quite — streak reset to 0";
+    msg.className="center bad";
     setExplain(
-
       'tcExplain',
-
-      'You entered <b>'
-      +
-      answer
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>Correct calculation:</b><br>'
-      +
-      tcRunning
-      +
-      ' ÷ '
-      +
-      tcDecks
-      +
-      ' = <b>'
-      +
-      expected
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>Your 10-answer streak has restarted.</b><br><br>'+
-      '<b>What to do instead:</b> '
-      +
-      'divide the Running Count by decks remaining. Do not multiply them.',
-
+      'You entered <b>'+answer+'</b>.<br><br><b>Correct calculation:</b><br>'+tcRunning+' ÷ '+tcDecks+' = <b>'+expected+'</b>.'+
+      '<br><br><b>Your 10-answer streak has restarted.</b><br><br>'+ 
+      '<b>What to do instead:</b> divide the Running Count by decks remaining. Do not multiply them.',
       true
-
     );
-
   }
 
-  document
-  .getElementById(
-    "tcScore"
-  )
-  .innerText=
-  Math.min(
-    progress.tcScore,
-    10
-  );
-
+  document.getElementById("tcScore").innerText=Math.min(progress.tcScore,10);
   input.value="";
-
   save();
 
-  if(
-    progress.tcScore>=10
-  ){
-
-    setTimeout(
-      function(){
-        showStagePassed(5);
-      },
-      800
-    );
-
+  if(progress.tcScore>=10){
+    input.disabled=true;
+    setTimeout(function(){ showStagePassed(5); },500);
+  }else if(isCorrect){
+    input.disabled=true;
+    setTimeout(function(){
+      msg.innerText="";
+      nextTC();
+    },350);
+  }else{
+    tcWaitingForNext=true;
+    input.disabled=true;
+    document.getElementById("tcNextBtn").classList.remove("hidden");
   }
-
-  else{
-
-    setTimeout(
-      nextTC,
-      900
-    );
-
-  }
-
 }
 
 /* STAGE 6 */
@@ -3187,7 +2889,7 @@ function nextDeck(){
       setExplain(
         "deckExplain",
         "You passed all <b>4 random Running Count checkpoints</b> and completed the full deck."+
-        "<br><br>This test cannot be passed simply by knowing that a full Hi-Lo deck ends at 0.",
+        "<br><br>Stage 7 is now unlocked, where you will learn how to use the count at the table.",
         false
       );
       setTimeout(function(){ showStagePassed(6); },900);
@@ -3224,7 +2926,7 @@ function nextDeck(){
     setExplain(
       "deckExplain",
       "You passed all <b>4 random Running Count checkpoints</b> and completed the full deck."+
-      "<br><br>This test cannot be passed simply by knowing that a full Hi-Lo deck ends at 0.",
+      "<br><br>Stage 7 is now unlocked, where you will learn how to use the count at the table.",
       false
     );
     setTimeout(function(){ showStagePassed(6); },900);
@@ -3284,6 +2986,228 @@ function checkDeck(){
     renderDeckCheckpointStatus();
   }
 }
+
+
+/* STAGE 7 */
+
+var stage7Current=null;
+var stage7Step='tc';
+var stage7WaitingForNext=false;
+
+var stage7DecisionScenarios=[
+  {player:'16',dealer:'10',tc:1,answer:'stand',why:'At True Count 0 or higher, the classic Hi-Lo deviation for 16 vs 10 is to stand instead of hit.'},
+  {player:'16',dealer:'10',tc:-1,answer:'hit',why:'Below True Count 0, use the normal Basic Strategy play and hit 16 vs 10.'},
+  {player:'15',dealer:'10',tc:4,answer:'stand',why:'At about True Count +4 or higher, a common Hi-Lo deviation is to stand on 15 vs 10.'},
+  {player:'15',dealer:'10',tc:2,answer:'hit',why:'Below the +4 index, keep the Basic Strategy play and hit 15 vs 10.'},
+  {player:'12',dealer:'3',tc:2,answer:'stand',why:'At about True Count +2 or higher, 12 vs 3 becomes a stand in the common Hi-Lo index set.'},
+  {player:'12',dealer:'3',tc:1,answer:'hit',why:'Below the +2 index, 12 vs 3 remains a hit.'},
+  {player:'12',dealer:'2',tc:3,answer:'stand',why:'At about True Count +3 or higher, 12 vs 2 becomes a stand.'},
+  {player:'12',dealer:'2',tc:1,answer:'hit',why:'Below the +3 index, 12 vs 2 remains a hit.'},
+  {player:'Any hand',dealer:'A',tc:3,answer:'insurance',why:'A common Hi-Lo benchmark is to take Insurance around True Count +3 or higher.'},
+  {player:'Any hand',dealer:'A',tc:1,answer:'noinsurance',why:'Below about True Count +3, Insurance is normally declined.'}
+];
+
+function stage7BetForTC(tc){
+  if(tc<=0){ return 1; }
+  if(tc===1){ return 2; }
+  if(tc===2){ return 4; }
+  if(tc===3){ return 6; }
+  return 8;
+}
+
+function stage7Signed(v){ return (v>0?'+':'')+v; }
+
+function stage7SetPart(part){
+  progress.stage7Part=part;
+  progress.stage7Score=0;
+  save();
+  stage7LoadScenario();
+}
+
+function startStage7(){
+  progress.stage7Part=1;
+  progress.stage7Score=0;
+  save();
+  showPractice(7);
+  stage7LoadScenario();
+}
+
+function stage7ResetUI(){
+  stage7Step='tc';
+  stage7WaitingForNext=false;
+  document.getElementById('stage7TCSection').classList.remove('hidden');
+  document.getElementById('stage7TCInput').value='';
+  document.getElementById('stage7TCInput').disabled=false;
+  document.getElementById('stage7CheckTCBtn').disabled=false;
+  document.getElementById('stage7BetSection').classList.add('hidden');
+  document.getElementById('stage7DecisionSection').classList.add('hidden');
+  document.getElementById('stage7NextBtn').classList.add('hidden');
+  document.getElementById('stage7Message').innerText='';
+  clearExplain('stage7Explain');
+}
+
+function stage7RandomCountScenario(){
+  var decks=[1,2,3,4,5][Math.floor(Math.random()*5)];
+  var tc=Math.floor(Math.random()*9)-3;
+  var rc=tc*decks;
+  return {rc:rc,decks:decks,tc:tc,bet:stage7BetForTC(tc)};
+}
+
+function stage7IntegrationScenario(){
+  var base=stage7DecisionScenarios[Math.floor(Math.random()*stage7DecisionScenarios.length)];
+  var decks=[1,2,3,4,5][Math.floor(Math.random()*5)];
+  var rc=base.tc*decks;
+  return {
+    rc:rc,decks:decks,tc:base.tc,bet:stage7BetForTC(base.tc),
+    player:base.player,dealer:base.dealer,answer:base.answer,why:base.why
+  };
+}
+
+function stage7RenderDecisionButtons(options){
+  var box=document.getElementById('stage7DecisionButtons');
+  box.innerHTML='';
+  options.forEach(function(opt){
+    var b=document.createElement('button');
+    var label={hit:'Hit',stand:'Stand',double:'Double',insurance:'Take Insurance',noinsurance:'No Insurance'}[opt]||opt;
+    b.textContent=label;
+    b.onclick=function(){ stage7ChooseDecision(opt); };
+    box.appendChild(b);
+  });
+}
+
+function stage7LoadScenario(){
+  stage7ResetUI();
+  var part=progress.stage7Part||1;
+  var phase=document.getElementById('stage7PhaseLabel');
+  var instructions=document.getElementById('stage7Instructions');
+  var scenario=document.getElementById('stage7Scenario');
+  var score=document.getElementById('stage7Score');
+  var target=document.getElementById('stage7Target');
+  var scoreLabel=document.getElementById('stage7ScoreLabel');
+  target.innerText='5';
+  score.innerText=Math.min(progress.stage7Score||0,5);
+  scoreLabel.innerText='Correct scenarios in this part';
+
+  if(part===1){
+    phase.innerText='Part A — Count → Bet';
+    instructions.innerText='Convert Running Count to True Count, then choose the training bet size. Get 5 scenarios correct in a row.';
+    stage7Current=stage7RandomCountScenario();
+    scenario.innerHTML='<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+'<br><b>Decks Remaining:</b> '+stage7Current.decks+'<br><br>Step 1: calculate the True Count.';
+  }else if(part===2){
+    phase.innerText='Part B — Count → Decision';
+    instructions.innerText='Use the True Count to decide whether a count-aware deviation applies. Get 5 scenarios correct in a row.';
+    var d=stage7DecisionScenarios[Math.floor(Math.random()*stage7DecisionScenarios.length)];
+    stage7Current={tc:d.tc,player:d.player,dealer:d.dealer,answer:d.answer,why:d.why};
+    document.getElementById('stage7TCSection').classList.add('hidden');
+    document.getElementById('stage7DecisionSection').classList.remove('hidden');
+    stage7Step='decision';
+    scenario.innerHTML='<b>True Count:</b> '+stage7Signed(d.tc)+'<br><b>Player:</b> '+d.player+'<br><b>Dealer:</b> '+d.dealer+'<br><br>What is the correct count-aware play?';
+    stage7RenderDecisionButtons(d.answer==='insurance'||d.answer==='noinsurance' ? ['insurance','noinsurance'] : ['hit','stand']);
+  }else{
+    phase.innerText='Part C — Full Table Integration';
+    instructions.innerText='Do the full sequence: calculate True Count → choose bet → choose the count-aware play. Get 5 full scenarios correct in a row.';
+    stage7Current=stage7IntegrationScenario();
+    scenario.innerHTML='<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+'<br><b>Decks Remaining:</b> '+stage7Current.decks+'<br><b>Player:</b> '+stage7Current.player+'<br><b>Dealer:</b> '+stage7Current.dealer+'<br><br>Step 1: calculate the True Count.';
+  }
+}
+
+function stage7Fail(message,explanation){
+  progress.stage7Score=0;
+  save();
+  document.getElementById('stage7Score').innerText=0;
+  document.getElementById('stage7Message').innerText=message+' — streak reset to 0';
+  document.getElementById('stage7Message').className='center bad';
+  setExplain('stage7Explain',explanation,true);
+  stage7WaitingForNext=true;
+  document.getElementById('stage7TCInput').disabled=true;
+  document.getElementById('stage7CheckTCBtn').disabled=true;
+  document.getElementById('stage7BetSection').classList.add('hidden');
+  document.getElementById('stage7DecisionSection').classList.add('hidden');
+  document.getElementById('stage7NextBtn').classList.remove('hidden');
+}
+
+function stage7CheckTrueCount(){
+  if(stage7WaitingForNext || stage7Step!=='tc'){ return; }
+  var input=document.getElementById('stage7TCInput');
+  if(input.value===''){ return; }
+  var answer=Number(input.value);
+  var correct=answer===stage7Current.tc;
+  recordDailyAttempt(correct);
+  if(!correct){
+    stage7Fail('Not quite','Running Count <b>'+stage7Signed(stage7Current.rc)+'</b> ÷ <b>'+stage7Current.decks+'</b> decks = True Count <b>'+stage7Signed(stage7Current.tc)+'</b>.<br><br>Always convert to True Count before using the count to size a bet or make a count-aware deviation.');
+    return;
+  }
+  document.getElementById('stage7Message').innerText='True Count correct ✓';
+  document.getElementById('stage7Message').className='center good';
+  input.disabled=true;
+  document.getElementById('stage7CheckTCBtn').disabled=true;
+  document.getElementById('stage7BetSection').classList.remove('hidden');
+  stage7Step='bet';
+}
+
+function stage7ChooseBet(units){
+  if(stage7WaitingForNext || stage7Step!=='bet'){ return; }
+  var correct=units===stage7Current.bet;
+  recordDailyAttempt(correct);
+  if(!correct){
+    stage7Fail('Not quite','At True Count <b>'+stage7Signed(stage7Current.tc)+'</b>, the training ramp uses <b>'+stage7Current.bet+' unit'+(stage7Current.bet===1?'':'s')+'</b>.<br><br>Training ramp: TC ≤ 0 → 1, +1 → 2, +2 → 4, +3 → 6, +4+ → 8 units.');
+    return;
+  }
+
+  if((progress.stage7Part||1)===1){
+    stage7CompleteScenario('Correct ✓','True Count '+stage7Signed(stage7Current.tc)+' maps to <b>'+units+' unit'+(units===1?'':'s')+'</b> in this training ramp.');
+    return;
+  }
+
+  document.getElementById('stage7Message').innerText='Bet choice correct ✓';
+  document.getElementById('stage7Message').className='center good';
+  document.getElementById('stage7BetSection').classList.add('hidden');
+  document.getElementById('stage7DecisionSection').classList.remove('hidden');
+  stage7RenderDecisionButtons(stage7Current.answer==='insurance'||stage7Current.answer==='noinsurance' ? ['insurance','noinsurance'] : ['hit','stand']);
+  stage7Step='decision';
+}
+
+function stage7ChooseDecision(action){
+  if(stage7WaitingForNext || stage7Step!=='decision'){ return; }
+  var correct=action===stage7Current.answer;
+  recordDailyAttempt(correct);
+  if(!correct){
+    var label={hit:'HIT',stand:'STAND',insurance:'TAKE INSURANCE',noinsurance:'NO INSURANCE'}[stage7Current.answer]||stage7Current.answer.toUpperCase();
+    stage7Fail('Not quite','Recommended play: <b>'+label+'</b>.<br><br>'+stage7Current.why);
+    return;
+  }
+  stage7CompleteScenario('Correct decision ✓',stage7Current.why);
+}
+
+function stage7CompleteScenario(message,explanation){
+  progress.stage7Score=(progress.stage7Score||0)+1;
+  save();
+  document.getElementById('stage7Score').innerText=Math.min(progress.stage7Score,5);
+  document.getElementById('stage7Message').innerText=message;
+  document.getElementById('stage7Message').className='center good';
+  clearExplain('stage7Explain');
+
+  if(progress.stage7Score>=5){
+    var part=progress.stage7Part||1;
+    if(part<3){
+      document.getElementById('stage7Message').innerText='Part '+String.fromCharCode(64+part)+' complete ✓';
+      setExplain('stage7Explain',explanation+'<br><br><b>Next:</b> '+(part===1?'learn when the count changes specific playing decisions.':'combine count, bet sizing and playing decisions in one table-style sequence.'),false);
+      setTimeout(function(){ stage7SetPart(part+1); },1100);
+    }else{
+      completeStage(7);
+      setExplain('stage7Explain','You completed the full integration section: Running Count → True Count → bet size → count-aware decision.',false);
+      setTimeout(function(){ showStagePassed(7); },900);
+    }
+  }else{
+    setTimeout(stage7LoadScenario,450);
+  }
+}
+
+function stage7NextAfterMistake(){
+  if(!stage7WaitingForNext){ return; }
+  stage7LoadScenario();
+}
+
 
 /* REAL BLACKJACK TABLE TRAINER */
 
@@ -3353,6 +3277,16 @@ function trainerSetBet(amount){
   trainerRenderStats();
 }
 
+function trainerShowShoeNotice(){
+  var el=document.getElementById('trainerShoeNotice');
+  if(!el){ return; }
+  el.classList.remove('hidden');
+  clearTimeout(trainerShowShoeNotice._timer);
+  trainerShowShoeNotice._timer=setTimeout(function(){
+    el.classList.add('hidden');
+  },2200);
+}
+
 function trainerBuildShoe(){
   trainerShoe=[];
 
@@ -3372,6 +3306,7 @@ function trainerBuildShoe(){
   }
 
   trainerRunningCount=0;
+  trainerShowShoeNotice();
 }
 
 function trainerDraw(exposed){
