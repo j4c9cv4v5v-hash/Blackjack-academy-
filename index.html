@@ -224,6 +224,182 @@ input{
 .deltaUp{color:#5eead4}
 .deltaDown{color:#fb7185}
 
+
+.trainerTop{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:12px 0;
+}
+
+.trainerStat{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+}
+
+.trainerStat b{
+  display:block;
+  font-size:22px;
+}
+
+.tableArea{
+  background:linear-gradient(180deg,#0d5b42,#083d2e);
+  border:1px solid #28725d;
+  border-radius:22px;
+  padding:18px;
+  margin:14px 0;
+  min-height:360px;
+}
+
+.handLabel{
+  text-align:center;
+  font-size:13px;
+  opacity:.8;
+  margin:8px 0;
+}
+
+.miniCards{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  min-height:76px;
+}
+
+.miniCard{
+  width:52px;
+  height:72px;
+  border-radius:9px;
+  background:#fff;
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:20px;
+  box-shadow:0 3px 8px rgba(0,0,0,.25);
+}
+
+.miniCard.red{color:#c8203b}
+.miniCard.back{
+  color:white;
+  background:repeating-linear-gradient(45deg,#1f2f4f,#1f2f4f 7px,#31446c 7px,#31446c 14px);
+}
+
+.actionGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.actionGrid button{
+  margin:0;
+}
+
+.coachBox{
+  background:#091322;
+  border:1px solid #34425e;
+  border-radius:14px;
+  padding:14px;
+  line-height:1.5;
+  margin-top:14px;
+}
+
+.coachBox.goodCoach{border-color:#5eead4}
+.coachBox.badCoach{border-color:#fb7185}
+
+.trainerLaunch{
+  background:#fbbf24;
+  color:#2b1b00;
+}
+
+.trainerRule{
+  font-size:12px;
+  color:#b8c4d8;
+  line-height:1.45;
+}
+
+
+.bankrollGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:12px 0;
+}
+.bankrollStat{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:12px;
+  padding:10px 6px;
+  text-align:center;
+}
+.bankrollStat b{
+  display:block;
+  font-size:21px;
+}
+.betControls{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:7px;
+  margin-top:10px;
+}
+.betControls button{
+  margin:0;
+  padding:11px 5px;
+  font-size:14px;
+  background:#22304a;
+  color:white;
+}
+.betLine{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.betLine button{
+  margin:0;
+}
+.specialActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.specialActions button{
+  margin:0;
+  background:#6b4f1d;
+  color:#fff6d6;
+}
+.trainerStatsGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.trainerMiniStat{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:12px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:12px;
+}
+.trainerMiniStat b{
+  display:block;
+  font-size:20px;
+}
+.resultWin{color:#5eead4}
+.resultLoss{color:#fb7185}
+.resultPush{color:#fbbf24}
+@media(max-width:520px){
+  .bankrollGrid{grid-template-columns:repeat(2,1fr)}
+  .betControls{grid-template-columns:repeat(3,1fr)}
+  .trainerStatsGrid{grid-template-columns:repeat(2,1fr)}
+}
+
 @media(max-width:520px){
   .rules{grid-template-columns:1fr}
   .card{height:160px}
@@ -252,6 +428,11 @@ input{
   <p class="small">
     Completed stages stay unlocked so you can review them anytime.
   </p>
+
+  <button class="trainerLaunch" onclick="openRealGame()">
+    ♣ Real Blackjack Table Practice
+  </button>
+  <p class="small center">Available at every stage — play a realistic hand and get feedback after every decision.</p>
 </div>
 
 <div class="box">
@@ -289,6 +470,122 @@ input{
   <p class="small" id="dailySummary">
     Your first training day starts today.
   </p>
+</div>
+
+
+<!-- REAL BLACKJACK TABLE TRAINER -->
+
+<div id="realTrainer" class="box hidden">
+
+  <h2>♣ Real Blackjack Table Practice</h2>
+
+  <p class="sub">
+    Play full blackjack hands while the coach checks your decisions.
+    After every move you will see whether it was correct, what the recommended play was, and why.
+  </p>
+
+  <p class="trainerRule">
+    Training rules: 6-deck shoe, dealer stands on soft 17, blackjack pays 3:2,
+    double after split allowed, late surrender available, insurance offered against a dealer Ace.
+    This is a practice simulator — no real money is used.
+  </p>
+
+  <div class="bankrollGrid">
+    <div class="bankrollStat"><b id="trainerBankroll">$1000</b>Bankroll</div>
+    <div class="bankrollStat"><b id="trainerBet">$10</b>Current bet</div>
+    <div class="bankrollStat"><b id="trainerProfit">$0</b>Session P/L</div>
+    <div class="bankrollStat"><b id="trainerDecisionAcc">—</b>Decision accuracy</div>
+  </div>
+
+  <div class="lesson">
+    <b>Choose your bet</b>
+    <div class="betControls">
+      <button onclick="trainerSetBet(5)">$5</button>
+      <button onclick="trainerSetBet(10)">$10</button>
+      <button onclick="trainerSetBet(25)">$25</button>
+      <button onclick="trainerSetBet(50)">$50</button>
+      <button onclick="trainerSetBet(100)">$100</button>
+    </div>
+    <p class="small center" style="margin-bottom:0">
+      Betting is only for simulation. Your bankroll and statistics are saved on this device.
+    </p>
+  </div>
+
+  <div class="trainerTop">
+    <div class="trainerStat">
+      <b id="trainerRC">0</b>
+      Running Count
+    </div>
+    <div class="trainerStat">
+      <b id="trainerTC">0.0</b>
+      True Count
+    </div>
+    <div class="trainerStat">
+      <b id="trainerCardsLeft">312</b>
+      Cards left
+    </div>
+  </div>
+
+  <div class="tableArea">
+
+    <div class="handLabel">DEALER</div>
+    <div id="trainerDealerCards" class="miniCards"></div>
+    <div id="trainerDealerTotal" class="center small">Showing: —</div>
+
+    <div style="height:26px"></div>
+
+    <div class="handLabel">PLAYER</div>
+    <div id="trainerPlayerCards" class="miniCards"></div>
+    <div id="trainerPlayerTotal" class="center small">Total: —</div>
+
+  </div>
+
+  <div id="trainerInsuranceBox" class="coachBox hidden">
+    <b>Dealer shows an Ace.</b><br>
+    Insurance costs half your main bet and pays 2:1 if the dealer has blackjack.
+    <div class="specialActions">
+      <button onclick="trainerInsurance(true)">Take Insurance</button>
+      <button onclick="trainerInsurance(false)">No Insurance</button>
+    </div>
+  </div>
+
+  <div id="trainerActions" class="actionGrid">
+    <button onclick="trainerAction('hit')">Hit</button>
+    <button onclick="trainerAction('stand')">Stand</button>
+    <button id="trainerDoubleBtn" onclick="trainerAction('double')">Double</button>
+    <button id="trainerSplitBtn" onclick="trainerAction('split')">Split</button>
+  </div>
+
+  <div id="trainerSpecialActions" class="specialActions">
+    <button id="trainerSurrenderBtn" onclick="trainerAction('surrender')">Surrender</button>
+    <button onclick="trainerShowHint()">Hint</button>
+  </div>
+
+  <button id="trainerNextBtn" class="secondary hidden" onclick="trainerNewRound()">
+    Deal Next Hand
+  </button>
+
+  <div id="trainerCoach" class="coachBox">
+    Make your decision. The explanation will appear here after you act.
+  </div>
+
+  <div class="trainerStatsGrid">
+    <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
+    <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
+    <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
+    <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
+    <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
+    <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
+  </div>
+
+  <button class="secondary" onclick="trainerResetStats()">
+    Reset Table Stats & Bankroll
+  </button>
+
+  <button class="secondary" onclick="showLesson(progress.stage||1)">
+    Back to Course
+  </button>
+
 </div>
 
 <!-- STAGE 1 LESSON -->
@@ -1290,7 +1587,7 @@ function renderStageMenu(){
     b.onclick=
     function(){
 
-      showLesson(i);
+      openStage(i);
 
     };
 
@@ -1301,6 +1598,9 @@ function renderStageMenu(){
 }
 
 function hideAll(){
+
+  var trainer=document.getElementById("realTrainer");
+  if(trainer){ trainer.classList.add("hidden"); }
 
   for(
     var i=1;
@@ -1383,10 +1683,37 @@ function showLesson(stage){
 
   save();
 
-  window.scrollTo(
-    0,
-    0
-  );
+  setTimeout(function(){
+    var el=document.getElementById("l"+stage);
+    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
+  },50);
+
+}
+
+function openStage(stage){
+
+  if(!isUnlocked(stage)){
+    return;
+  }
+
+  if(stage===1){
+    startStage1();
+  }
+  else if(stage===2){
+    startValues();
+  }
+  else if(stage===3){
+    startRunning();
+  }
+  else if(stage===4){
+    startGroups();
+  }
+  else if(stage===5){
+    startTC();
+  }
+  else if(stage===6){
+    startDeck();
+  }
 
 }
 
@@ -1414,10 +1741,10 @@ function showPractice(stage){
 
   save();
 
-  window.scrollTo(
-    0,
-    0
-  );
+  setTimeout(function(){
+    var el=document.getElementById("s"+stage);
+    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
+  },50);
 
 }
 
@@ -2698,6 +3025,835 @@ function checkDeck(){
 
 }
 
+
+/* REAL BLACKJACK TABLE TRAINER */
+
+var trainerShoe=[];
+var trainerRunningCount=0;
+var trainerDealer=[];
+var trainerHands=[];
+var trainerHandBets=[];
+var trainerHandIndex=0;
+var trainerSplitUsed=false;
+var trainerRoundFinished=false;
+var trainerInsurancePending=false;
+var trainerInsuranceBet=0;
+var trainerCurrentBet=10;
+var trainerRoundStartBankroll=0;
+var trainerFirstDecision=true;
+
+var trainerStats={
+  bankroll:1000,
+  startingBankroll:1000,
+  hands:0,
+  wins:0,
+  losses:0,
+  pushes:0,
+  correctDecisions:0,
+  mistakes:0
+};
+
+try{
+  var savedTrainer=localStorage.getItem("blackjackTrainerV2");
+  if(savedTrainer){
+    var tp=JSON.parse(savedTrainer);
+    if(tp.stats){ trainerStats=Object.assign(trainerStats,tp.stats); }
+    if(tp.currentBet){ trainerCurrentBet=tp.currentBet; }
+  }
+}catch(e){}
+
+function trainerSave(){
+  try{
+    localStorage.setItem("blackjackTrainerV2",JSON.stringify({
+      stats:trainerStats,
+      currentBet:trainerCurrentBet
+    }));
+  }catch(e){}
+}
+
+function trainerMoney(v){
+  var sign=v<0?'-':'';
+  return sign+'$'+Math.abs(v).toFixed(v%1===0?0:2);
+}
+
+function trainerSetBet(amount){
+  if(!trainerRoundFinished && trainerHands.length){
+    document.getElementById('trainerCoach').innerHTML=
+      '<b>Finish the current hand first.</b><br>You can change the bet before the next deal.';
+    return;
+  }
+
+  if(amount>trainerStats.bankroll){
+    document.getElementById('trainerCoach').innerHTML=
+      '<b class="bad">Bet too large.</b><br>Your simulated bankroll is '+trainerMoney(trainerStats.bankroll)+'.';
+    return;
+  }
+
+  trainerCurrentBet=amount;
+  trainerSave();
+  trainerRenderStats();
+}
+
+function trainerBuildShoe(){
+  trainerShoe=[];
+
+  for(var d=0;d<6;d++){
+    for(var s=0;s<4;s++){
+      for(var r=0;r<ranks.length;r++){
+        trainerShoe.push({rank:ranks[r],suit:suits[s]});
+      }
+    }
+  }
+
+  for(var i=trainerShoe.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=trainerShoe[i];
+    trainerShoe[i]=trainerShoe[j];
+    trainerShoe[j]=t;
+  }
+
+  trainerRunningCount=0;
+}
+
+function trainerDraw(exposed){
+  if(trainerShoe.length<52){
+    trainerBuildShoe();
+  }
+
+  var c=trainerShoe.pop();
+
+  if(exposed){
+    trainerRunningCount+=cardValue(c.rank);
+  }
+
+  return c;
+}
+
+function trainerCardNumber(rank){
+  if(rank==='A'){ return 11; }
+  if(['10','J','Q','K'].includes(rank)){ return 10; }
+  return Number(rank);
+}
+
+function trainerHandValue(hand){
+  var total=0;
+  var aces=0;
+
+  hand.forEach(function(c){
+    total+=trainerCardNumber(c.rank);
+    if(c.rank==='A'){ aces++; }
+  });
+
+  while(total>21 && aces>0){
+    total-=10;
+    aces--;
+  }
+
+  return {total:total,soft:aces>0};
+}
+
+function trainerDealerUpValue(){
+  var r=trainerDealer[0].rank;
+  if(r==='A'){ return 11; }
+  return trainerCardNumber(r);
+}
+
+function trainerIsPair(hand){
+  if(hand.length!==2){ return false; }
+  return trainerCardNumber(hand[0].rank)===trainerCardNumber(hand[1].rank);
+}
+
+function trainerCanSurrender(hand){
+  return trainerHands.length===1 &&
+         trainerHandIndex===0 &&
+         hand.length===2 &&
+         trainerFirstDecision;
+}
+
+/* S17 basic-strategy trainer with DAS and late surrender. */
+function trainerRecommendation(hand){
+  var hv=trainerHandValue(hand);
+  var total=hv.total;
+  var dealer=trainerDealerUpValue();
+  var canDouble=hand.length===2;
+  var canSplit=trainerIsPair(hand) && !trainerSplitUsed;
+
+  if(trainerCanSurrender(hand) && !trainerIsPair(hand)){
+    if(total===16 && (dealer===9 || dealer===10 || dealer===11)){ return 'surrender'; }
+    if(total===15 && dealer===10){ return 'surrender'; }
+  }
+
+  if(canSplit){
+    var pair=trainerCardNumber(hand[0].rank);
+
+    if(pair===11){ return 'split'; }
+    if(pair===10){ return 'stand'; }
+    if(pair===9){ return [2,3,4,5,6,8,9].includes(dealer)?'split':'stand'; }
+    if(pair===8){ return 'split'; }
+    if(pair===7){ return dealer>=2 && dealer<=7?'split':'hit'; }
+    if(pair===6){ return dealer>=2 && dealer<=6?'split':'hit'; }
+    if(pair===5){
+      if(dealer>=2 && dealer<=9 && canDouble){ return 'double'; }
+      return 'hit';
+    }
+    if(pair===4){ return dealer===5 || dealer===6?'split':'hit'; }
+    if(pair===3 || pair===2){ return dealer>=2 && dealer<=7?'split':'hit'; }
+  }
+
+  if(hv.soft && total<=21){
+    if(total>=20){ return 'stand'; }
+
+    if(total===19){
+      if(dealer===6 && canDouble){ return 'double'; }
+      return 'stand';
+    }
+
+    if(total===18){
+      if(dealer>=3 && dealer<=6 && canDouble){ return 'double'; }
+      if(dealer===2 || dealer===7 || dealer===8){ return 'stand'; }
+      return 'hit';
+    }
+
+    if(total===17){
+      if(dealer>=3 && dealer<=6 && canDouble){ return 'double'; }
+      return 'hit';
+    }
+
+    if(total===16 || total===15){
+      if(dealer>=4 && dealer<=6 && canDouble){ return 'double'; }
+      return 'hit';
+    }
+
+    if(total===14 || total===13){
+      if((dealer===5 || dealer===6) && canDouble){ return 'double'; }
+      return 'hit';
+    }
+  }
+
+  if(total>=17){ return 'stand'; }
+  if(total>=13 && total<=16){ return dealer>=2 && dealer<=6?'stand':'hit'; }
+  if(total===12){ return dealer>=4 && dealer<=6?'stand':'hit'; }
+
+  if(total===11){
+    if(dealer!==11 && canDouble){ return 'double'; }
+    return 'hit';
+  }
+
+  if(total===10){
+    if(dealer>=2 && dealer<=9 && canDouble){ return 'double'; }
+    return 'hit';
+  }
+
+  if(total===9){
+    if(dealer>=3 && dealer<=6 && canDouble){ return 'double'; }
+    return 'hit';
+  }
+
+  return 'hit';
+}
+
+function trainerDecisionWhy(action,hand){
+  var hv=trainerHandValue(hand);
+  var dealer=trainerDealerUpValue();
+  var dealerText=dealer===11?'A':dealer;
+
+  if(action==='surrender'){
+    return 'This is one of the late-surrender situations where giving up half the bet loses less on average than playing the hand out.';
+  }
+
+  if(action==='split'){
+    return 'This pair has better expected value as two separate hands against the dealer’s '+dealerText+'.';
+  }
+
+  if(action==='double'){
+    return 'This is a favorable doubling situation: you have enough advantage to justify doubling the wager for exactly one more card.';
+  }
+
+  if(action==='stand'){
+    if(hv.total>=17){
+      return 'Your hand is strong enough, and another card creates unnecessary bust risk.';
+    }
+    return 'The dealer’s '+dealerText+' is weak enough that standing is the higher-percentage basic-strategy play.';
+  }
+
+  if(action==='hit'){
+    if(hv.total<=11){
+      return 'You cannot bust with one additional card from this total, so taking another card is correct.';
+    }
+    return 'Against the dealer’s '+dealerText+', this hand is too weak to stand profitably, so basic strategy calls for a hit.';
+  }
+
+  return '';
+}
+
+function trainerRenderCard(c,hidden){
+  if(hidden){
+    return '<div class="miniCard back">◆</div>';
+  }
+
+  var red=(c.suit==='♥'||c.suit==='♦')?' red':'';
+  return '<div class="miniCard'+red+'">'+c.rank+c.suit+'</div>';
+}
+
+function trainerRenderStats(){
+  var profit=trainerStats.bankroll-trainerStats.startingBankroll;
+  var decisions=trainerStats.correctDecisions+trainerStats.mistakes;
+  var acc=decisions?Math.round(trainerStats.correctDecisions/decisions*100)+'%':'—';
+
+  document.getElementById('trainerBankroll').innerText=trainerMoney(trainerStats.bankroll);
+  document.getElementById('trainerBet').innerText=trainerMoney(trainerCurrentBet);
+  document.getElementById('trainerProfit').innerText=(profit>0?'+':'')+trainerMoney(profit);
+  document.getElementById('trainerDecisionAcc').innerText=acc;
+
+  document.getElementById('trainerHandsStat').innerText=trainerStats.hands;
+  document.getElementById('trainerWinsStat').innerText=trainerStats.wins;
+  document.getElementById('trainerLossesStat').innerText=trainerStats.losses;
+  document.getElementById('trainerPushesStat').innerText=trainerStats.pushes;
+  document.getElementById('trainerCorrectStat').innerText=trainerStats.correctDecisions;
+  document.getElementById('trainerMistakesStat').innerText=trainerStats.mistakes;
+}
+
+function trainerRender(){
+  var dealerEl=document.getElementById('trainerDealerCards');
+  var playerEl=document.getElementById('trainerPlayerCards');
+
+  dealerEl.innerHTML='';
+  playerEl.innerHTML='';
+
+  trainerDealer.forEach(function(c,i){
+    dealerEl.innerHTML+=trainerRenderCard(c,i===1 && !trainerRoundFinished);
+  });
+
+  var current=trainerHands[trainerHandIndex] || trainerHands[0] || [];
+
+  if(trainerHands.length>1){
+    trainerHands.forEach(function(hand,idx){
+      playerEl.innerHTML+='<div style="width:100%;text-align:center;font-size:12px;opacity:.8">Hand '+(idx+1)+(idx===trainerHandIndex && !trainerRoundFinished?' • current':'')+'</div>';
+      hand.forEach(function(c){
+        playerEl.innerHTML+=trainerRenderCard(c,false);
+      });
+    });
+  }else{
+    current.forEach(function(c){
+      playerEl.innerHTML+=trainerRenderCard(c,false);
+    });
+  }
+
+  var up=trainerDealer.length?trainerCardNumber(trainerDealer[0].rank):0;
+
+  document.getElementById('trainerDealerTotal').innerText=
+    trainerRoundFinished && trainerDealer.length
+    ? 'Total: '+trainerHandValue(trainerDealer).total
+    : 'Showing: '+(up===11?'A / 11':up);
+
+  document.getElementById('trainerPlayerTotal').innerText=
+    current.length
+    ? 'Current hand total: '+trainerHandValue(current).total
+    : 'Total: —';
+
+  document.getElementById('trainerRC').innerText=
+    (trainerRunningCount>0?'+':'')+trainerRunningCount;
+
+  var decksRemaining=Math.max(trainerShoe.length/52,0.25);
+  var tc=trainerRunningCount/decksRemaining;
+
+  document.getElementById('trainerTC').innerText=
+    (tc>0?'+':'')+tc.toFixed(1);
+
+  document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
+
+  var splitBtn=document.getElementById('trainerSplitBtn');
+  var doubleBtn=document.getElementById('trainerDoubleBtn');
+  var surrenderBtn=document.getElementById('trainerSurrenderBtn');
+
+  if(current.length && !trainerRoundFinished){
+    splitBtn.disabled=!(trainerIsPair(current) && !trainerSplitUsed && current.length===2);
+    doubleBtn.disabled=current.length!==2 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
+    surrenderBtn.disabled=!trainerCanSurrender(current);
+  }else{
+    splitBtn.disabled=true;
+    doubleBtn.disabled=true;
+    surrenderBtn.disabled=true;
+  }
+
+  trainerRenderStats();
+}
+
+function openRealGame(){
+  hideAll();
+
+  progress.mode='trainer';
+  save();
+
+  var el=document.getElementById('realTrainer');
+  el.classList.remove('hidden');
+
+  if(trainerShoe.length===0){
+    trainerBuildShoe();
+  }
+
+  if(trainerHands.length===0 || trainerRoundFinished){
+    trainerNewRound();
+  }else{
+    trainerRender();
+  }
+
+  setTimeout(function(){
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
+function trainerNewRound(){
+  if(trainerShoe.length<60){
+    trainerBuildShoe();
+  }
+
+  if(trainerStats.bankroll<trainerCurrentBet){
+    trainerCurrentBet=Math.max(5,Math.floor(trainerStats.bankroll/5)*5);
+  }
+
+  if(trainerCurrentBet<=0 || trainerStats.bankroll<trainerCurrentBet){
+    document.getElementById('trainerCoach').innerHTML=
+      '<b class="bad">Simulated bankroll exhausted.</b><br>Reset the table stats to start again.';
+    document.getElementById('trainerActions').classList.add('hidden');
+    document.getElementById('trainerSpecialActions').classList.add('hidden');
+    return;
+  }
+
+  trainerDealer=[];
+  trainerHands=[];
+  trainerHandBets=[];
+  trainerHandIndex=0;
+  trainerSplitUsed=false;
+  trainerRoundFinished=false;
+  trainerInsurancePending=false;
+  trainerInsuranceBet=0;
+  trainerFirstDecision=true;
+
+  trainerRoundStartBankroll=trainerStats.bankroll;
+  trainerStats.bankroll-=trainerCurrentBet;
+
+  var p1=trainerDraw(true);
+  var d1=trainerDraw(true);
+  var p2=trainerDraw(true);
+  var d2=trainerDraw(false);
+
+  trainerHands=[[p1,p2]];
+  trainerHandBets=[trainerCurrentBet];
+  trainerDealer=[d1,d2];
+
+  document.getElementById('trainerActions').classList.remove('hidden');
+  document.getElementById('trainerSpecialActions').classList.remove('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+
+  document.getElementById('trainerCoach').className='coachBox';
+  document.getElementById('trainerCoach').innerHTML=
+    '<b>Your move.</b><br>Choose the best play. The coach will explain your decision afterward.';
+
+  trainerRender();
+  trainerSave();
+
+  var dealerUp=trainerDealerUpValue();
+
+  /* Dealer Ace: insurance decision comes before blackjack check. */
+  if(dealerUp===11){
+    trainerInsurancePending=true;
+    document.getElementById('trainerInsuranceBox').classList.remove('hidden');
+    document.getElementById('trainerActions').classList.add('hidden');
+    document.getElementById('trainerSpecialActions').classList.add('hidden');
+
+    document.getElementById('trainerCoach').innerHTML=
+      '<b>Insurance decision first.</b><br>Use the running/true count and decide whether insurance is justified.';
+    return;
+  }
+
+  /* Dealer 10-value card: peek immediately. */
+  if(dealerUp===10 && trainerHandValue(trainerDealer).total===21){
+    trainerRevealHole();
+    trainerResolveDealerBlackjack();
+    return;
+  }
+
+  /* Player natural blackjack if dealer does not have blackjack. */
+  if(trainerHandValue(trainerHands[0]).total===21){
+    trainerRevealHole();
+    trainerFinishNaturalBlackjack();
+  }
+}
+
+function trainerInsurance(takeIt){
+  if(!trainerInsurancePending){ return; }
+
+  var decksRemaining=Math.max(trainerShoe.length/52,0.25);
+  var tc=trainerRunningCount/decksRemaining;
+  var recommended=tc>=3;
+  var correct=(takeIt===recommended);
+
+  trainerRecordDecision(correct);
+
+  var cost=trainerCurrentBet/2;
+
+  if(takeIt){
+    if(trainerStats.bankroll>=cost){
+      trainerStats.bankroll-=cost;
+      trainerInsuranceBet=cost;
+    }else{
+      takeIt=false;
+      trainerInsuranceBet=0;
+    }
+  }
+
+  var dealerBJ=trainerHandValue(trainerDealer).total===21;
+  var coach=document.getElementById('trainerCoach');
+  coach.className='coachBox '+(correct?'goodCoach':'badCoach');
+
+  coach.innerHTML=
+    '<b class="'+(correct?'good':'bad')+'">'+
+    (correct?'Good insurance decision ✓':'Insurance decision could be improved')+
+    '</b><br>'+
+    'Current True Count: <b>'+(tc>0?'+':'')+tc.toFixed(1)+'</b>.<br>'+
+    (recommended
+      ? 'With Hi-Lo, a common practical benchmark is to take insurance around True Count +3 or higher because tens are rich enough in the remaining shoe.'
+      : 'Below about True Count +3, insurance is usually a negative-expectation side bet and should normally be declined.'
+    );
+
+  trainerInsurancePending=false;
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+
+  trainerRevealHole();
+
+  if(dealerBJ){
+    if(trainerInsuranceBet>0){
+      trainerStats.bankroll+=trainerInsuranceBet*3; /* return stake + 2:1 win */
+      coach.innerHTML+='<br><br><b>Dealer has blackjack.</b> Your insurance bet wins 2:1.';
+    }else{
+      coach.innerHTML+='<br><br><b>Dealer has blackjack.</b>';
+    }
+
+    trainerResolveDealerBlackjack();
+    return;
+  }
+
+  if(trainerInsuranceBet>0){
+    coach.innerHTML+='<br><br>Dealer does not have blackjack, so the insurance bet loses.';
+  }
+
+  if(trainerHandValue(trainerHands[0]).total===21){
+    trainerFinishNaturalBlackjack();
+    return;
+  }
+
+  document.getElementById('trainerActions').classList.remove('hidden');
+  document.getElementById('trainerSpecialActions').classList.remove('hidden');
+  trainerRender();
+  trainerSave();
+}
+
+function trainerRevealHole(){
+  if(!trainerRoundFinished && trainerDealer.length>1){
+    trainerRunningCount+=cardValue(trainerDealer[1].rank);
+  }
+}
+
+function trainerResolveDealerBlackjack(){
+  trainerRoundFinished=true;
+  var playerBJ=trainerHandValue(trainerHands[0]).total===21;
+
+  if(playerBJ){
+    trainerStats.bankroll+=trainerCurrentBet;
+    trainerStats.pushes++;
+    trainerStats.hands++;
+    trainerShowRoundEnd('Push — both player and dealer have blackjack.','resultPush');
+  }else{
+    trainerStats.losses++;
+    trainerStats.hands++;
+    trainerShowRoundEnd('Dealer blackjack — main bet loses.','resultLoss');
+  }
+
+  trainerRender();
+  trainerSave();
+}
+
+function trainerFinishNaturalBlackjack(){
+  trainerRoundFinished=true;
+
+  var winAmount=trainerCurrentBet*2.5; /* return bet + 3:2 profit */
+  trainerStats.bankroll+=winAmount;
+  trainerStats.wins++;
+  trainerStats.hands++;
+
+  trainerShowRoundEnd(
+    'Blackjack! Your '+trainerMoney(trainerCurrentBet)+' bet pays 3:2. Profit: '+trainerMoney(trainerCurrentBet*1.5)+'.',
+    'resultWin'
+  );
+
+  trainerRender();
+  trainerSave();
+}
+
+function trainerRecordDecision(correct){
+  recordDailyAttempt(correct);
+
+  if(correct){
+    trainerStats.correctDecisions++;
+  }else{
+    trainerStats.mistakes++;
+  }
+
+  trainerSave();
+  trainerRenderStats();
+}
+
+function trainerShowHint(){
+  if(trainerRoundFinished || trainerInsurancePending){ return; }
+
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand){ return; }
+
+  var rec=trainerRecommendation(hand);
+
+  document.getElementById('trainerCoach').className='coachBox';
+  document.getElementById('trainerCoach').innerHTML=
+    '<b>Hint:</b> Basic strategy recommends <b>'+rec.toUpperCase()+'</b> here.<br><span class="small">Hints do not count as a correct or incorrect decision.</span>';
+}
+
+function trainerAction(action){
+  if(trainerRoundFinished || trainerInsurancePending){ return; }
+
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand){ return; }
+
+  var recommended=trainerRecommendation(hand);
+  var correct=action===recommended;
+  var oldHand=hand.slice();
+
+  trainerRecordDecision(correct);
+
+  var coach=document.getElementById('trainerCoach');
+  coach.className='coachBox '+(correct?'goodCoach':'badCoach');
+
+  coach.innerHTML=
+    '<b class="'+(correct?'good':'bad')+'">'+
+    (correct?'Correct decision ✓':'Not the best decision')+
+    '</b><br>'+
+    'You chose <b>'+action.toUpperCase()+'</b>. '+
+    (correct
+      ? 'Basic strategy agrees with that play.'
+      : 'The recommended play is <b>'+recommended.toUpperCase()+'</b>.'
+    )+
+    '<br><br><b>Why:</b> '+trainerDecisionWhy(recommended,oldHand);
+
+  trainerFirstDecision=false;
+
+  if(action==='surrender'){
+    if(oldHand.length!==2 || trainerHands.length!==1 || trainerHandIndex!==0){
+      return;
+    }
+
+    trainerStats.bankroll+=trainerHandBets[trainerHandIndex]/2;
+    trainerStats.losses++;
+    trainerStats.hands++;
+
+    trainerRoundFinished=true;
+    trainerRevealHole();
+
+    coach.innerHTML+='<br><br><b>Result:</b> You surrender and receive half the original wager back.';
+    trainerEndControls();
+    trainerRender();
+    trainerSave();
+    return;
+  }
+
+  if(action==='hit'){
+    hand.push(trainerDraw(true));
+
+    if(trainerHandValue(hand).total>21){
+      coach.innerHTML+='<br><br><b>Result:</b> This hand busted.';
+      trainerAdvanceHand();
+    }
+  }
+
+  else if(action==='stand'){
+    trainerAdvanceHand();
+  }
+
+  else if(action==='double'){
+    var addBet=trainerHandBets[trainerHandIndex];
+
+    if(hand.length!==2 || trainerStats.bankroll<addBet){ return; }
+
+    trainerStats.bankroll-=addBet;
+    trainerHandBets[trainerHandIndex]+=addBet;
+
+    hand.push(trainerDraw(true));
+
+    coach.innerHTML+='<br><br><b>Double:</b> your wager is doubled, one final card is dealt, then the hand stands.';
+    trainerAdvanceHand();
+  }
+
+  else if(action==='split'){
+    if(!trainerIsPair(hand) || trainerSplitUsed){ return; }
+
+    var secondBet=trainerHandBets[trainerHandIndex];
+
+    if(trainerStats.bankroll<secondBet){
+      coach.innerHTML+='<br><br><b class="bad">Not enough simulated bankroll to fund the second split hand.</b>';
+      return;
+    }
+
+    trainerStats.bankroll-=secondBet;
+    trainerSplitUsed=true;
+
+    var first=[hand[0],trainerDraw(true)];
+    var second=[hand[1],trainerDraw(true)];
+
+    trainerHands.splice(trainerHandIndex,1,first,second);
+    trainerHandBets.splice(trainerHandIndex,1,secondBet,secondBet);
+
+    if(first[0].rank==='A'){
+      coach.innerHTML+='<br><br><b>Split aces:</b> each ace receives one card and automatically stands.';
+      trainerHandIndex=trainerHands.length-1;
+      trainerFinishAllHands();
+    }
+  }
+
+  trainerRender();
+  trainerSave();
+}
+
+function trainerAdvanceHand(){
+  if(trainerHandIndex<trainerHands.length-1){
+    trainerHandIndex++;
+    trainerFirstDecision=true;
+    trainerRender();
+    return;
+  }
+
+  trainerFinishAllHands();
+}
+
+function trainerFinishAllHands(){
+  if(trainerRoundFinished){ return; }
+
+  trainerRoundFinished=true;
+  trainerRevealHole();
+
+  var allBusted=trainerHands.every(function(h){
+    return trainerHandValue(h).total>21;
+  });
+
+  if(!allBusted){
+    while(true){
+      var dv=trainerHandValue(trainerDealer);
+
+      if(dv.total<17){
+        trainerDealer.push(trainerDraw(true));
+        continue;
+      }
+
+      break;
+    }
+  }
+
+  var dealerTotal=trainerHandValue(trainerDealer).total;
+  var results=[];
+
+  trainerHands.forEach(function(hand,idx){
+    var pt=trainerHandValue(hand).total;
+    var bet=trainerHandBets[idx];
+    var result='';
+    var css='';
+
+    trainerStats.hands++;
+
+    if(pt>21){
+      result='Bust — loss '+trainerMoney(bet);
+      trainerStats.losses++;
+      css='resultLoss';
+    }
+    else if(dealerTotal>21){
+      trainerStats.bankroll+=bet*2;
+      result='Dealer bust — win '+trainerMoney(bet);
+      trainerStats.wins++;
+      css='resultWin';
+    }
+    else if(pt>dealerTotal){
+      trainerStats.bankroll+=bet*2;
+      result='Win '+trainerMoney(bet);
+      trainerStats.wins++;
+      css='resultWin';
+    }
+    else if(pt<dealerTotal){
+      result='Loss '+trainerMoney(bet);
+      trainerStats.losses++;
+      css='resultLoss';
+    }
+    else{
+      trainerStats.bankroll+=bet;
+      result='Push — bet returned';
+      trainerStats.pushes++;
+      css='resultPush';
+    }
+
+    results.push('<span class="'+css+'">Hand '+(idx+1)+': '+pt+' → '+result+'</span>');
+  });
+
+  var coach=document.getElementById('trainerCoach');
+
+  coach.innerHTML+=
+    '<br><br><b>Round result:</b><br>'+
+    results.join('<br>')+
+    '<br>Dealer: '+dealerTotal+
+    '<br><br><span class="small">The Running Count now includes every exposed card from the completed round.</span>';
+
+  trainerEndControls();
+  trainerRender();
+  trainerSave();
+}
+
+function trainerShowRoundEnd(message,cssClass){
+  var coach=document.getElementById('trainerCoach');
+  coach.className='coachBox';
+  coach.innerHTML='<b class="'+cssClass+'">'+message+'</b>';
+  trainerEndControls();
+}
+
+function trainerEndControls(){
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.remove('hidden');
+}
+
+function trainerResetStats(){
+  if(!confirm('Reset simulated bankroll and all table statistics?')){
+    return;
+  }
+
+  trainerStats={
+    bankroll:1000,
+    startingBankroll:1000,
+    hands:0,
+    wins:0,
+    losses:0,
+    pushes:0,
+    correctDecisions:0,
+    mistakes:0
+  };
+
+  trainerCurrentBet=10;
+  trainerShoe=[];
+  trainerHands=[];
+  trainerDealer=[];
+  trainerRoundFinished=true;
+  trainerSave();
+  trainerRenderStats();
+  trainerBuildShoe();
+  trainerNewRound();
+}
+
+
 /* RESET */
 
 function resetCourse(){
@@ -2772,7 +3928,13 @@ initDailyTracking();
 
 renderStageMenu();
 
-if(
+if(progress.mode==='trainer'){
+
+  openRealGame();
+
+}
+
+else if(
   progress.mode==='practice'
 ){
 
