@@ -178,6 +178,22 @@ input{
 .good{color:#5eead4}
 .bad{color:#fb7185}
 
+.inputAssist{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:8px
+}
+.inputAssist button{
+  margin:0;
+  background:#22304a;
+  color:white
+}
+button:disabled{
+  opacity:.38;
+  cursor:not-allowed
+}
+
 .stageMenu{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -690,8 +706,8 @@ button:disabled{
   </div>
 
   <div id="trainerActions" class="actionGrid">
-    <button onclick="trainerAction('hit')">Hit</button>
-    <button onclick="trainerAction('stand')">Stand</button>
+    <button id="trainerHitBtn" onclick="trainerAction('hit')">Hit</button>
+    <button id="trainerStandBtn" onclick="trainerAction('stand')">Stand</button>
     <button id="trainerDoubleBtn" onclick="trainerAction('double')">Double</button>
     <button id="trainerSplitBtn" onclick="trainerAction('split')">Split</button>
   </div>
@@ -814,7 +830,7 @@ button:disabled{
 
   <div id="stage1Card" class="card">?</div>
 
-  <div class="buttons">
+  <div id="stage1AnswerButtons" class="buttons">
 
     <button onclick="answerStage1(1)">
       +1
@@ -833,6 +849,10 @@ button:disabled{
   <p id="stage1Message" class="center"></p>
 
   <div id="stage1Explain"></div>
+
+  <button id="stage1NextBtn" class="secondary hidden" onclick="continueStage1Practice()">
+    Next Card
+  </button>
 
   <div class="center big">
     <span id="stage1Score">0</span>/15 in a row
@@ -887,12 +907,12 @@ button:disabled{
 
   <p class="sub">
     Identify each card instantly.
-    Get 15 correct answers to complete this stage.
+    Get 15 correct answers in a row to complete this stage.
   </p>
 
   <div id="valueCard" class="card">?</div>
 
-  <div class="buttons">
+  <div id="valueAnswerButtons" class="buttons">
 
     <button onclick="answerValue(1)">
       +1
@@ -912,8 +932,12 @@ button:disabled{
 
   <div id="valueExplain"></div>
 
+  <button id="valueNextBtn" class="secondary hidden" onclick="continueValuePractice()">
+    Next Card
+  </button>
+
   <div class="center big">
-    <span id="valueScore">0</span>/15
+    <span id="valueScore">0</span>/15 in a row
   </div>
 
 </div>
@@ -963,7 +987,7 @@ button:disabled{
 
   <p class="sub">
     Enter the new Running Count after each card.
-    Get 15 correct answers.
+    Get 15 correct answers in a row.
   </p>
 
   <div class="center small">
@@ -985,6 +1009,10 @@ button:disabled{
     placeholder="Enter new count"
   >
 
+  <div class="inputAssist">
+    <button type="button" onclick="toggleInputSign('runningInput')">± Change Sign</button>
+  </div>
+
   <button onclick="checkRunning()">
     Check
   </button>
@@ -994,7 +1022,7 @@ button:disabled{
   <div id="runningExplain"></div>
 
   <div class="center big">
-    <span id="runningScore">0</span>/15
+    <span id="runningScore">0</span>/15 in a row
   </div>
 
 </div>
@@ -1041,7 +1069,7 @@ button:disabled{
 
   <p class="sub">
     Calculate each group's total value.
-    Get 10 correct answers.
+    Get 10 correct answers in a row.
   </p>
 
   <div
@@ -1059,6 +1087,10 @@ button:disabled{
     placeholder="Total value"
   >
 
+  <div class="inputAssist">
+    <button type="button" onclick="toggleInputSign('groupInput')">± Change Sign</button>
+  </div>
+
   <button onclick="checkGroup()">
     Check
   </button>
@@ -1068,7 +1100,7 @@ button:disabled{
   <div id="groupExplain"></div>
 
   <div class="center big">
-    <span id="groupScore">0</span>/10
+    <span id="groupScore">0</span>/10 in a row
   </div>
 
 </div>
@@ -1115,6 +1147,10 @@ button:disabled{
 
   <h2>5. True Count</h2>
 
+  <p class="sub">
+    Calculate the True Count and get 10 correct answers in a row.
+  </p>
+
   <div class="rules">
 
     <div class="rule">
@@ -1141,6 +1177,10 @@ button:disabled{
     placeholder="Enter True Count"
   >
 
+  <div class="inputAssist">
+    <button type="button" onclick="toggleInputSign('tcInput')">± Change Sign</button>
+  </div>
+
   <button onclick="checkTC()">
     Check
   </button>
@@ -1150,7 +1190,7 @@ button:disabled{
   <div id="tcExplain"></div>
 
   <div class="center big">
-    <span id="tcScore">0</span>/10
+    <span id="tcScore">0</span>/10 in a row
   </div>
 
 </div>
@@ -1163,20 +1203,21 @@ button:disabled{
 
   <div class="lesson">
 
-    <h3>Full Deck Test</h3>
+    <h3>Full Deck Checkpoint Test</h3>
 
     <p class="sub">
-      Now apply the Running Count through
-      a full shuffled 52-card deck.
+      Count through a shuffled 52-card deck while the app stops you at random checkpoints.
     </p>
 
     <div class="example">
       <b>Your goal:</b><br>
-      Start at 0 → count every card → finish at 0.
+      Keep the Running Count in your head and answer every random checkpoint correctly.
+      You will not know in advance when a checkpoint appears.
     </div>
 
     <p class="tip">
-      Focus on accuracy before speed.
+      A full deck always ends at 0, so random checkpoints make sure you are really tracking the count.
+      A wrong checkpoint ends the attempt and you must restart.
     </p>
 
   </div>
@@ -1191,12 +1232,16 @@ button:disabled{
 
 <div id="s6" class="box pageScreen hidden">
 
-  <h2>6. Full Deck Test</h2>
+  <h2>6. Full Deck Checkpoint Test</h2>
 
   <p class="sub">
-    Count the full deck in your head
-    and enter the final Running Count.
+    Count the deck in your head. At four random checkpoints, enter the current Running Count.
+    Pass all checkpoints and finish the deck to complete the course.
   </p>
+
+  <div id="deckCheckpointStatus" class="example">
+    Checkpoints passed: <b>0/4</b>
+  </div>
 
   <div class="center small">
     CARDS REMAINING
@@ -1227,11 +1272,15 @@ button:disabled{
       id="deckAnswer"
       type="number"
       inputmode="numeric"
-      placeholder="Your final Running Count"
+      placeholder="Count at checkpoint"
     >
 
+    <div class="inputAssist">
+      <button type="button" onclick="toggleInputSign('deckAnswer')">± Change Sign</button>
+    </div>
+
     <button onclick="checkDeck()">
-      Check My Count
+      Check Checkpoint
     </button>
 
   </div>
@@ -2107,284 +2156,197 @@ function reviewPassedStage(){
 
 }
 
+function toggleInputSign(id){
+  var input=document.getElementById(id);
+  if(!input){ return; }
+  var raw=input.value.trim();
+  if(raw===""){
+    input.value="-1";
+  }else{
+    var n=Number(raw);
+    if(Number.isNaN(n)){ return; }
+    input.value=String(n===0 ? -1 : -n);
+  }
+  input.focus();
+}
+
 /* STAGE 1 */
 
 var currentStage1Card;
+var stage1WaitingForNext=false;
+
+function setStage1AnswerButtonsDisabled(disabled){
+  document.querySelectorAll("#stage1AnswerButtons button").forEach(function(btn){
+    btn.disabled=disabled;
+  });
+}
 
 function startStage1(){
-
   progress.stage1Score=0;
+  stage1WaitingForNext=false;
   save();
-
   showPractice(1);
-
   document.getElementById("stage1Score").innerText=0;
   document.getElementById("stage1Message").innerText="";
   clearExplain("stage1Explain");
-
+  document.getElementById("stage1NextBtn").classList.add("hidden");
+  setStage1AnswerButtonsDisabled(false);
   nextStage1Card();
-
 }
 
 function nextStage1Card(){
+  currentStage1Card=randomCard(document.getElementById("stage1Card"));
+}
 
-  currentStage1Card=
-    randomCard(
-      document.getElementById("stage1Card")
-    );
-
+function continueStage1Practice(){
+  if(!stage1WaitingForNext){ return; }
+  stage1WaitingForNext=false;
+  document.getElementById("stage1Message").innerText="";
+  clearExplain("stage1Explain");
+  document.getElementById("stage1NextBtn").classList.add("hidden");
+  setStage1AnswerButtonsDisabled(false);
+  nextStage1Card();
 }
 
 function answerStage1(answer){
+  if(progress.stage1Score>=15 || stage1WaitingForNext){ return; }
 
-  if(progress.stage1Score>=15){
-    return;
-  }
-
-  var correct=cardValue(currentStage1Card);
+  var answeredCard=currentStage1Card;
+  var correct=cardValue(answeredCard);
   var isCorrect=answer===correct;
+  var msg=document.getElementById("stage1Message");
 
   recordDailyAttempt(isCorrect);
 
-  var msg=document.getElementById("stage1Message");
-
   if(isCorrect){
-
     progress.stage1Score++;
-
     msg.innerText="Correct ✓";
     msg.className="center good";
 
     var explanation="";
-
     if(correct===1){
-      explanation=
-        "<b>"+currentStage1Card+"</b> is a low card (2–6), so Hi-Lo counts it as <b>+1</b>.";
+      explanation="<b>"+answeredCard+"</b> is a low card (2–6), so Hi-Lo counts it as <b>+1</b>.";
+    }else if(correct===0){
+      explanation="<b>"+answeredCard+"</b> is a neutral card (7–9), so Hi-Lo counts it as <b>0</b>.";
+    }else{
+      explanation="<b>"+answeredCard+"</b> is a high card (10/J/Q/K/A), so Hi-Lo counts it as <b>−1</b>.";
     }
-    else if(correct===0){
-      explanation=
-        "<b>"+currentStage1Card+"</b> is a neutral card (7–9), so Hi-Lo counts it as <b>0</b>.";
-    }
-    else{
-      explanation=
-        "<b>"+currentStage1Card+"</b> is a high card (10/J/Q/K/A), so Hi-Lo counts it as <b>−1</b>.";
-    }
-
     setExplain("stage1Explain",explanation,false);
-
   }else{
-
     progress.stage1Score=0;
-
     msg.innerText="Not quite — streak reset to 0";
     msg.className="center bad";
-
     setExplain(
       "stage1Explain",
-      "You chose <b>"+valueText(answer)+"</b>, but <b>"+
-      currentStage1Card+"</b> is worth <b>"+valueText(correct)+"</b>."+
+      "You chose <b>"+valueText(answer)+"</b>, but <b>"+answeredCard+
+      "</b> is worth <b>"+valueText(correct)+"</b>."+
       "<br><br><b>Your 15-card streak has restarted.</b>"+
       "<br><br><b>What to do instead:</b> memorize the three groups: "+
       "2–6 = +1, 7–9 = 0, and 10/J/Q/K/A = −1.",
       true
     );
-
   }
 
-  document.getElementById("stage1Score").innerText=
-    Math.min(progress.stage1Score,15);
-
+  document.getElementById("stage1Score").innerText=Math.min(progress.stage1Score,15);
   save();
 
   if(progress.stage1Score>=15){
-
-    setTimeout(function(){
-      showStagePassed(1);
-    },800);
-
+    setStage1AnswerButtonsDisabled(true);
+    setTimeout(function(){ showStagePassed(1); },800);
   }else{
-
-    setTimeout(nextStage1Card,750);
-
+    stage1WaitingForNext=true;
+    setStage1AnswerButtonsDisabled(true);
+    document.getElementById("stage1NextBtn").classList.remove("hidden");
   }
-
 }
 
 /* STAGE 2 */
 
 var currentValueCard;
+var valueWaitingForNext=false;
+
+function setValueAnswerButtonsDisabled(disabled){
+  document.querySelectorAll("#valueAnswerButtons button").forEach(function(btn){
+    btn.disabled=disabled;
+  });
+}
 
 function startValues(){
-
   progress.valueScore=0;
+  valueWaitingForNext=false;
   save();
-
   showPractice(2);
-
-  document
-  .getElementById(
-    "valueScore"
-  )
-  .innerText=
-  Math.min(
-    progress.valueScore,
-    15
-  );
-
-  clearExplain(
-    'valueExplain'
-  );
-
+  document.getElementById("valueScore").innerText=0;
+  document.getElementById("valueMessage").innerText="";
+  clearExplain("valueExplain");
+  document.getElementById("valueNextBtn").classList.add("hidden");
+  setValueAnswerButtonsDisabled(false);
   nextValueCard();
-
 }
 
 function nextValueCard(){
+  currentValueCard=randomCard(document.getElementById("valueCard"));
+}
 
-  currentValueCard=
-  randomCard(
-    document.getElementById(
-      "valueCard"
-    )
-  );
-
+function continueValuePractice(){
+  if(!valueWaitingForNext){ return; }
+  valueWaitingForNext=false;
+  document.getElementById("valueMessage").innerText="";
+  clearExplain("valueExplain");
+  document.getElementById("valueNextBtn").classList.add("hidden");
+  setValueAnswerButtonsDisabled(false);
+  nextValueCard();
 }
 
 function answerValue(answer){
+  if(valueWaitingForNext){ return; }
 
-  var correct=
-  cardValue(
-    currentValueCard
-  );
+  var answeredCard=currentValueCard;
+  var correct=cardValue(answeredCard);
+  var isCorrect=answer===correct;
+  var msg=document.getElementById("valueMessage");
 
-  var msg=
-  document.getElementById(
-    "valueMessage"
-  );
-
-  var isCorrect=
-  answer===correct;
-
-  recordDailyAttempt(
-    isCorrect
-  );
+  recordDailyAttempt(isCorrect);
 
   if(isCorrect){
-
     progress.valueScore++;
+    msg.innerText="Correct ✓";
+    msg.className="center good";
 
-    msg.innerText=
-    "Correct ✓";
-
-    msg.className=
-    "center good";
-
-    var explanation='';
-
+    var explanation="";
     if(correct===1){
-
-      explanation=
-      currentValueCard+
-      ' belongs to the low-card group 2–6, so its value is <b>+1</b>.';
-
+      explanation=answeredCard+' belongs to the low-card group 2–6, so its value is <b>+1</b>.';
+    }else if(correct===0){
+      explanation=answeredCard+' belongs to the neutral group 7–9, so its value is <b>0</b>.';
+    }else{
+      explanation=answeredCard+' belongs to the high-card group 10/J/Q/K/A, so its value is <b>−1</b>.';
     }
-
-    else if(correct===0){
-
-      explanation=
-      currentValueCard+
-      ' belongs to the neutral group 7–9, so its value is <b>0</b>.';
-
-    }
-
-    else{
-
-      explanation=
-      currentValueCard+
-      ' belongs to the high-card group 10/J/Q/K/A, so its value is <b>−1</b>.';
-
-    }
-
+    setExplain("valueExplain",explanation,false);
+  }else{
+    progress.valueScore=0;
+    msg.innerText="Not quite — streak reset to 0";
+    msg.className="center bad";
     setExplain(
-      'valueExplain',
-      explanation,
-      false
-    );
-
-  }
-
-  else{
-
-    msg.innerText=
-    "Not quite";
-
-    msg.className=
-    "center bad";
-
-    setExplain(
-
-      'valueExplain',
-
-      'You chose <b>'
-      +
-      valueText(answer)
-      +
-      '</b>, but <b>'
-      +
-      currentValueCard
-      +
-      '</b> is worth <b>'
-      +
-      valueText(correct)
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>What to do instead:</b> '
-      +
-      'remember 2–6 = +1, 7–9 = 0, and 10/J/Q/K/A = −1.',
-
+      "valueExplain",
+      'You chose <b>'+valueText(answer)+'</b>, but <b>'+answeredCard+
+      '</b> is worth <b>'+valueText(correct)+'</b>.'+
+      '<br><br><b>Your 15-card streak has restarted.</b>'+
+      '<br><br><b>What to do instead:</b> remember 2–6 = +1, 7–9 = 0, and 10/J/Q/K/A = −1.',
       true
-
     );
-
   }
 
-  document
-  .getElementById(
-    "valueScore"
-  )
-  .innerText=
-  Math.min(
-    progress.valueScore,
-    15
-  );
-
+  document.getElementById("valueScore").innerText=Math.min(progress.valueScore,15);
   save();
 
-  if(
-    progress.valueScore>=15
-  ){
-
-    setTimeout(
-      function(){
-        showStagePassed(2);
-      },
-      800
-    );
-
+  if(progress.valueScore>=15){
+    setValueAnswerButtonsDisabled(true);
+    setTimeout(function(){ showStagePassed(2); },800);
+  }else{
+    valueWaitingForNext=true;
+    setValueAnswerButtonsDisabled(true);
+    document.getElementById("valueNextBtn").classList.remove("hidden");
   }
-
-  else{
-
-    setTimeout(
-      nextValueCard,
-      800
-    );
-
-  }
-
 }
 
 /* STAGE 3 */
@@ -2534,8 +2496,10 @@ function checkRunning(){
 
   else{
 
+    progress.runningScore=0;
+
     msg.innerText=
-    "Not quite";
+    "Not quite — streak reset to 0";
 
     msg.className=
     "center bad";
@@ -2590,6 +2554,7 @@ function checkRunning(){
       +
       '<br><br>'
       +
+      '<b>Your 15-answer streak has restarted.</b><br><br>'+
       '<b>What to do instead:</b> '
       +
       'always update from the previous total. Do not restart from 0.',
@@ -2812,8 +2777,10 @@ function checkGroup(){
 
   else{
 
+    progress.groupScore=0;
+
     msg.innerText=
-    "Not quite";
+    "Not quite — streak reset to 0";
 
     msg.className=
     "center bad";
@@ -2842,6 +2809,7 @@ function checkGroup(){
       +
       '<br><br>'
       +
+      '<b>Your 10-answer streak has restarted.</b><br><br>'+
       '<b>What to do instead:</b> '
       +
       'first cancel any +1 with a −1, then add what remains.',
@@ -3038,8 +3006,10 @@ function checkTC(){
 
   else{
 
+    progress.tcScore=0;
+
     msg.innerText=
-    "Not quite";
+    "Not quite — streak reset to 0";
 
     msg.className=
     "center bad";
@@ -3072,6 +3042,7 @@ function checkTC(){
       +
       '<br><br>'
       +
+      '<b>Your 10-answer streak has restarted.</b><br><br>'+
       '<b>What to do instead:</b> '
       +
       'divide the Running Count by decks remaining. Do not multiply them.',
@@ -3123,287 +3094,196 @@ function checkTC(){
 /* STAGE 6 */
 
 var deck=[];
-
 var deckRunning=0;
+var deckCardsShown=0;
+var deckCheckpointPositions=[];
+var deckCheckpointIndex=0;
+var deckCheckpointPending=false;
+var deckFailed=false;
+
+function buildDeckCheckpoints(){
+  function randomBetween(min,max){
+    return min+Math.floor(Math.random()*(max-min+1));
+  }
+  deckCheckpointPositions=[
+    randomBetween(9,15),
+    randomBetween(21,28),
+    randomBetween(34,41),
+    randomBetween(45,50)
+  ];
+}
+
+function renderDeckCheckpointStatus(){
+  var el=document.getElementById("deckCheckpointStatus");
+  if(!el){ return; }
+
+  if(deckFailed){
+    el.innerHTML='<b class="bad">Attempt failed.</b> Restart the deck to try again.';
+  }else if(deckCheckpointPending){
+    el.innerHTML='<b>CHECKPOINT '+(deckCheckpointIndex+1)+' of 4</b><br>Enter the Running Count now before you can continue.';
+  }else{
+    el.innerHTML='Checkpoints passed: <b>'+deckCheckpointIndex+'/4</b>'+
+      (deckCheckpointIndex<4
+        ? '<br><span class="small">Keep counting. The next checkpoint is hidden.</span>'
+        : '<br><span class="good">All checkpoints passed. Finish the remaining cards.</span>');
+  }
+}
 
 function startDeck(){
-
   showPractice(6);
-
   deck=[];
 
-  for(
-    var s=0;
-    s<4;
-    s++
-  ){
-
-    for(
-      var r=0;
-      r<ranks.length;
-      r++
-    ){
-
-      deck.push(
-        ranks[r]
-      );
-
+  for(var s=0;s<4;s++){
+    for(var r=0;r<ranks.length;r++){
+      deck.push(ranks[r]);
     }
-
   }
 
-  for(
-    var i=
-    deck.length-1;
-    i>0;
-    i--
-  ){
-
-    var j=
-    Math.floor(
-      Math.random()*
-      (i+1)
-    );
-
-    var temp=
-    deck[i];
-
-    deck[i]=
-    deck[j];
-
-    deck[j]=
-    temp;
-
+  for(var i=deck.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var temp=deck[i];
+    deck[i]=deck[j];
+    deck[j]=temp;
   }
 
   deckRunning=0;
+  deckCardsShown=0;
+  deckCheckpointIndex=0;
+  deckCheckpointPending=false;
+  deckFailed=false;
+  buildDeckCheckpoints();
 
-  document
-  .getElementById(
-    "cardsRemaining"
-  )
-  .innerText=52;
-
-  document
-  .getElementById(
-    "deckCard"
-  )
-  .innerText=
-  "Ready";
-
-  document
-  .getElementById(
-    "deckMessage"
-  )
-  .innerText="";
-
-  clearExplain(
-    'deckExplain'
-  );
-
-  document
-  .getElementById(
-    "completeMessage"
-  )
-  .classList.add(
-    "hidden"
-  );
-
+  document.getElementById("cardsRemaining").innerText=52;
+  document.getElementById("deckCard").innerText="Ready";
+  document.getElementById("deckCard").className="card";
+  document.getElementById("deckMessage").innerText="";
+  document.getElementById("deckAnswer").value="";
+  clearExplain("deckExplain");
+  document.getElementById("completeMessage").classList.add("hidden");
+  renderDeckCheckpointStatus();
 }
 
 function nextDeck(){
+  var msg=document.getElementById("deckMessage");
 
-  if(
-    deck.length===0
-  ){
-
-    document
-    .getElementById(
-      "deckCard"
-    )
-    .innerText=
-    "Deck Complete";
-
+  if(deckFailed){
+    msg.innerText="Restart the deck before continuing.";
+    msg.className="center bad";
     return;
-
   }
 
-  var rank=
-  deck.pop();
+  if(deckCheckpointPending){
+    msg.innerText="Answer the checkpoint before showing another card.";
+    msg.className="center bad";
+    return;
+  }
 
-  deckRunning+=
-  cardValue(
-    rank
-  );
+  if(deck.length===0){
+    if(deckCheckpointIndex===4){
+      document.getElementById("deckCard").innerText="Deck Complete";
+      msg.innerText="Full deck complete ✓";
+      msg.className="center good";
+      completeStage(6);
+      setExplain(
+        "deckExplain",
+        "You passed all <b>4 random Running Count checkpoints</b> and completed the full deck."+
+        "<br><br>This test cannot be passed simply by knowing that a full Hi-Lo deck ends at 0.",
+        false
+      );
+      setTimeout(function(){ showStagePassed(6); },900);
+    }
+    return;
+  }
 
-  var suit=
-  suits[
-    Math.floor(
-      Math.random()*4
-    )
-  ];
+  var rank=deck.pop();
+  deckRunning+=cardValue(rank);
+  deckCardsShown++;
 
-  var card=
-  document
-  .getElementById(
-    "deckCard"
-  );
-
-  card.innerText=
-  rank+suit;
+  var suit=suits[Math.floor(Math.random()*4)];
+  var card=document.getElementById("deckCard");
+  card.innerText=rank+suit;
+  card.className=(suit==="♥" || suit==="♦") ? "card red" : "card";
+  document.getElementById("cardsRemaining").innerText=deck.length;
+  msg.innerText="";
+  clearExplain("deckExplain");
 
   if(
-    suit==="♥"
-    ||
-    suit==="♦"
+    deckCheckpointIndex<deckCheckpointPositions.length &&
+    deckCardsShown===deckCheckpointPositions[deckCheckpointIndex]
   ){
-
-    card.className=
-    "card red";
-
+    deckCheckpointPending=true;
+    msg.innerText="Checkpoint! Enter your current Running Count.";
+    msg.className="center good";
+    renderDeckCheckpointStatus();
   }
-
-  else{
-
-    card.className=
-    "card";
-
+  else if(deck.length===0 && deckCheckpointIndex===4){
+    document.getElementById("deckCard").innerText="Deck Complete";
+    msg.innerText="Full deck complete ✓";
+    msg.className="center good";
+    completeStage(6);
+    setExplain(
+      "deckExplain",
+      "You passed all <b>4 random Running Count checkpoints</b> and completed the full deck."+
+      "<br><br>This test cannot be passed simply by knowing that a full Hi-Lo deck ends at 0.",
+      false
+    );
+    setTimeout(function(){ showStagePassed(6); },900);
   }
-
-  document
-  .getElementById(
-    "cardsRemaining"
-  )
-  .innerText=
-  deck.length;
-
 }
 
 function checkDeck(){
+  var input=document.getElementById("deckAnswer");
+  var msg=document.getElementById("deckMessage");
 
-  var input=
-  document.getElementById(
-    "deckAnswer"
-  );
-
-  if(
-    input.value===""
-  ){
+  if(deckFailed){
+    msg.innerText="This attempt ended after a wrong checkpoint. Restart the deck.";
+    msg.className="center bad";
     return;
   }
 
-  if(deck.length>0){
-
-    document.getElementById("deckMessage").innerText=
-      "Finish the full deck first.";
-
-    document.getElementById("deckMessage").className=
-      "center bad";
-
-    setExplain(
-      "deckExplain",
-      "There are still <b>"+deck.length+"</b> cards remaining. "+
-      "Keep counting until all 52 cards have been shown, then enter your final Running Count.",
-      true
-    );
-
+  if(!deckCheckpointPending){
+    msg.innerText="Wait for a checkpoint before entering a count.";
+    msg.className="center bad";
     return;
   }
 
-  var answer=
-  Number(
-    input.value
-  );
+  if(input.value===""){ return; }
 
-  var msg=
-  document.getElementById(
-    "deckMessage"
-  );
-
-  var isCorrect=
-  answer===deckRunning;
-
-  recordDailyAttempt(
-    isCorrect
-  );
+  var answer=Number(input.value);
+  var expected=deckRunning;
+  var isCorrect=answer===expected;
+  recordDailyAttempt(isCorrect);
 
   if(isCorrect){
-
-    msg.innerText=
-    "Perfect ✓";
-
-    msg.className=
-    "center good";
-
-    completeStage(6);
-
+    deckCheckpointIndex++;
+    deckCheckpointPending=false;
+    msg.innerText="Checkpoint correct ✓ Keep counting.";
+    msg.className="center good";
     setExplain(
-
-      'deckExplain',
-
-      'Your final Running Count matches the actual count.'
-      +
-      '<br><br>'
-      +
-      'A complete balanced Hi-Lo deck should finish at <b>0</b>.',
-
+      "deckExplain",
+      "Correct — the Running Count at this checkpoint is <b>"+
+      (expected>0?"+":"")+expected+"</b>."+
+      "<br><br>Keep that count in your head and continue from here.",
       false
-
     );
-
-    setTimeout(
-      function(){
-        showStagePassed(6);
-      },
-      900
-    );
-
-  }
-
-  else{
-
-    msg.innerText=
-    "Not quite";
-
-    msg.className=
-    "center bad";
-
+    input.value="";
+    renderDeckCheckpointStatus();
+  }else{
+    deckFailed=true;
+    deckCheckpointPending=false;
+    msg.innerText="Wrong checkpoint — restart the test";
+    msg.className="center bad";
     setExplain(
-
-      'deckExplain',
-
-      'You entered <b>'
-      +
-      answer
-      +
-      '</b>, but the correct final count is <b>'
-      +
-      deckRunning
-      +
-      '</b>.'
-      +
-      '<br><br>'
-      +
-      '<b>What this means:</b> '
-      +
-      'at least one card was added or subtracted incorrectly.'
-      +
-      '<br><br>'
-      +
-      '<b>What to do instead:</b> '
-      +
-      'restart the deck slowly, focus on accuracy, and use cancellation pairs whenever possible.',
-
+      "deckExplain",
+      "You entered <b>"+answer+"</b>, but the correct Running Count was <b>"+
+      (expected>0?"+":"")+expected+"</b>."+
+      "<br><br><b>This attempt does not pass.</b> Restart the deck and try again.",
       true
-
     );
-
+    input.value="";
+    renderDeckCheckpointStatus();
   }
-
-  input.value="";
-
 }
-
 
 /* REAL BLACKJACK TABLE TRAINER */
 
@@ -3741,15 +3621,22 @@ function trainerRender(){
 
   document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
 
+  var hitBtn=document.getElementById('trainerHitBtn');
+  var standBtn=document.getElementById('trainerStandBtn');
   var splitBtn=document.getElementById('trainerSplitBtn');
   var doubleBtn=document.getElementById('trainerDoubleBtn');
   var surrenderBtn=document.getElementById('trainerSurrenderBtn');
 
   if(current.length && !trainerRoundFinished){
+    var currentTotal=trainerHandValue(current).total;
+    hitBtn.disabled=currentTotal>=21;
+    standBtn.disabled=currentTotal>=21;
     splitBtn.disabled=!(trainerIsPair(current) && !trainerSplitUsed && current.length===2);
-    doubleBtn.disabled=current.length!==2 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
+    doubleBtn.disabled=current.length!==2 || currentTotal>=21 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
     surrenderBtn.disabled=!trainerCanSurrender(current);
   }else{
+    hitBtn.disabled=true;
+    standBtn.disabled=true;
     splitBtn.disabled=true;
     doubleBtn.disabled=true;
     surrenderBtn.disabled=true;
@@ -4047,8 +3934,14 @@ function trainerAction(action){
   if(action==='hit'){
     hand.push(trainerDraw(true));
 
-    if(trainerHandValue(hand).total>21){
+    var hitTotal=trainerHandValue(hand).total;
+
+    if(hitTotal>21){
       coach.innerHTML+='<br><br><b>Result:</b> This hand busted.';
+      trainerAdvanceHand();
+    }
+    else if(hitTotal===21){
+      coach.innerHTML+='<br><br><b>21:</b> this hand automatically stands. No further Hit is allowed.';
       trainerAdvanceHand();
     }
   }
@@ -4102,11 +3995,33 @@ function trainerAction(action){
 }
 
 function trainerAdvanceHand(){
-  if(trainerHandIndex<trainerHands.length-1){
-    trainerHandIndex++;
-    trainerFirstDecision=true;
-    trainerRender();
-    return;
+
+  var nextIndex=trainerHandIndex+1;
+
+  while(nextIndex<trainerHands.length){
+
+    var nextTotal=trainerHandValue(trainerHands[nextIndex]).total;
+
+    if(nextTotal<21){
+      trainerHandIndex=nextIndex;
+      trainerFirstDecision=true;
+
+      var coach=document.getElementById('trainerCoach');
+      if(trainerHands.length>1){
+        coach.innerHTML+='<br><br><b>Next:</b> continue with Hand '+(trainerHandIndex+1)+'.';
+      }
+
+      trainerRender();
+      trainerSave();
+      return;
+    }
+
+    nextIndex++;
+  }
+
+  if(trainerHands.length>1){
+    var coach=document.getElementById('trainerCoach');
+    coach.innerHTML+='<br><br><b>All split hands are finished.</b> A hand on 21 automatically stands; busted hands are already closed. Resolving the dealer now.';
   }
 
   trainerFinishAllHands();
