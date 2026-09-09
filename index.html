@@ -428,22 +428,22 @@ button:disabled{
   box-shadow:0 6px 18px rgba(0,0,0,.28);
 }
 
-#homeView.hidden,
-#homeButton.hidden{
+#homeButton.hidden,
+#homeView.hidden{
   display:none;
 }
 
 .pageView{
   min-height:100vh;
-  padding-top:48px;
+  padding-top:54px;
 }
 
 #realTrainer{
-  padding-top:16px;
+  padding-top:62px;
 }
 
 #realTrainer h2{
-  margin-bottom:6px;
+  margin-bottom:4px;
 }
 
 .trainerIntroCompact{
@@ -458,12 +458,12 @@ button:disabled{
 }
 
 .trainerCompactGrid .bankrollStat{
-  padding:8px 4px;
-  font-size:11px;
+  padding:7px 3px;
+  font-size:10px;
 }
 
 .trainerCompactGrid .bankrollStat b{
-  font-size:17px;
+  font-size:16px;
 }
 
 .compactBetRow{
@@ -475,73 +475,73 @@ button:disabled{
 
 .compactBetRow button{
   margin:0;
-  padding:9px 3px;
-  font-size:13px;
+  padding:8px 3px;
+  font-size:12px;
 }
 
 #realTrainer .trainerTop{
-  margin:8px 0;
-  gap:6px;
+  margin:7px 0;
+  gap:5px;
 }
 
 #realTrainer .trainerStat{
   padding:7px 4px;
-  font-size:11px;
+  font-size:10px;
 }
 
 #realTrainer .trainerStat b{
-  font-size:18px;
+  font-size:17px;
 }
 
 #realTrainer .tableArea{
   min-height:0;
-  padding:12px;
-  margin:8px 0;
+  padding:10px;
+  margin:7px 0;
   border-radius:16px;
 }
 
 #realTrainer .miniCards{
-  min-height:58px;
-  gap:6px;
+  min-height:54px;
+  gap:5px;
 }
 
 #realTrainer .miniCard{
-  width:44px;
-  height:58px;
-  font-size:17px;
+  width:42px;
+  height:56px;
+  font-size:16px;
 }
 
 #realTrainer .handLabel{
-  margin:3px 0;
+  margin:2px 0;
 }
 
-#realTrainer .tableArea > div[style*="height:26px"]{
-  height:10px !important;
+#realTrainer .dealerPlayerSpacer{
+  height:8px;
 }
 
 #realTrainer .actionGrid{
-  margin-top:8px;
-  gap:6px;
+  margin-top:7px;
+  gap:5px;
 }
 
 #realTrainer .actionGrid button,
 #realTrainer .specialActions button{
-  padding:11px 6px;
-  font-size:15px;
+  padding:10px 5px;
+  font-size:14px;
 }
 
 #realTrainer .coachBox{
-  padding:11px;
-  margin-top:8px;
+  padding:10px;
+  margin-top:7px;
   font-size:14px;
 }
 
 .trainerDetails{
-  margin-top:10px;
+  margin-top:8px;
   border:1px solid #293855;
   border-radius:12px;
   background:#0c1627;
-  padding:10px 12px;
+  padding:9px 11px;
 }
 
 .trainerDetails summary{
@@ -550,15 +550,8 @@ button:disabled{
 }
 
 @media(max-width:520px){
-  .trainerCompactGrid{
-    grid-template-columns:repeat(4,1fr);
-  }
-  .compactBetRow{
-    grid-template-columns:repeat(5,1fr);
-  }
-  #realTrainer{
-    margin-top:8px;
-  }
+  .trainerCompactGrid{grid-template-columns:repeat(4,1fr)}
+  .compactBetRow{grid-template-columns:repeat(5,1fr)}
 }
 
 </style>
@@ -658,11 +651,6 @@ button:disabled{
     <button onclick="trainerSetBet(100)">$100</button>
   </div>
 
-<p class="small center" style="margin-bottom:0">
-      Betting is only for simulation. Your bankroll and statistics are saved on this device.
-    </p>
-  </div>
-
   <div class="trainerTop">
     <div class="trainerStat">
       <b id="trainerRC">0</b>
@@ -684,7 +672,7 @@ button:disabled{
     <div id="trainerDealerCards" class="miniCards"></div>
     <div id="trainerDealerTotal" class="center small">Showing: —</div>
 
-    <div style="height:26px"></div>
+    <div class="dealerPlayerSpacer"></div>
 
     <div class="handLabel">PLAYER</div>
     <div id="trainerPlayerCards" class="miniCards"></div>
@@ -702,8 +690,8 @@ button:disabled{
   </div>
 
   <div id="trainerActions" class="actionGrid">
-    <button onclick="trainerAction('hit')">Hit</button>
-    <button onclick="trainerAction('stand')">Stand</button>
+    <button id="trainerHitBtn" onclick="trainerAction('hit')">Hit</button>
+    <button id="trainerStandBtn" onclick="trainerAction('stand')">Stand</button>
     <button id="trainerDoubleBtn" onclick="trainerAction('double')">Double</button>
     <button id="trainerSplitBtn" onclick="trainerAction('split')">Split</button>
   </div>
@@ -3529,15 +3517,21 @@ function trainerRender(){
 
   document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
 
+  var hitBtn=document.getElementById('trainerHitBtn');
+  var standBtn=document.getElementById('trainerStandBtn');
   var splitBtn=document.getElementById('trainerSplitBtn');
   var doubleBtn=document.getElementById('trainerDoubleBtn');
   var surrenderBtn=document.getElementById('trainerSurrenderBtn');
 
-  if(current.length && !trainerRoundFinished){
+  if(current.length && !trainerRoundFinished && !trainerInsurancePending){
+    hitBtn.disabled=false;
+    standBtn.disabled=false;
     splitBtn.disabled=!(trainerIsPair(current) && !trainerSplitUsed && current.length===2);
     doubleBtn.disabled=current.length!==2 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
     surrenderBtn.disabled=!trainerCanSurrender(current);
   }else{
+    hitBtn.disabled=true;
+    standBtn.disabled=true;
     splitBtn.disabled=true;
     doubleBtn.disabled=true;
     surrenderBtn.disabled=true;
@@ -3547,6 +3541,7 @@ function trainerRender(){
 }
 
 function openRealGame(){
+
   hideAll();
   setPageMode(false);
 
@@ -3560,15 +3555,13 @@ function openRealGame(){
     trainerBuildShoe();
   }
 
-  if(trainerHands.length===0 || trainerRoundFinished){
-    trainerNewRound();
-  }else{
-    trainerRender();
-  }
+  /* Always show an actual hand when the table is opened. */
+  trainerNewRound();
 
   setTimeout(function(){
     window.scrollTo({top:0,behavior:'smooth'});
   },50);
+
 }
 
 function trainerNewRound(){
