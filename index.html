@@ -558,6 +558,50 @@ button:disabled{
   color:#fff6d6 !important;
 }
 
+
+.backupBox{
+  border-color:#40506e;
+}
+
+.backupSteps{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:12px;
+  padding:12px 14px;
+  margin:10px 0 12px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.backupCodeArea{
+  width:100%;
+  min-height:92px;
+  margin:9px 0;
+  padding:11px;
+  box-sizing:border-box;
+  border-radius:10px;
+  border:1px solid #40506e;
+  background:#091322;
+  color:#e8eefc;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:11px;
+  line-height:1.35;
+  resize:vertical;
+}
+
+.backupActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.backupActions button{margin:0}
+
+.backupStatus{
+  min-height:20px;
+  margin:8px 0 0;
+}
+
 @media(max-width:520px){
   .quickRefGrid{grid-template-columns:1fr}
   .deviationRow{grid-template-columns:1fr}
@@ -800,6 +844,31 @@ button:disabled{
   <p class="small" id="dailySummary">
     Your first training day starts today.
   </p>
+</div>
+
+<div class="box backupBox">
+  <h2 style="margin-bottom:6px">☁️ Backup &amp; Restore Progress</h2>
+  <p class="sub" style="margin-top:0">
+    Safari and a Home Screen web app can keep separate local progress. Use a backup code to move your course progress and table statistics between them.
+  </p>
+
+  <div class="backupSteps">
+    <b>To move your progress to the Home Screen app:</b><br>
+    1. Open this site in Safari and tap <b>Copy Backup Code</b>.<br>
+    2. Open the Home Screen app, paste the code below, and tap <b>Restore Backup</b>.
+  </div>
+
+  <button onclick="copyBackupCode()">Copy Backup Code</button>
+  <textarea id="backupExportCode" class="backupCodeArea hidden" readonly aria-label="Backup code"></textarea>
+
+  <p class="small" style="margin:12px 0 4px"><b>Restore from a backup code</b></p>
+  <textarea id="backupImportCode" class="backupCodeArea" placeholder="Paste backup code here" aria-label="Paste backup code"></textarea>
+  <div class="backupActions">
+    <button onclick="restoreBackupCode()">Restore Backup</button>
+    <button class="secondary" onclick="clearBackupFields()">Clear</button>
+  </div>
+  <p id="backupStatus" class="small center backupStatus"></p>
+  <p class="small center" style="margin-bottom:0">The backup contains only this app's saved course progress and simulated blackjack statistics.</p>
 </div>
 
 </div>
@@ -4611,6 +4680,129 @@ function trainerResetStats(){
   trainerNewRound();
 }
 
+
+/* BACKUP & RESTORE */
+
+function backupUtf8ToBase64(str){
+  var bytes=encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,function(match,p1){
+    return String.fromCharCode(parseInt(p1,16));
+  });
+  return btoa(bytes);
+}
+
+function backupBase64ToUtf8(base64){
+  var binary=atob(base64);
+  var encoded='';
+  for(var i=0;i<binary.length;i++){
+    encoded+='%'+('00'+binary.charCodeAt(i).toString(16)).slice(-2);
+  }
+  return decodeURIComponent(encoded);
+}
+
+function buildBackupCode(){
+  var payload={
+    app:'BlackjackCountingAcademy',
+    version:1,
+    createdAt:new Date().toISOString(),
+    course:progress,
+    trainer:{
+      stats:trainerStats,
+      currentBet:trainerCurrentBet
+    }
+  };
+
+  return 'BJACAD1:'+backupUtf8ToBase64(JSON.stringify(payload));
+}
+
+function backupSetStatus(message,isError){
+  var el=document.getElementById('backupStatus');
+  if(!el){ return; }
+  el.innerText=message;
+  el.className='small center backupStatus '+(isError?'bad':'good');
+}
+
+async function copyBackupCode(){
+  var code=buildBackupCode();
+  var area=document.getElementById('backupExportCode');
+  area.value=code;
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(code);
+      backupSetStatus('Backup code copied ✓ Open the Home Screen app and paste it into Restore Backup.',false);
+      area.classList.add('hidden');
+      return;
+    }
+  }catch(e){}
+
+  area.classList.remove('hidden');
+  area.focus();
+  area.select();
+  area.setSelectionRange(0,999999);
+
+  try{
+    var copied=document.execCommand('copy');
+    if(copied){
+      backupSetStatus('Backup code copied ✓ Open the Home Screen app and paste it into Restore Backup.',false);
+    }else{
+      backupSetStatus('Automatic copy was blocked. The backup code is selected above — choose Copy.',true);
+    }
+  }catch(e){
+    backupSetStatus('Automatic copy was blocked. Select the backup code above and choose Copy.',true);
+  }
+}
+
+function restoreBackupCode(){
+  var area=document.getElementById('backupImportCode');
+  var code=(area.value||'').trim().replace(/\s+/g,'');
+
+  if(!code){
+    backupSetStatus('Paste a backup code first.',true);
+    return;
+  }
+
+  if(code.indexOf('BJACAD1:')!==0){
+    backupSetStatus('This does not look like a Blackjack Academy backup code.',true);
+    return;
+  }
+
+  try{
+    var payload=JSON.parse(backupBase64ToUtf8(code.slice(8)));
+
+    if(!payload || payload.app!=='BlackjackCountingAcademy' || !payload.course || typeof payload.course!=='object'){
+      throw new Error('Invalid backup');
+    }
+
+    if(!confirm('Restore this backup? It will replace the progress currently stored in this copy of the app.')){
+      return;
+    }
+
+    localStorage.setItem('blackjackCourseV4',JSON.stringify(payload.course));
+
+    if(payload.trainer && typeof payload.trainer==='object'){
+      var restoredTrainer={
+        stats:payload.trainer.stats || trainerStats,
+        currentBet:payload.trainer.currentBet || 10
+      };
+      localStorage.setItem('blackjackTrainerV2',JSON.stringify(restoredTrainer));
+    }
+
+    backupSetStatus('Backup restored ✓ Reloading your saved progress…',false);
+    setTimeout(function(){ window.location.reload(); },650);
+
+  }catch(e){
+    backupSetStatus('Could not restore this code. Make sure the entire backup code was copied and pasted.',true);
+  }
+}
+
+function clearBackupFields(){
+  var exportArea=document.getElementById('backupExportCode');
+  var importArea=document.getElementById('backupImportCode');
+  if(exportArea){ exportArea.value=''; exportArea.classList.add('hidden'); }
+  if(importArea){ importArea.value=''; }
+  var status=document.getElementById('backupStatus');
+  if(status){ status.innerText=''; status.className='small center backupStatus'; }
+}
 
 /* RESET */
 
