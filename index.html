@@ -862,7 +862,7 @@ button:disabled{
   <textarea id="backupExportCode" class="backupCodeArea hidden" readonly aria-label="Backup code"></textarea>
 
   <p class="small" style="margin:12px 0 4px"><b>Restore from a backup code</b></p>
-  <textarea id="backupImportCode" class="backupCodeArea" placeholder="Paste backup code here" aria-label="Paste backup code"></textarea>
+  <textarea id="backupImportCode" class="backupCodeArea" placeholder="Paste backup code here" aria-label="Paste backup code" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
   <div class="backupActions">
     <button onclick="restoreBackupCode()">Restore Backup</button>
     <button class="secondary" onclick="clearBackupFields()">Clear</button>
@@ -4754,20 +4754,25 @@ async function copyBackupCode(){
 
 function restoreBackupCode(){
   var area=document.getElementById('backupImportCode');
-  var code=(area.value||'').trim().replace(/\s+/g,'');
+  var code=(area.value||'')
+    .trim()
+    .replace(/[\s\u200B-\u200D\uFEFF]+/g,'');
 
   if(!code){
     backupSetStatus('Paste a backup code first.',true);
     return;
   }
 
-  if(code.indexOf('BJACAD1:')!==0){
+  /* iOS may alter capitalization of the short prefix when text is pasted.
+     Only the prefix is matched case-insensitively; the Base64 payload keeps its original case. */
+  var prefixMatch=code.match(/^bjacad1:/i);
+  if(!prefixMatch){
     backupSetStatus('This does not look like a Blackjack Academy backup code.',true);
     return;
   }
 
   try{
-    var payload=JSON.parse(backupBase64ToUtf8(code.slice(8)));
+    var payload=JSON.parse(backupBase64ToUtf8(code.slice(prefixMatch[0].length)));
 
     if(!payload || payload.app!=='BlackjackCountingAcademy' || !payload.course || typeof payload.course!=='object'){
       throw new Error('Invalid backup');
