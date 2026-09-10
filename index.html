@@ -553,6 +553,177 @@ button:disabled{
 
 .stage7PartIntro h3{margin-top:0}
 
+.stage7PartPicker{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:12px 0 14px;
+}
+
+.stage7PartPicker button{
+  margin:0;
+  padding:11px 6px;
+  background:#22304a;
+  color:#fff;
+  font-size:13px;
+  line-height:1.25;
+}
+
+.stage7PartPicker button span{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  font-weight:600;
+  color:#aab6cc;
+}
+
+.stage7PartPicker button.active{
+  outline:2px solid #5eead4;
+  background:#29405a;
+}
+
+.stage7PartPicker button:disabled{
+  opacity:.42;
+  cursor:not-allowed;
+}
+
+.stage7PartPickerNote{
+  margin:-4px 0 10px;
+}
+
+.countVisibilityRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0 4px;
+}
+
+.countVisibilityRow .small{
+  margin:0;
+  flex:1;
+}
+
+.countToggleBtn{
+  width:auto;
+  min-width:132px;
+  margin:0;
+  padding:9px 12px;
+  background:#22304a;
+  color:white;
+}
+
+.countHiddenValue{
+  letter-spacing:2px;
+}
+
+.deckEstimatorLaunch{
+  background:#1f6f5b !important;
+  color:white !important;
+}
+
+.deckEstimatorPanel{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:16px;
+  padding:14px;
+  margin:12px 0;
+}
+
+.shoeShell{
+  position:relative;
+  height:92px;
+  border:2px solid #64748b;
+  border-radius:14px 14px 20px 20px;
+  background:#111827;
+  overflow:hidden;
+  margin:14px 0 8px;
+}
+
+.shoeOpenEdge{
+  position:absolute;
+  top:0;
+  right:0;
+  width:18px;
+  height:100%;
+  border-left:2px solid #64748b;
+  background:#0b1220;
+  z-index:3;
+}
+
+.shoeRemaining{
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:100%;
+  background:repeating-linear-gradient(90deg,#24324f 0,#24324f 4px,#31446c 4px,#31446c 7px);
+  border-right:2px solid #93a4bf;
+  transition:width .2s ease;
+}
+
+.shoeUsed{
+  position:absolute;
+  right:18px;
+  top:0;
+  bottom:0;
+  background:linear-gradient(180deg,#0a101c,#111827);
+}
+
+.shoeLabelRow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11px;
+  opacity:.75;
+}
+
+.deckChoiceGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-top:12px;
+}
+
+.deckChoiceGrid button{
+  margin:0;
+  padding:10px 4px;
+  background:#22304a;
+  color:white;
+  font-size:13px;
+}
+
+.deckChoiceGrid button.selected{
+  outline:2px solid #5eead4;
+  background:#29405a;
+}
+
+.deckEstimatorStats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:10px 0;
+}
+
+.deckEstimatorStat{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:12px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:11px;
+}
+
+.deckEstimatorStat b{
+  display:block;
+  font-size:20px;
+}
+
+@media(max-width:520px){
+  .countVisibilityRow{align-items:stretch;flex-direction:column}
+  .countToggleBtn{width:100%}
+  .deckChoiceGrid{grid-template-columns:repeat(3,1fr)}
+}
+
 .hintButton{
   background:#6b4f1d !important;
   color:#fff6d6 !important;
@@ -810,6 +981,16 @@ button:disabled{
 </div>
 
 <div class="box">
+  <h2 style="margin-bottom:6px">📏 Deck Estimation Trainer</h2>
+  <p class="sub guideIntro">
+    Practice estimating how many decks remain in a 6-deck shoe — a key skill for calculating the True Count at a real table.
+  </p>
+  <button class="deckEstimatorLaunch" onclick="openDeckEstimator(false)">
+    Practice Deck Estimation
+  </button>
+</div>
+
+<div class="box">
   <h2 style="margin-bottom:6px">Daily Progress</h2>
 
   <p class="sub" style="margin-top:0">
@@ -986,6 +1167,9 @@ button:disabled{
       <div class="example">
         Example: 12 vs 2 is normally HIT in the Hit/Stand baseline. In the Hi-Lo index set used by this course, it changes to STAND at about True Count +3 or higher.
       </div>
+      <div class="example">
+        To calculate a useful True Count at a real table, you also need to estimate how many decks remain in the shoe. Use the Deck Estimation Trainer from Home to practice this visually.
+      </div>
     </div>
   </details>
 
@@ -1004,6 +1188,46 @@ button:disabled{
   </details>
 
   <button class="secondary" onclick="showHome()">Back to Home</button>
+</div>
+
+<!-- DECK ESTIMATION TRAINER -->
+<div id="deckEstimator" class="box hidden pageScreen">
+  <h2>📏 Deck Estimation Trainer</h2>
+  <p class="sub">
+    A real True Count needs an estimate of how many decks remain. Train your eye on a 6-deck shoe and answer in half-deck steps.
+  </p>
+
+  <div class="example">
+    <b>Why this matters:</b><br>
+    True Count = Running Count ÷ decks remaining.<br><br>
+    Example: Running Count +8 with about 4 decks remaining → True Count about +2.
+  </div>
+
+  <div class="deckEstimatorStats">
+    <div class="deckEstimatorStat"><b id="deckEstCorrect">0</b>Correct</div>
+    <div class="deckEstimatorStat"><b id="deckEstAttempts">0</b>Attempts</div>
+    <div class="deckEstimatorStat"><b id="deckEstAccuracy">—</b>Accuracy</div>
+  </div>
+
+  <div class="deckEstimatorPanel">
+    <div class="center small"><b>6-DECK SHOE</b> — estimate the cards still waiting to be dealt</div>
+    <div class="shoeShell" aria-label="Visual shoe with an unknown number of decks remaining">
+      <div id="shoeRemainingVisual" class="shoeRemaining"></div>
+      <div id="shoeUsedVisual" class="shoeUsed"></div>
+      <div class="shoeOpenEdge"></div>
+    </div>
+    <div class="shoeLabelRow"><span>Cards remaining</span><span>Dealt / empty space</span></div>
+  </div>
+
+  <p class="center"><b>How many decks are left?</b></p>
+  <div id="deckEstChoices" class="deckChoiceGrid"></div>
+  <button id="deckEstCheckBtn" onclick="checkDeckEstimate()" disabled>Check Estimate</button>
+  <p id="deckEstMessage" class="center"></p>
+  <div id="deckEstExplain"></div>
+  <button id="deckEstNextBtn" class="secondary hidden" onclick="nextDeckEstimate()">Next Shoe</button>
+
+  <p class="small center">Real casino shoes and discard trays vary in shape. This is a visual training model for estimating in roughly half-deck increments.</p>
+  <button id="deckEstBackBtn" class="secondary" onclick="closeDeckEstimator()">Back to Home</button>
 </div>
 
 <!-- REAL BLACKJACK TABLE TRAINER -->
@@ -1046,6 +1270,11 @@ button:disabled{
     <p class="small center" style="margin-bottom:0">
       Betting is only for simulation. Your bankroll and statistics are saved on this device.
     </p>
+  </div>
+
+  <div class="countVisibilityRow">
+    <p class="small">Practice mode: hide Running Count and True Count when you want to keep them yourself.</p>
+    <button id="trainerCountToggle" class="countToggleBtn" type="button" onclick="trainerToggleCounts()">🙈 Hide Counts</button>
   </div>
 
   <div class="trainerTop">
@@ -1760,6 +1989,13 @@ button:disabled{
 
   <h2>7. Using the Count at the Table</h2>
 
+  <div id="stage7PartPicker" class="stage7PartPicker" aria-label="Choose Stage 7 part">
+    <button id="stage7PartBtn1" type="button" onclick="stage7ChoosePart(1)">Part A<span>Count → Bet</span></button>
+    <button id="stage7PartBtn2" type="button" onclick="stage7ChoosePart(2)">Part B<span>Count → Decision</span></button>
+    <button id="stage7PartBtn3" type="button" onclick="stage7ChoosePart(3)">Part C<span>Full Integration</span></button>
+  </div>
+  <p id="stage7PartPickerNote" class="small center stage7PartPickerNote"></p>
+
   <div id="stage7PhaseLabel" class="stage7Phase">Part A — Count → Bet</div>
 
   <div id="stage7PartIntro" class="lesson stage7PartIntro hidden">
@@ -1911,6 +2147,7 @@ var progress={
   tcScore:0,
 
   stage7Part:1,
+  stage7MaxPart:1,
   stage7Score:0,
 
   daily:{
@@ -1948,6 +2185,10 @@ if(typeof progress.stage1Score!=="number"){
   progress.stage1Score=0;
 }
 if(typeof progress.stage7Part!=="number"){ progress.stage7Part=1; }
+if(typeof progress.stage7MaxPart!=="number"){
+  progress.stage7MaxPart=progress.completed.includes(7) ? 3 : Math.max(1,Math.min(progress.stage7Part||1,3));
+}
+if(progress.completed.includes(7)){ progress.stage7MaxPart=3; }
 if(typeof progress.stage7Score!=="number"){ progress.stage7Score=0; }
 
 if(!progress.daily){
@@ -2399,6 +2640,126 @@ function openRulesGuide(){
 
 }
 
+var deckEstimatorReturnToStage7=false;
+var deckEstimatorAnswer=0;
+var deckEstimatorSelected=null;
+var deckEstimatorLastAnswer=null;
+var deckEstimatorCorrect=0;
+var deckEstimatorAttempts=0;
+
+function openDeckEstimator(fromStage7){
+  deckEstimatorReturnToStage7=!!fromStage7;
+  hideAll();
+  setPageMode(false);
+
+  var el=document.getElementById('deckEstimator');
+  if(el){ el.classList.remove('hidden'); }
+
+  var back=document.getElementById('deckEstBackBtn');
+  if(back){ back.innerText=deckEstimatorReturnToStage7?'Back to Stage 7':'Back to Home'; }
+
+  progress.mode='deckEstimator';
+  save();
+  nextDeckEstimate();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeDeckEstimator(){
+  if(deckEstimatorReturnToStage7){
+    showPractice(7);
+    stage7ShowPartIntro(progress.stage7Part||1);
+  }else{
+    showHome();
+  }
+}
+
+function renderDeckEstimatorStats(){
+  document.getElementById('deckEstCorrect').innerText=deckEstimatorCorrect;
+  document.getElementById('deckEstAttempts').innerText=deckEstimatorAttempts;
+  document.getElementById('deckEstAccuracy').innerText=deckEstimatorAttempts?Math.round(deckEstimatorCorrect/deckEstimatorAttempts*100)+'%':'—';
+}
+
+function buildDeckEstimateChoices(){
+  var box=document.getElementById('deckEstChoices');
+  box.innerHTML='';
+  for(var half=1;half<=12;half++){
+    (function(value){
+      var b=document.createElement('button');
+      b.type='button';
+      b.textContent=value.toFixed(1).replace('.0','')+' decks';
+      b.onclick=function(){
+        deckEstimatorSelected=value;
+        Array.from(box.querySelectorAll('button')).forEach(function(x){ x.classList.remove('selected'); });
+        b.classList.add('selected');
+        document.getElementById('deckEstCheckBtn').disabled=false;
+      };
+      box.appendChild(b);
+    })(half/2);
+  }
+}
+
+function nextDeckEstimate(){
+  var possible=[];
+  for(var half=2;half<=11;half++){ possible.push(half/2); } /* 1.0 through 5.5 */
+  var answer=possible[Math.floor(Math.random()*possible.length)];
+  if(possible.length>1 && answer===deckEstimatorLastAnswer){
+    answer=possible[(possible.indexOf(answer)+1+Math.floor(Math.random()*(possible.length-1)))%possible.length];
+  }
+  deckEstimatorAnswer=answer;
+  deckEstimatorLastAnswer=answer;
+  deckEstimatorSelected=null;
+
+  var usableWidth=calcDeckEstimatorPercent(answer);
+  document.getElementById('shoeRemainingVisual').style.width=usableWidth+'%';
+  document.getElementById('shoeUsedVisual').style.width=Math.max(0,100-usableWidth)+'%';
+
+  buildDeckEstimateChoices();
+  document.getElementById('deckEstCheckBtn').disabled=true;
+  document.getElementById('deckEstCheckBtn').classList.remove('hidden');
+  document.getElementById('deckEstNextBtn').classList.add('hidden');
+  document.getElementById('deckEstMessage').innerText='';
+  clearExplain('deckEstExplain');
+  renderDeckEstimatorStats();
+}
+
+function calcDeckEstimatorPercent(decks){
+  /* Keep a little room for the shoe opening so the stack looks realistic without exact ruler marks. */
+  return Math.max(8,Math.min(94,(decks/6)*94));
+}
+
+function checkDeckEstimate(){
+  if(deckEstimatorSelected===null){ return; }
+
+  deckEstimatorAttempts++;
+  var correct=deckEstimatorSelected===deckEstimatorAnswer;
+  if(correct){ deckEstimatorCorrect++; }
+  recordDailyAttempt(correct);
+
+  var msg=document.getElementById('deckEstMessage');
+  msg.innerText=correct?'Correct ✓':'Not quite';
+  msg.className='center '+(correct?'good':'bad');
+
+  var cards=Math.round(deckEstimatorAnswer*52);
+  var exampleRC=Math.max(2,Math.round(deckEstimatorAnswer*2));
+  var exampleTC=exampleRC/deckEstimatorAnswer;
+
+  setExplain(
+    'deckEstExplain',
+    (correct
+      ? 'You estimated <b>'+deckEstimatorAnswer.toFixed(1).replace('.0','')+' decks</b> correctly.'
+      : 'You chose <b>'+deckEstimatorSelected.toFixed(1).replace('.0','')+' decks</b>. The visual represents about <b>'+deckEstimatorAnswer.toFixed(1).replace('.0','')+' decks</b> remaining.')+
+    '<br><br>That is roughly <b>'+cards+' cards</b> in a 6-deck training shoe.'+
+    '<br><br><b>True Count connection:</b> if the Running Count were +'+exampleRC+', then +'+exampleRC+' ÷ '+deckEstimatorAnswer.toFixed(1).replace('.0','')+' ≈ <b>+'+exampleTC.toFixed(1)+'</b>.'+
+    '<br><br><span class="small">At a real table you estimate visually; you do not need perfect card-by-card precision.</span>',
+    !correct
+  );
+
+  Array.from(document.querySelectorAll('#deckEstChoices button')).forEach(function(b){ b.disabled=true; });
+  document.getElementById('deckEstCheckBtn').classList.add('hidden');
+  document.getElementById('deckEstNextBtn').classList.remove('hidden');
+  renderDeckEstimatorStats();
+}
+
 function hideAll(){
 
   var trainer=document.getElementById("realTrainer");
@@ -2409,6 +2770,9 @@ function hideAll(){
 
   var guide=document.getElementById("rulesGuide");
   if(guide){ guide.classList.add("hidden"); }
+
+  var deckEstimator=document.getElementById("deckEstimator");
+  if(deckEstimator){ deckEstimator.classList.add("hidden"); }
 
   for(
     var i=1;
@@ -3416,13 +3780,21 @@ function stage7DeviationSheetHTML(){
 function stage7PartIntroHTML(part){
   if(part===1){
     return ''+
-      '<p><b>Goal:</b> turn the Running Count into a True Count, then use the training ramp to choose a bet size.</p>'+
-      '<div class="example"><b>A unit is your base bet.</b><br>If 1 unit = $10:<br><br>'+ 
+      '<p><b>What you will do:</b> every scenario gives you a Running Count and an estimate of decks remaining. First calculate the True Count. Then use that True Count to choose the training bet size.</p>'+
+      '<div class="example"><b>What each number means</b><br><br>'+
+      '<b>Running Count</b> = the count you have kept as exposed cards were dealt.<br>'+
+      '<b>Decks Remaining</b> = your estimate of how many decks are still left in the shoe.<br>'+
+      '<b>True Count</b> = Running Count ÷ Decks Remaining.<br>'+
+      '<b>1 unit</b> = your base bet.</div>'+
+      '<p><b>Example:</b> Running Count +8 with 4 decks remaining gives True Count +2. If your base unit is $10, the training ramp below would use 4 units = $40.</p>'+
+      '<div class="example"><b>Learning bet ramp — if 1 unit = $10</b><br><br>'+ 
       'TC ≤ 0 → 1 unit = $10<br>'+ 
       'TC +1 → 2 units = $20<br>'+ 
       'TC +2 → 4 units = $40<br>'+ 
       'TC +3 → 6 units = $60<br>'+ 
       'TC +4+ → 8 units = $80</div>'+ 
+      '<p><b>Your goal:</b> get 5 complete scenarios correct in a row. A wrong True Count or wrong bet resets this part to 0/5, and the app explains what to do instead.</p>'+
+      '<button type="button" class="secondary deckEstimatorLaunch" onclick="openDeckEstimator(true)">Practice Deck Estimation First</button>'+
       '<p class="small">This ramp is only a learning model inside the simulator. It is not a universal betting law or a guarantee of profit.</p>';
   }
 
@@ -3441,15 +3813,52 @@ function stage7PartIntroHTML(part){
     '<p><b>Need help on Step 3?</b> Use the Hint button. It will show the correct play and why, but it resets your streak to 0 and that scenario cannot score.</p>';
 }
 
-function stage7SetPart(part){
+function stage7UnlockedPart(){
+  if(progress.completed.includes(7)){ return 3; }
+  return Math.max(1,Math.min(progress.stage7MaxPart||1,3));
+}
+
+function stage7UpdatePartPicker(){
+  var unlocked=stage7UnlockedPart();
+  var current=progress.stage7Part||1;
+
+  for(var p=1;p<=3;p++){
+    var btn=document.getElementById('stage7PartBtn'+p);
+    if(!btn){ continue; }
+    btn.disabled=p>unlocked;
+    btn.classList.toggle('active',p===current);
+  }
+
+  var note=document.getElementById('stage7PartPickerNote');
+  if(note){
+    note.innerText=unlocked>=3
+      ? 'Choose any part to practice. Switching parts starts that part at 0/5.'
+      : 'Parts unlock in order. You can return to any part you have already unlocked.';
+  }
+}
+
+function stage7ChoosePart(part){
+  if(part<1 || part>3 || part>stage7UnlockedPart()){ return; }
   progress.stage7Part=part;
   progress.stage7Score=0;
   stage7RuleBags[part]=[];
   save();
+  stage7UpdatePartPicker();
+  stage7ShowPartIntro(part);
+}
+
+function stage7SetPart(part){
+  progress.stage7MaxPart=Math.max(progress.stage7MaxPart||1,part);
+  progress.stage7Part=part;
+  progress.stage7Score=0;
+  stage7RuleBags[part]=[];
+  save();
+  stage7UpdatePartPicker();
   stage7ShowPartIntro(part);
 }
 
 function startStage7(){
+  progress.stage7MaxPart=progress.completed.includes(7) ? 3 : Math.max(1,progress.stage7MaxPart||1);
   progress.stage7Part=1;
   progress.stage7Score=0;
   stage7RuleBags={2:[],3:[]};
@@ -3457,11 +3866,13 @@ function startStage7(){
   stage7LastCountSignature='';
   save();
   showPractice(7);
+  stage7UpdatePartPicker();
   stage7ShowPartIntro(1);
 }
 
 function stage7ShowPartIntro(part){
   stage7ResetUI();
+  stage7UpdatePartPicker();
 
   var phase=document.getElementById('stage7PhaseLabel');
   var intro=document.getElementById('stage7PartIntro');
@@ -3614,6 +4025,7 @@ function stage7RenderCountScenario(stepText){
 
 function stage7LoadScenario(){
   stage7ResetUI();
+  stage7UpdatePartPicker();
   var part=progress.stage7Part||1;
   var phase=document.getElementById('stage7PhaseLabel');
   var instructions=document.getElementById('stage7Instructions');
@@ -3781,6 +4193,9 @@ function stage7CompleteScenario(message,explanation){
 
   if(progress.stage7Score>=5){
     if(part<3){
+      progress.stage7MaxPart=Math.max(progress.stage7MaxPart||1,part+1);
+      save();
+      stage7UpdatePartPicker();
       document.getElementById('stage7Message').innerText='Part '+String.fromCharCode(64+part)+' complete ✓';
       setExplain(
         'stage7Explain',
@@ -3791,7 +4206,10 @@ function stage7CompleteScenario(message,explanation){
       );
       setTimeout(function(){ stage7SetPart(part+1); },1700);
     }else{
+      progress.stage7MaxPart=3;
+      save();
       completeStage(7);
+      stage7UpdatePartPicker();
       setExplain('stage7Explain','You completed the full integration section: Running Count → True Count → bet size → count-aware decision.',false);
       setTimeout(function(){ showStagePassed(7); },1200);
     }
@@ -3822,6 +4240,7 @@ var trainerInsuranceBet=0;
 var trainerCurrentBet=10;
 var trainerRoundStartBankroll=0;
 var trainerFirstDecision=true;
+var trainerCountsVisible=true;
 
 var trainerStats={
   bankroll:1000,
@@ -3840,6 +4259,7 @@ try{
     var tp=JSON.parse(savedTrainer);
     if(tp.stats){ trainerStats=Object.assign(trainerStats,tp.stats); }
     if(tp.currentBet){ trainerCurrentBet=tp.currentBet; }
+    if(typeof tp.countsVisible==='boolean'){ trainerCountsVisible=tp.countsVisible; }
   }
 }catch(e){}
 
@@ -3847,7 +4267,8 @@ function trainerSave(){
   try{
     localStorage.setItem("blackjackTrainerV2",JSON.stringify({
       stats:trainerStats,
-      currentBet:trainerCurrentBet
+      currentBet:trainerCurrentBet,
+      countsVisible:trainerCountsVisible
     }));
   }catch(e){}
 }
@@ -3855,6 +4276,12 @@ function trainerSave(){
 function trainerMoney(v){
   var sign=v<0?'-':'';
   return sign+'$'+Math.abs(v).toFixed(v%1===0?0:2);
+}
+
+function trainerToggleCounts(){
+  trainerCountsVisible=!trainerCountsVisible;
+  trainerSave();
+  trainerRender();
 }
 
 function trainerSetBet(amount){
@@ -4143,14 +4570,26 @@ function trainerRender(){
     ? 'Current hand total: '+trainerHandValue(current).total
     : 'Total: —';
 
-  document.getElementById('trainerRC').innerText=
-    (trainerRunningCount>0?'+':'')+trainerRunningCount;
+  var rcEl=document.getElementById('trainerRC');
+  var tcEl=document.getElementById('trainerTC');
+  var countToggle=document.getElementById('trainerCountToggle');
 
   var decksRemaining=Math.max(trainerShoe.length/52,0.25);
   var tc=trainerRunningCount/decksRemaining;
 
-  document.getElementById('trainerTC').innerText=
-    (tc>0?'+':'')+tc.toFixed(1);
+  if(trainerCountsVisible){
+    rcEl.innerText=(trainerRunningCount>0?'+':'')+trainerRunningCount;
+    tcEl.innerText=(tc>0?'+':'')+tc.toFixed(1);
+    rcEl.classList.remove('countHiddenValue');
+    tcEl.classList.remove('countHiddenValue');
+    if(countToggle){ countToggle.innerText='🙈 Hide Counts'; }
+  }else{
+    rcEl.innerText='•••';
+    tcEl.innerText='•••';
+    rcEl.classList.add('countHiddenValue');
+    tcEl.classList.add('countHiddenValue');
+    if(countToggle){ countToggle.innerText='👁 Show Counts'; }
+  }
 
   document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
 
@@ -4707,7 +5146,8 @@ function buildBackupCode(){
     course:progress,
     trainer:{
       stats:trainerStats,
-      currentBet:trainerCurrentBet
+      currentBet:trainerCurrentBet,
+      countsVisible:trainerCountsVisible
     }
   };
 
@@ -4787,7 +5227,8 @@ function restoreBackupCode(){
     if(payload.trainer && typeof payload.trainer==='object'){
       var restoredTrainer={
         stats:payload.trainer.stats || trainerStats,
-        currentBet:payload.trainer.currentBet || 10
+        currentBet:payload.trainer.currentBet || 10,
+        countsVisible:typeof payload.trainer.countsVisible==='boolean' ? payload.trainer.countsVisible : true
       };
       localStorage.setItem('blackjackTrainerV2',JSON.stringify(restoredTrainer));
     }
@@ -4838,6 +5279,7 @@ function resetCourse(){
       tcScore:0,
 
       stage7Part:1,
+  stage7MaxPart:1,
       stage7Score:0,
 
       daily:{
