@@ -450,13 +450,117 @@ button:disabled{
 }
 
 .pageScreen{
-  padding-top:52px;
+  padding-top:calc(env(safe-area-inset-top, 0px) + 76px);
   min-height:100vh;
 }
 
-/* Make the blackjack trainer more compact on a phone without changing its HTML structure. */
+/* Keep page titles clear of the fixed Home button on iPhone/PWA. */
 #realTrainer{
-  padding-top:60px;
+  padding-top:calc(env(safe-area-inset-top, 0px) + 76px);
+}
+
+.guideLaunch{
+  background:#22304a;
+  color:white;
+}
+
+.guideIntro{
+  margin-top:0;
+}
+
+.guideItem{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:14px;
+  margin:10px 0;
+  overflow:hidden;
+}
+
+.guideItem summary{
+  cursor:pointer;
+  list-style:none;
+  padding:15px 16px;
+  font-weight:800;
+}
+
+.guideItem summary::-webkit-details-marker{display:none}
+.guideItem[open] summary{border-bottom:1px solid #293855}
+.guideBody{padding:14px 16px;color:#dce5f7;line-height:1.55}
+
+.guideCards{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0;
+}
+
+.guideCard{
+  width:58px;
+  height:78px;
+  background:#f8fafc;
+  color:#111827;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:900;
+  box-shadow:0 3px 10px rgba(0,0,0,.22);
+}
+
+.guideCard.red{color:#dc2626}
+
+.quickRefGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.quickRefCell{
+  background:#091322;
+  border:1px solid #293855;
+  border-radius:10px;
+  padding:10px;
+  font-size:13px;
+  line-height:1.4;
+}
+
+.deviationSheet{
+  margin:12px 0;
+  border:1px solid #293855;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.deviationRow{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:8px;
+  padding:10px 12px;
+  background:#091322;
+  border-bottom:1px solid #293855;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.deviationRow:last-child{border-bottom:0}
+.deviationRow b{color:#fff}
+
+.stage7PartIntro{
+  margin-top:14px;
+}
+
+.stage7PartIntro h3{margin-top:0}
+
+.hintButton{
+  background:#6b4f1d !important;
+  color:#fff6d6 !important;
+}
+
+@media(max-width:520px){
+  .quickRefGrid{grid-template-columns:1fr}
+  .deviationRow{grid-template-columns:1fr}
 }
 
 #realTrainer > .sub,
@@ -614,6 +718,11 @@ button:disabled{
 }
 
 </style>
+
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="apple-mobile-web-app-title" content="Blackjack Academy">
+
 </head>
 
 <body>
@@ -644,6 +753,16 @@ button:disabled{
     ♣ Real Blackjack Table Practice
   </button>
   <p class="small center">Available at every stage — play a realistic hand and get feedback after every decision.</p>
+</div>
+
+<div class="box">
+  <h2 style="margin-bottom:6px">📘 Blackjack Rules &amp; Table Guide</h2>
+  <p class="sub guideIntro">
+    Review the rules anytime with simple card examples, special actions and a quick table reference.
+  </p>
+  <button class="guideLaunch" onclick="openRulesGuide()">
+    Open Rules &amp; Examples
+  </button>
 </div>
 
 <div class="box">
@@ -683,6 +802,139 @@ button:disabled{
   </p>
 </div>
 
+</div>
+
+<!-- BLACKJACK RULES & TABLE GUIDE -->
+<div id="rulesGuide" class="box hidden pageScreen">
+  <h2>📘 Blackjack Rules &amp; Table Guide</h2>
+  <p class="sub">
+    A simple reference for the rules used in this trainer. Open any section for an example.
+  </p>
+
+  <details class="guideItem" open>
+    <summary>🎯 Goal of Blackjack</summary>
+    <div class="guideBody">
+      Beat the dealer without going over 21. You win by finishing with a higher total than the dealer, or when the dealer busts.
+      <div class="guideCards"><span class="guideCard">10♠</span><span class="guideCard red">7♥</span></div>
+      Example: 10 + 7 = <b>17</b>. You have not busted because the total is 21 or less.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>🃏 Card Values &amp; Aces</summary>
+    <div class="guideBody">
+      Cards 2–10 are worth their number. J, Q and K are worth 10. An Ace is worth 11 when possible, but becomes 1 when 11 would make the hand bust.
+      <div class="guideCards"><span class="guideCard">A♠</span><span class="guideCard red">6♦</span></div>
+      A + 6 is <b>soft 17</b>. The Ace can still change from 11 to 1 if another card is drawn.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>⭐ Natural Blackjack</summary>
+    <div class="guideBody">
+      A natural blackjack is an Ace plus any 10-value card as your first two cards. In this trainer it pays <b>3:2</b>. If the dealer also has a natural blackjack, the result is a push.
+      <div class="guideCards"><span class="guideCard">A♣</span><span class="guideCard red">K♥</span></div>
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>➕ Hit / ✋ Stand</summary>
+    <div class="guideBody">
+      <b>Hit</b> means take another card. <b>Stand</b> means keep your current total and end your turn.
+      <div class="guideCards"><span class="guideCard">9♣</span><span class="guideCard red">7♦</span></div>
+      Example: with 16 you may hit or stand depending on the dealer card and the strategy situation.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>×2 Double Down</summary>
+    <div class="guideBody">
+      Double your original wager, receive <b>exactly one more card</b>, then your hand automatically stands. It is normally available only on your first two cards, subject to table rules.
+      <div class="guideCards"><span class="guideCard">5♠</span><span class="guideCard red">6♥</span><span class="guideCard">K♣</span></div>
+      Example: 5 + 6 = 11, double, receive one final card.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>↔️ Split</summary>
+    <div class="guideBody">
+      When your first two cards form a pair and the table rules allow it, you can split them into two separate hands. A second wager equal to the first is placed, and each hand is then played separately.
+      <div class="guideCards"><span class="guideCard">8♠</span><span class="guideCard red">8♥</span></div>
+      After the split, each 8 starts a new hand. Rules for resplitting or split Aces can vary by casino.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>🏳️ Surrender</summary>
+    <div class="guideBody">
+      With <b>late surrender</b>, when the option is available, you give up the hand before taking another card and receive half of your original wager back. The other half is lost. Not every table offers surrender.
+      <div class="example"><b>$20 wager → surrender → $10 returned, $10 lost.</b></div>
+      Important: if surrender is available, it is checked before the Hit/Stand decision. Some Stage 7 count drills focus specifically on the Hit/Stand index layer.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>🛡️ Insurance</summary>
+    <div class="guideBody">
+      Insurance is offered when the dealer shows an Ace. It is a separate side bet of up to half your original wager. If the dealer has blackjack, insurance pays <b>2:1</b>; otherwise the insurance bet loses.
+      <div class="guideCards"><span class="guideCard red">A♦</span><span class="guideCard">?</span></div>
+      Basic Strategy normally declines insurance. In this Hi-Lo training model, a common count benchmark is to take it around <b>True Count +3 or higher</b>.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>🤵 Dealer Rules — S17</summary>
+    <div class="guideBody">
+      In this trainer the dealer <b>hits 16 or less</b> and <b>stands on every 17 or higher</b>, including soft 17 (S17). The dealer does not choose strategically; the rule determines every draw.
+      <div class="guideCards"><span class="guideCard">A♠</span><span class="guideCard red">6♥</span></div>
+      Here the dealer has soft 17 and stands because this trainer uses S17.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>☁️ Soft Hand vs 🧱 Hard Hand</summary>
+    <div class="guideBody">
+      A <b>soft hand</b> contains an Ace currently counted as 11, so one extra card cannot immediately bust the hand. A <b>hard hand</b> has no Ace counted as 11.
+      <div class="guideCards"><span class="guideCard">A♣</span><span class="guideCard red">6♦</span><span class="guideCard">10♠</span><span class="guideCard red">6♥</span></div>
+      A+6 is soft 17. 10+6 is hard 16.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>✅ Win / ❌ Loss / 💥 Bust / 🤝 Push</summary>
+    <div class="guideBody">
+      <b>Win:</b> your final total beats the dealer, or the dealer busts.<br>
+      <b>Loss:</b> the dealer finishes higher without busting, or you bust first.<br>
+      <b>Bust:</b> a total above 21; that hand loses immediately.<br>
+      <b>Push:</b> equal final totals; your original wager is returned.
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>🧠 Basic Strategy vs Card Counting</summary>
+    <div class="guideBody">
+      <b>Basic Strategy is the default.</b> Card counting does not replace it. The count mainly helps estimate when the remaining shoe is richer in high cards, size a training bet, and make a small number of learned deviations.
+      <div class="example">
+        Example: 12 vs 2 is normally HIT in the Hit/Stand baseline. In the Hi-Lo index set used by this course, it changes to STAND at about True Count +3 or higher.
+      </div>
+    </div>
+  </details>
+
+  <details class="guideItem">
+    <summary>⚡ Quick Reference</summary>
+    <div class="guideBody">
+      <div class="quickRefGrid">
+        <div class="quickRefCell"><b>Hit</b><br>Take another card.</div>
+        <div class="quickRefCell"><b>Stand</b><br>End your turn with this total.</div>
+        <div class="quickRefCell"><b>Double</b><br>Double wager, one card, then stand.</div>
+        <div class="quickRefCell"><b>Split</b><br>Turn a pair into two hands with a second wager.</div>
+        <div class="quickRefCell"><b>Surrender</b><br>End the hand and recover half the wager when allowed.</div>
+        <div class="quickRefCell"><b>Insurance</b><br>Dealer Ace side bet; course benchmark TC +3+.</div>
+      </div>
+    </div>
+  </details>
+
+  <button class="secondary" onclick="showHome()">Back to Home</button>
 </div>
 
 <!-- REAL BLACKJACK TABLE TRAINER -->
@@ -1397,10 +1649,14 @@ button:disabled{
       Never restart after each hand. Keep counting every exposed card until the shoe is shuffled.<br><br>
       <b>2. Convert to True Count before using the information</b><br>
       True Count = Running Count ÷ decks remaining.<br><br>
-      <b>3. Use the True Count mainly to size your bet</b><br>
-      A higher positive True Count means the remaining shoe is richer in high cards.
-      In this trainer we use a simple learning ramp:<br>
-      TC ≤ 0 → 1 unit · +1 → 2 units · +2 → 4 units · +3 → 6 units · +4 or higher → 8 units.
+      <b>3. Use the True Count to choose a training bet size</b><br>
+      A <b>unit</b> means your base bet. If 1 unit = $10, then the learning ramp looks like this:<br><br>
+      TC ≤ 0 → 1 unit = $10<br>
+      TC +1 → 2 units = $20<br>
+      TC +2 → 4 units = $40<br>
+      TC +3 → 6 units = $60<br>
+      TC +4 or higher → 8 units = $80<br><br>
+      This is a <b>learning bet ramp</b> used inside the simulator, not a universal casino rule or a promise of profit.
     </div>
 
     <p class="tip">
@@ -1436,46 +1692,58 @@ button:disabled{
   <h2>7. Using the Count at the Table</h2>
 
   <div id="stage7PhaseLabel" class="stage7Phase">Part A — Count → Bet</div>
-  <p id="stage7Instructions" class="sub"></p>
 
-  <div id="stage7Scenario" class="stage7Scenario"></div>
+  <div id="stage7PartIntro" class="lesson stage7PartIntro hidden">
+    <h3 id="stage7PartIntroTitle"></h3>
+    <div id="stage7PartIntroBody" class="sub"></div>
+    <button id="stage7PartStartBtn" onclick="stage7BeginPart()">Start Part</button>
+  </div>
 
-  <div id="stage7TCSection">
-    <input id="stage7TCInput" type="number" inputmode="decimal" placeholder="Enter True Count">
-    <div class="inputAssist">
-      <button type="button" onclick="toggleInputSign('stage7TCInput')">± Change Sign</button>
+  <div id="stage7PracticeArea">
+    <p id="stage7Instructions" class="sub"></p>
+
+    <div id="stage7Scenario" class="stage7Scenario"></div>
+
+    <div id="stage7TCSection">
+      <input id="stage7TCInput" type="number" inputmode="decimal" placeholder="Enter True Count">
+      <div class="inputAssist">
+        <button type="button" onclick="toggleInputSign('stage7TCInput')">± Change Sign</button>
+      </div>
+      <button id="stage7CheckTCBtn" onclick="stage7CheckTrueCount()">Check True Count</button>
     </div>
-    <button id="stage7CheckTCBtn" onclick="stage7CheckTrueCount()">Check True Count</button>
-  </div>
 
-  <div id="stage7BetSection" class="hidden">
-    <p class="small center">Choose the training bet size:</p>
-    <div class="stage7ChoiceGrid">
-      <button onclick="stage7ChooseBet(1)">1 unit</button>
-      <button onclick="stage7ChooseBet(2)">2 units</button>
-      <button onclick="stage7ChooseBet(4)">4 units</button>
-      <button onclick="stage7ChooseBet(6)">6 units</button>
-      <button onclick="stage7ChooseBet(8)">8 units</button>
+    <div id="stage7BetSection" class="hidden">
+      <p class="small center">Choose the training bet size:</p>
+      <div class="stage7ChoiceGrid">
+        <button onclick="stage7ChooseBet(1)">1 unit</button>
+        <button onclick="stage7ChooseBet(2)">2 units</button>
+        <button onclick="stage7ChooseBet(4)">4 units</button>
+        <button onclick="stage7ChooseBet(6)">6 units</button>
+        <button onclick="stage7ChooseBet(8)">8 units</button>
+      </div>
     </div>
+
+    <div id="stage7DecisionSection" class="hidden">
+      <p class="small center">Choose the correct play:</p>
+      <div id="stage7DecisionButtons" class="stage7ActionGrid"></div>
+      <button id="stage7HintBtn" class="secondary hintButton hidden" onclick="stage7UseHint()">
+        💡 Hint — resets streak to 0
+      </button>
+    </div>
+
+    <p id="stage7Message" class="center"></p>
+    <div id="stage7Explain"></div>
+
+    <button id="stage7NextBtn" class="secondary hidden" onclick="stage7NextAfterMistake()">
+      Next Scenario
+    </button>
+
+    <div class="center big">
+      <span id="stage7Score">0</span>/<span id="stage7Target">5</span>
+    </div>
+
+    <p class="small center" id="stage7ScoreLabel">Correct scenarios in this part</p>
   </div>
-
-  <div id="stage7DecisionSection" class="hidden">
-    <p class="small center">Choose the correct play:</p>
-    <div id="stage7DecisionButtons" class="stage7ActionGrid"></div>
-  </div>
-
-  <p id="stage7Message" class="center"></p>
-  <div id="stage7Explain"></div>
-
-  <button id="stage7NextBtn" class="secondary hidden" onclick="stage7NextAfterMistake()">
-    Next Scenario
-  </button>
-
-  <div class="center big">
-    <span id="stage7Score">0</span>/<span id="stage7Target">5</span>
-  </div>
-
-  <p class="small center" id="stage7ScoreLabel">Correct scenarios in this part</p>
 
 </div>
 
@@ -2047,6 +2315,21 @@ function showHome(){
 
 }
 
+function openRulesGuide(){
+
+  hideAll();
+  setPageMode(false);
+
+  var guide=document.getElementById("rulesGuide");
+  if(guide){ guide.classList.remove("hidden"); }
+
+  progress.mode="rules";
+  save();
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
 function hideAll(){
 
   var trainer=document.getElementById("realTrainer");
@@ -2054,6 +2337,9 @@ function hideAll(){
 
   var pass=document.getElementById("passScreen");
   if(pass){ pass.classList.add("hidden"); }
+
+  var guide=document.getElementById("rulesGuide");
+  if(guide){ guide.classList.add("hidden"); }
 
   for(
     var i=1;
@@ -2993,18 +3279,16 @@ function checkDeck(){
 var stage7Current=null;
 var stage7Step='tc';
 var stage7WaitingForNext=false;
+var stage7RuleBags={2:[],3:[]};
+var stage7LastRule={2:null,3:null};
+var stage7LastCountSignature='';
 
-var stage7DecisionScenarios=[
-  {player:'16',dealer:'10',tc:1,answer:'stand',why:'At True Count 0 or higher, the classic Hi-Lo deviation for 16 vs 10 is to stand instead of hit.'},
-  {player:'16',dealer:'10',tc:-1,answer:'hit',why:'Below True Count 0, use the normal Basic Strategy play and hit 16 vs 10.'},
-  {player:'15',dealer:'10',tc:4,answer:'stand',why:'At about True Count +4 or higher, a common Hi-Lo deviation is to stand on 15 vs 10.'},
-  {player:'15',dealer:'10',tc:2,answer:'hit',why:'Below the +4 index, keep the Basic Strategy play and hit 15 vs 10.'},
-  {player:'12',dealer:'3',tc:2,answer:'stand',why:'At about True Count +2 or higher, 12 vs 3 becomes a stand in the common Hi-Lo index set.'},
-  {player:'12',dealer:'3',tc:1,answer:'hit',why:'Below the +2 index, 12 vs 3 remains a hit.'},
-  {player:'12',dealer:'2',tc:3,answer:'stand',why:'At about True Count +3 or higher, 12 vs 2 becomes a stand.'},
-  {player:'12',dealer:'2',tc:1,answer:'hit',why:'Below the +3 index, 12 vs 2 remains a hit.'},
-  {player:'Any hand',dealer:'A',tc:3,answer:'insurance',why:'A common Hi-Lo benchmark is to take Insurance around True Count +3 or higher.'},
-  {player:'Any hand',dealer:'A',tc:1,answer:'noinsurance',why:'Below about True Count +3, Insurance is normally declined.'}
+var stage7DeviationRules=[
+  {key:'16v10',player:'16',dealer:'10',basic:'hit',deviation:'stand',threshold:0},
+  {key:'15v10',player:'15',dealer:'10',basic:'hit',deviation:'stand',threshold:4},
+  {key:'12v3',player:'12',dealer:'3',basic:'hit',deviation:'stand',threshold:2},
+  {key:'12v2',player:'12',dealer:'2',basic:'hit',deviation:'stand',threshold:3},
+  {key:'insurance',player:'Irrelevant for Insurance',dealer:'A',basic:'noinsurance',deviation:'insurance',threshold:3}
 ];
 
 function stage7BetForTC(tc){
@@ -3017,18 +3301,130 @@ function stage7BetForTC(tc){
 
 function stage7Signed(v){ return (v>0?'+':'')+v; }
 
+function stage7ActionLabel(action){
+  return {
+    hit:'HIT',
+    stand:'STAND',
+    double:'DOUBLE',
+    insurance:'TAKE INSURANCE',
+    noinsurance:'NO INSURANCE'
+  }[action] || String(action).toUpperCase();
+}
+
+function stage7ThresholdText(sc){
+  return stage7ActionLabel(sc.deviation)+' at True Count '+stage7Signed(sc.threshold)+' or higher';
+}
+
+function stage7DecisionExplanation(sc){
+  var reached=sc.tc>=sc.threshold;
+  var html=
+    '<b>Basic Strategy'+(sc.key==='16v10'?' Hit/Stand baseline':'')+':</b> '+stage7ActionLabel(sc.basic)+'<br>'+ 
+    '<b>Deviation threshold:</b> '+stage7ThresholdText(sc)+'<br>'+ 
+    '<b>Current True Count:</b> '+stage7Signed(sc.tc)+'<br>'+ 
+    '<b>Correct play:</b> '+stage7ActionLabel(sc.answer)+'<br><br>'+ 
+    '<b>Why:</b> '+(reached
+      ? 'The True Count has reached the learned threshold, so use the count-based deviation.'
+      : 'The True Count is still below the learned threshold, so stay with the Basic Strategy baseline.');
+
+  if(sc.key==='16v10'){
+    html+='<br><br><span class="small">Late-surrender note: when surrender is available and appropriate, check surrender before this Hit/Stand index drill.</span>';
+  }
+
+  return html;
+}
+
+function stage7DeviationSheetHTML(){
+  return ''+
+    '<div class="deviationSheet">'+
+      '<div class="deviationRow"><b>16 vs 10</b><span>Stand at TC 0+</span></div>'+
+      '<div class="deviationRow"><b>15 vs 10</b><span>Stand at TC +4+</span></div>'+
+      '<div class="deviationRow"><b>12 vs 3</b><span>Stand at TC +2+</span></div>'+
+      '<div class="deviationRow"><b>12 vs 2</b><span>Stand at TC +3+</span></div>'+
+      '<div class="deviationRow"><b>Insurance vs A</b><span>Take at TC +3+</span></div>'+
+    '</div>';
+}
+
+function stage7PartIntroHTML(part){
+  if(part===1){
+    return ''+
+      '<p><b>Goal:</b> turn the Running Count into a True Count, then use the training ramp to choose a bet size.</p>'+
+      '<div class="example"><b>A unit is your base bet.</b><br>If 1 unit = $10:<br><br>'+ 
+      'TC ≤ 0 → 1 unit = $10<br>'+ 
+      'TC +1 → 2 units = $20<br>'+ 
+      'TC +2 → 4 units = $40<br>'+ 
+      'TC +3 → 6 units = $60<br>'+ 
+      'TC +4+ → 8 units = $80</div>'+ 
+      '<p class="small">This ramp is only a learning model inside the simulator. It is not a universal betting law or a guarantee of profit.</p>';
+  }
+
+  if(part===2){
+    return ''+
+      '<p><b>Basic Strategy is the default.</b> The count changes only a few learned situations. Compare the current True Count with the threshold below.</p>'+ 
+      stage7DeviationSheetHTML()+
+      '<div class="example"><b>How to think:</b><br>Basic Strategy → deviation threshold → current True Count → final play.</div>'+ 
+      '<p class="small">For 16 vs 10, this course is teaching the Hit/Stand index layer. If late surrender is available, surrender is checked first.</p>';
+  }
+
+  return ''+
+    '<p><b>Now combine everything:</b> Running Count → True Count → bet size → count-aware play.</p>'+ 
+    '<div class="example"><b>Step 1:</b> calculate True Count.<br><b>Step 2:</b> choose the training bet.<br><b>Step 3:</b> choose the count-aware play.</div>'+ 
+    stage7DeviationSheetHTML()+
+    '<p><b>Need help on Step 3?</b> Use the Hint button. It will show the correct play and why, but it resets your streak to 0 and that scenario cannot score.</p>';
+}
+
 function stage7SetPart(part){
   progress.stage7Part=part;
   progress.stage7Score=0;
+  stage7RuleBags[part]=[];
   save();
-  stage7LoadScenario();
+  stage7ShowPartIntro(part);
 }
 
 function startStage7(){
   progress.stage7Part=1;
   progress.stage7Score=0;
+  stage7RuleBags={2:[],3:[]};
+  stage7LastRule={2:null,3:null};
+  stage7LastCountSignature='';
   save();
   showPractice(7);
+  stage7ShowPartIntro(1);
+}
+
+function stage7ShowPartIntro(part){
+  stage7ResetUI();
+
+  var phase=document.getElementById('stage7PhaseLabel');
+  var intro=document.getElementById('stage7PartIntro');
+  var practice=document.getElementById('stage7PracticeArea');
+  var title=document.getElementById('stage7PartIntroTitle');
+  var body=document.getElementById('stage7PartIntroBody');
+  var btn=document.getElementById('stage7PartStartBtn');
+
+  practice.classList.add('hidden');
+  intro.classList.remove('hidden');
+
+  if(part===1){
+    phase.innerText='Part A — Count → Bet';
+    title.innerText='Before Part A — Count → Bet';
+    btn.innerText='Got it — Start Part A';
+  }else if(part===2){
+    phase.innerText='Part B — Count → Decision';
+    title.innerText='Before Part B — Count → Decision';
+    btn.innerText='Got it — Start Part B';
+  }else{
+    phase.innerText='Part C — Full Table Integration';
+    title.innerText='Before Part C — Full Table Integration';
+    btn.innerText='Got it — Start Part C';
+  }
+
+  body.innerHTML=stage7PartIntroHTML(part);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function stage7BeginPart(){
+  document.getElementById('stage7PartIntro').classList.add('hidden');
+  document.getElementById('stage7PracticeArea').classList.remove('hidden');
   stage7LoadScenario();
 }
 
@@ -3041,26 +3437,79 @@ function stage7ResetUI(){
   document.getElementById('stage7CheckTCBtn').disabled=false;
   document.getElementById('stage7BetSection').classList.add('hidden');
   document.getElementById('stage7DecisionSection').classList.add('hidden');
+  document.getElementById('stage7HintBtn').classList.add('hidden');
   document.getElementById('stage7NextBtn').classList.add('hidden');
   document.getElementById('stage7Message').innerText='';
   clearExplain('stage7Explain');
 }
 
 function stage7RandomCountScenario(){
-  var decks=[1,2,3,4,5][Math.floor(Math.random()*5)];
-  var tc=Math.floor(Math.random()*9)-3;
-  var rc=tc*decks;
-  return {rc:rc,decks:decks,tc:tc,bet:stage7BetForTC(tc)};
+  var result=null;
+  for(var tries=0;tries<20;tries++){
+    var decks=[1,2,3,4,5][Math.floor(Math.random()*5)];
+    var tc=Math.floor(Math.random()*9)-3; /* -3 through +5 */
+    var rc=tc*decks;
+    var signature=rc+'|'+decks;
+    if(signature!==stage7LastCountSignature){
+      stage7LastCountSignature=signature;
+      result={rc:rc,decks:decks,tc:tc,bet:stage7BetForTC(tc)};
+      break;
+    }
+  }
+  return result || {rc:0,decks:4,tc:0,bet:1};
+}
+
+function stage7Shuffle(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+
+function stage7PickRule(part){
+  if(!stage7RuleBags[part] || stage7RuleBags[part].length===0){
+    var bag=[];
+    for(var i=0;i<stage7DeviationRules.length;i++){ bag.push(i); }
+    stage7Shuffle(bag);
+
+    if(stage7LastRule[part]!==null && bag.length>1 && bag[0]===stage7LastRule[part]){
+      var swap=bag[0]; bag[0]=bag[1]; bag[1]=swap;
+    }
+    stage7RuleBags[part]=bag;
+  }
+
+  var idx=stage7RuleBags[part].shift();
+  stage7LastRule[part]=idx;
+  return stage7DeviationRules[idx];
+}
+
+function stage7MakeDecisionScenario(part){
+  var rule=stage7PickRule(part);
+  var min=Math.max(-3,rule.threshold-3);
+  var max=Math.min(6,rule.threshold+2);
+  var tc=min+Math.floor(Math.random()*(max-min+1));
+  var answer=tc>=rule.threshold ? rule.deviation : rule.basic;
+
+  return {
+    key:rule.key,
+    player:rule.player,
+    dealer:rule.dealer,
+    basic:rule.basic,
+    deviation:rule.deviation,
+    threshold:rule.threshold,
+    tc:tc,
+    answer:answer
+  };
 }
 
 function stage7IntegrationScenario(){
-  var base=stage7DecisionScenarios[Math.floor(Math.random()*stage7DecisionScenarios.length)];
+  var base=stage7MakeDecisionScenario(3);
   var decks=[1,2,3,4,5][Math.floor(Math.random()*5)];
-  var rc=base.tc*decks;
-  return {
-    rc:rc,decks:decks,tc:base.tc,bet:stage7BetForTC(base.tc),
-    player:base.player,dealer:base.dealer,answer:base.answer,why:base.why
-  };
+  base.decks=decks;
+  base.rc=base.tc*decks;
+  base.bet=stage7BetForTC(base.tc);
+  return base;
 }
 
 function stage7RenderDecisionButtons(options){
@@ -3073,6 +3522,25 @@ function stage7RenderDecisionButtons(options){
     b.onclick=function(){ stage7ChooseDecision(opt); };
     box.appendChild(b);
   });
+}
+
+function stage7RenderCountScenario(stepText){
+  var scenario=document.getElementById('stage7Scenario');
+  var part=progress.stage7Part||1;
+
+  if(part===1){
+    scenario.innerHTML=
+      '<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+
+      '<br><b>Decks Remaining:</b> '+stage7Current.decks+
+      '<br><br>'+stepText;
+  }else{
+    scenario.innerHTML=
+      '<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+
+      '<br><b>Decks Remaining:</b> '+stage7Current.decks+
+      '<br><b>Player:</b> '+stage7Current.player+
+      '<br><b>Dealer:</b> '+stage7Current.dealer+
+      '<br><br>'+stepText;
+  }
 }
 
 function stage7LoadScenario(){
@@ -3092,22 +3560,25 @@ function stage7LoadScenario(){
     phase.innerText='Part A — Count → Bet';
     instructions.innerText='Convert Running Count to True Count, then choose the training bet size. Get 5 scenarios correct in a row.';
     stage7Current=stage7RandomCountScenario();
-    scenario.innerHTML='<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+'<br><b>Decks Remaining:</b> '+stage7Current.decks+'<br><br>Step 1: calculate the True Count.';
+    stage7RenderCountScenario('Step 1: calculate the True Count.');
   }else if(part===2){
     phase.innerText='Part B — Count → Decision';
-    instructions.innerText='Use the True Count to decide whether a count-aware deviation applies. Get 5 scenarios correct in a row.';
-    var d=stage7DecisionScenarios[Math.floor(Math.random()*stage7DecisionScenarios.length)];
-    stage7Current={tc:d.tc,player:d.player,dealer:d.dealer,answer:d.answer,why:d.why};
+    instructions.innerText='Use the True Count to decide whether a learned count-aware deviation applies. Get 5 scenarios correct in a row.';
+    stage7Current=stage7MakeDecisionScenario(2);
     document.getElementById('stage7TCSection').classList.add('hidden');
     document.getElementById('stage7DecisionSection').classList.remove('hidden');
     stage7Step='decision';
-    scenario.innerHTML='<b>True Count:</b> '+stage7Signed(d.tc)+'<br><b>Player:</b> '+d.player+'<br><b>Dealer:</b> '+d.dealer+'<br><br>What is the correct count-aware play?';
-    stage7RenderDecisionButtons(d.answer==='insurance'||d.answer==='noinsurance' ? ['insurance','noinsurance'] : ['hit','stand']);
+    scenario.innerHTML=
+      '<b>True Count:</b> '+stage7Signed(stage7Current.tc)+
+      '<br><b>Player:</b> '+stage7Current.player+
+      '<br><b>Dealer:</b> '+stage7Current.dealer+
+      '<br><br>What is the correct count-aware play?';
+    stage7RenderDecisionButtons(stage7Current.key==='insurance' ? ['insurance','noinsurance'] : ['hit','stand']);
   }else{
     phase.innerText='Part C — Full Table Integration';
     instructions.innerText='Do the full sequence: calculate True Count → choose bet → choose the count-aware play. Get 5 full scenarios correct in a row.';
     stage7Current=stage7IntegrationScenario();
-    scenario.innerHTML='<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+'<br><b>Decks Remaining:</b> '+stage7Current.decks+'<br><b>Player:</b> '+stage7Current.player+'<br><b>Dealer:</b> '+stage7Current.dealer+'<br><br>Step 1: calculate the True Count.';
+    stage7RenderCountScenario('Step 1: calculate the True Count.');
   }
 }
 
@@ -3123,6 +3594,7 @@ function stage7Fail(message,explanation){
   document.getElementById('stage7CheckTCBtn').disabled=true;
   document.getElementById('stage7BetSection').classList.add('hidden');
   document.getElementById('stage7DecisionSection').classList.add('hidden');
+  document.getElementById('stage7HintBtn').classList.add('hidden');
   document.getElementById('stage7NextBtn').classList.remove('hidden');
 }
 
@@ -3133,29 +3605,47 @@ function stage7CheckTrueCount(){
   var answer=Number(input.value);
   var correct=answer===stage7Current.tc;
   recordDailyAttempt(correct);
+
   if(!correct){
-    stage7Fail('Not quite','Running Count <b>'+stage7Signed(stage7Current.rc)+'</b> ÷ <b>'+stage7Current.decks+'</b> decks = True Count <b>'+stage7Signed(stage7Current.tc)+'</b>.<br><br>Always convert to True Count before using the count to size a bet or make a count-aware deviation.');
+    stage7Fail(
+      'Not quite',
+      'Running Count <b>'+stage7Signed(stage7Current.rc)+'</b> ÷ <b>'+stage7Current.decks+'</b> decks = True Count <b>'+stage7Signed(stage7Current.tc)+'</b>.'+
+      '<br><br><b>What to do instead:</b> divide the Running Count by decks remaining before using the count for a bet or deviation.'
+    );
     return;
   }
+
   document.getElementById('stage7Message').innerText='True Count correct ✓';
   document.getElementById('stage7Message').className='center good';
   input.disabled=true;
   document.getElementById('stage7CheckTCBtn').disabled=true;
   document.getElementById('stage7BetSection').classList.remove('hidden');
   stage7Step='bet';
+  stage7RenderCountScenario('Step 2: choose the correct training bet size.');
 }
 
 function stage7ChooseBet(units){
   if(stage7WaitingForNext || stage7Step!=='bet'){ return; }
   var correct=units===stage7Current.bet;
   recordDailyAttempt(correct);
+
   if(!correct){
-    stage7Fail('Not quite','At True Count <b>'+stage7Signed(stage7Current.tc)+'</b>, the training ramp uses <b>'+stage7Current.bet+' unit'+(stage7Current.bet===1?'':'s')+'</b>.<br><br>Training ramp: TC ≤ 0 → 1, +1 → 2, +2 → 4, +3 → 6, +4+ → 8 units.');
+    var dollars=stage7Current.bet*10;
+    stage7Fail(
+      'Not quite',
+      'At True Count <b>'+stage7Signed(stage7Current.tc)+'</b>, the training ramp uses <b>'+stage7Current.bet+' unit'+(stage7Current.bet===1?'':'s')+'</b>.'+
+      '<br><br>Training ramp: TC ≤ 0 → 1, +1 → 2, +2 → 4, +3 → 6, +4+ → 8 units.'+
+      '<br><br><b>Money example:</b> if 1 unit = $10, the correct training bet here would be <b>$'+dollars+'</b>.'
+    );
     return;
   }
 
   if((progress.stage7Part||1)===1){
-    stage7CompleteScenario('Correct ✓','True Count '+stage7Signed(stage7Current.tc)+' maps to <b>'+units+' unit'+(units===1?'':'s')+'</b> in this training ramp.');
+    stage7CompleteScenario(
+      'Correct ✓',
+      'True Count '+stage7Signed(stage7Current.tc)+' maps to <b>'+units+' unit'+(units===1?'':'s')+'</b> in this training ramp.'+
+      '<br>If 1 unit = $10, that would be <b>$'+(units*10)+'</b> in the example ramp.'
+    );
     return;
   }
 
@@ -3163,43 +3653,82 @@ function stage7ChooseBet(units){
   document.getElementById('stage7Message').className='center good';
   document.getElementById('stage7BetSection').classList.add('hidden');
   document.getElementById('stage7DecisionSection').classList.remove('hidden');
-  stage7RenderDecisionButtons(stage7Current.answer==='insurance'||stage7Current.answer==='noinsurance' ? ['insurance','noinsurance'] : ['hit','stand']);
+  stage7RenderDecisionButtons(stage7Current.key==='insurance' ? ['insurance','noinsurance'] : ['hit','stand']);
+  document.getElementById('stage7HintBtn').classList.remove('hidden');
   stage7Step='decision';
+  stage7RenderCountScenario('Step 3: choose the correct count-aware play.');
 }
 
 function stage7ChooseDecision(action){
   if(stage7WaitingForNext || stage7Step!=='decision'){ return; }
   var correct=action===stage7Current.answer;
   recordDailyAttempt(correct);
+
   if(!correct){
-    var label={hit:'HIT',stand:'STAND',insurance:'TAKE INSURANCE',noinsurance:'NO INSURANCE'}[stage7Current.answer]||stage7Current.answer.toUpperCase();
-    stage7Fail('Not quite','Recommended play: <b>'+label+'</b>.<br><br>'+stage7Current.why);
+    stage7Fail(
+      'Not quite',
+      'Recommended play: <b>'+stage7ActionLabel(stage7Current.answer)+'</b>.<br><br>'+stage7DecisionExplanation(stage7Current)
+    );
     return;
   }
-  stage7CompleteScenario('Correct decision ✓',stage7Current.why);
+
+  stage7CompleteScenario('Correct decision ✓',stage7DecisionExplanation(stage7Current));
+}
+
+function stage7UseHint(){
+  if(stage7WaitingForNext || stage7Step!=='decision' || (progress.stage7Part||1)!==3){ return; }
+
+  progress.stage7Score=0;
+  save();
+  document.getElementById('stage7Score').innerText=0;
+  document.getElementById('stage7Message').innerText='Hint used — streak reset to 0';
+  document.getElementById('stage7Message').className='center bad';
+  setExplain(
+    'stage7Explain',
+    '<b>Hint:</b> the correct play is <b>'+stage7ActionLabel(stage7Current.answer)+'</b>.<br><br>'+stage7DecisionExplanation(stage7Current),
+    false
+  );
+
+  stage7WaitingForNext=true;
+  document.getElementById('stage7DecisionSection').classList.add('hidden');
+  document.getElementById('stage7HintBtn').classList.add('hidden');
+  document.getElementById('stage7NextBtn').classList.remove('hidden');
 }
 
 function stage7CompleteScenario(message,explanation){
   progress.stage7Score=(progress.stage7Score||0)+1;
   save();
+
+  var part=progress.stage7Part||1;
   document.getElementById('stage7Score').innerText=Math.min(progress.stage7Score,5);
   document.getElementById('stage7Message').innerText=message;
   document.getElementById('stage7Message').className='center good';
-  clearExplain('stage7Explain');
+
+  if(part===2 || part===3){
+    setExplain('stage7Explain',explanation,false);
+  }else{
+    clearExplain('stage7Explain');
+  }
 
   if(progress.stage7Score>=5){
-    var part=progress.stage7Part||1;
     if(part<3){
       document.getElementById('stage7Message').innerText='Part '+String.fromCharCode(64+part)+' complete ✓';
-      setExplain('stage7Explain',explanation+'<br><br><b>Next:</b> '+(part===1?'learn when the count changes specific playing decisions.':'combine count, bet sizing and playing decisions in one table-style sequence.'),false);
-      setTimeout(function(){ stage7SetPart(part+1); },1100);
+      setExplain(
+        'stage7Explain',
+        explanation+'<br><br><b>Next:</b> '+(part===1
+          ? 'learn when the count changes specific playing decisions.'
+          : 'combine count, bet sizing and playing decisions in one table-style sequence.'),
+        false
+      );
+      setTimeout(function(){ stage7SetPart(part+1); },1700);
     }else{
       completeStage(7);
       setExplain('stage7Explain','You completed the full integration section: Running Count → True Count → bet size → count-aware decision.',false);
-      setTimeout(function(){ showStagePassed(7); },900);
+      setTimeout(function(){ showStagePassed(7); },1200);
     }
   }else{
-    setTimeout(stage7LoadScenario,450);
+    var delay=(part===2 ? 1700 : (part===3 ? 1300 : 550));
+    setTimeout(stage7LoadScenario,delay);
   }
 }
 
@@ -4101,6 +4630,8 @@ function resetCourse(){
 
       completed:[],
 
+      stage1Score:0,
+
       valueScore:0,
 
       runningScore:0,
@@ -4108,6 +4639,9 @@ function resetCourse(){
       groupScore:0,
 
       tcScore:0,
+
+      stage7Part:1,
+      stage7Score:0,
 
       daily:{
         lastVisit:null,
