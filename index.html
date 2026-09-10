@@ -831,6 +831,7 @@ button:disabled{
 }
 
 #realTrainer .tableArea{
+  position:relative;
   min-height:0;
   padding:10px;
   margin:7px 0;
@@ -888,6 +889,55 @@ button:disabled{
   font-weight:800;
 }
 
+.handBetLabel{
+  width:100%;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+  opacity:.92;
+  margin:2px 0 4px;
+}
+
+.trainerShuffleScreen{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(5,37,28,.98),rgba(4,25,20,.98));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px 14px;
+}
+
+.trainerShuffleScreen.hidden{display:none}
+
+.trainerShuffleIcon{
+  font-size:46px;
+  line-height:1;
+  margin-bottom:8px;
+}
+
+.trainerShuffleTitle{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.trainerShuffleSub{
+  margin-top:7px;
+  font-size:15px;
+  font-weight:800;
+}
+
+.trainerShuffleReset{
+  margin-top:5px;
+  font-size:13px;
+  opacity:.88;
+}
+
 .stage7Phase{
   display:inline-block;
   background:#22304a;
@@ -941,6 +991,7 @@ button:disabled{
 </head>
 
 <body>
+<!-- Blackjack Academy build: final-v2 counts-hidden-bets-shuffle-screen -->
 
 <div class="app">
 
@@ -1273,7 +1324,7 @@ button:disabled{
   </div>
 
   <div class="countVisibilityRow">
-    <p class="small">Practice mode: hide Running Count and True Count when you want to keep them yourself.</p>
+    <p class="small">Practice mode: hide Running Count, True Count and Cards Left when you want to track the shoe yourself.</p>
     <button id="trainerCountToggle" class="countToggleBtn" type="button" onclick="trainerToggleCounts()">🙈 Hide Counts</button>
   </div>
 
@@ -1292,7 +1343,14 @@ button:disabled{
     </div>
   </div>
 
-  <div class="tableArea">
+  <div class="tableArea" id="trainerTableArea">
+
+    <div id="trainerShuffleScreen" class="trainerShuffleScreen hidden" aria-live="polite">
+      <div class="trainerShuffleIcon">↻</div>
+      <div class="trainerShuffleTitle">SHUFFLING…</div>
+      <div class="trainerShuffleSub">NEW 6-DECK SHOE</div>
+      <div class="trainerShuffleReset">Running Count reset to 0</div>
+    </div>
 
     <div class="handLabel">DEALER</div>
     <div id="trainerDealerCards" class="miniCards"></div>
@@ -4241,6 +4299,7 @@ var trainerCurrentBet=10;
 var trainerRoundStartBankroll=0;
 var trainerFirstDecision=true;
 var trainerCountsVisible=true;
+var trainerShufflePending=false;
 
 var trainerStats={
   bankroll:1000,
@@ -4310,6 +4369,31 @@ function trainerShowShoeNotice(){
   trainerShowShoeNotice._timer=setTimeout(function(){
     el.classList.add('hidden');
   },2200);
+}
+
+function trainerShowTableShuffle(done){
+  var screen=document.getElementById('trainerShuffleScreen');
+  trainerShufflePending=true;
+
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+
+  if(screen){ screen.classList.remove('hidden'); }
+
+  var coach=document.getElementById('trainerCoach');
+  if(coach){
+    coach.className='coachBox';
+    coach.innerHTML='<b>New shoe.</b><br>The cards are being shuffled. Start the Running Count again from 0.';
+  }
+
+  clearTimeout(trainerShowTableShuffle._timer);
+  trainerShowTableShuffle._timer=setTimeout(function(){
+    if(screen){ screen.classList.add('hidden'); }
+    trainerShufflePending=false;
+    if(typeof done==='function'){ done(); }
+  },1700);
 }
 
 function trainerBuildShoe(){
@@ -4547,12 +4631,17 @@ function trainerRender(){
 
   if(trainerHands.length>1){
     trainerHands.forEach(function(hand,idx){
-      playerEl.innerHTML+='<div style="width:100%;text-align:center;font-size:12px;opacity:.8">Hand '+(idx+1)+(idx===trainerHandIndex && !trainerRoundFinished?' • current':'')+'</div>';
+      var handBet=trainerHandBets[idx] || 0;
+      playerEl.innerHTML+='<div class="handBetLabel">Hand '+(idx+1)+' — Bet: '+trainerMoney(handBet)+(idx===trainerHandIndex && !trainerRoundFinished?' • current':'')+'</div>';
       hand.forEach(function(c){
         playerEl.innerHTML+=trainerRenderCard(c,false);
       });
     });
   }else{
+    if(current.length){
+      var singleBet=trainerHandBets[0] || trainerCurrentBet;
+      playerEl.innerHTML+='<div class="handBetLabel">Hand 1 — Bet: '+trainerMoney(singleBet)+'</div>';
+    }
     current.forEach(function(c){
       playerEl.innerHTML+=trainerRenderCard(c,false);
     });
@@ -4572,6 +4661,7 @@ function trainerRender(){
 
   var rcEl=document.getElementById('trainerRC');
   var tcEl=document.getElementById('trainerTC');
+  var cardsLeftEl=document.getElementById('trainerCardsLeft');
   var countToggle=document.getElementById('trainerCountToggle');
 
   var decksRemaining=Math.max(trainerShoe.length/52,0.25);
@@ -4580,18 +4670,20 @@ function trainerRender(){
   if(trainerCountsVisible){
     rcEl.innerText=(trainerRunningCount>0?'+':'')+trainerRunningCount;
     tcEl.innerText=(tc>0?'+':'')+tc.toFixed(1);
+    cardsLeftEl.innerText=trainerShoe.length;
     rcEl.classList.remove('countHiddenValue');
     tcEl.classList.remove('countHiddenValue');
+    cardsLeftEl.classList.remove('countHiddenValue');
     if(countToggle){ countToggle.innerText='🙈 Hide Counts'; }
   }else{
     rcEl.innerText='•••';
     tcEl.innerText='•••';
+    cardsLeftEl.innerText='•••';
     rcEl.classList.add('countHiddenValue');
     tcEl.classList.add('countHiddenValue');
+    cardsLeftEl.classList.add('countHiddenValue');
     if(countToggle){ countToggle.innerText='👁 Show Counts'; }
   }
-
-  document.getElementById('trainerCardsLeft').innerText=trainerShoe.length;
 
   var hitBtn=document.getElementById('trainerHitBtn');
   var standBtn=document.getElementById('trainerStandBtn');
@@ -4641,10 +4733,24 @@ function openRealGame(){
 }
 
 function trainerNewRound(){
+  if(trainerShufflePending){ return; }
+
   if(trainerShoe.length<60){
+    var isReshuffle=trainerShoe.length>0;
     trainerBuildShoe();
+
+    if(isReshuffle){
+      trainerShowTableShuffle(function(){
+        trainerDealRound();
+      });
+      return;
+    }
   }
 
+  trainerDealRound();
+}
+
+function trainerDealRound(){
   if(trainerStats.bankroll<trainerCurrentBet){
     trainerCurrentBet=Math.max(5,Math.floor(trainerStats.bankroll/5)*5);
   }
