@@ -1982,6 +1982,153 @@ body.landscapeGameplay #s8 .stage8LandscapeRight > .small.center{
   body.landscapeGameplay #s8 .stage8Table{padding-top:27px}
 }
 
+
+
+/* ==========================================================
+   V7 — SAFE LANDSCAPE GUTTERS + LARGER CARDS
+   - Stage 8 lesson stays portrait; only Stage 8 practice rotates.
+   - Protects both landscape gameplay views from iPhone status/safe areas.
+   - Pulls YOU fully inside the table and enlarges all visible cards.
+   ========================================================== */
+
+/* CSS-rotated portrait iPhone: the app's LEFT edge becomes the phone's TOP
+   edge after rotate(90deg), so map the physical top safe area into left
+   padding. The app's RIGHT edge maps toward the home-indicator side. */
+body.landscapeGameplay.forceRotateLandscape .app{
+  padding-top:12px !important;
+  padding-bottom:14px !important;
+  padding-left:max(46px, env(safe-area-inset-top, 0px)) !important;
+  padding-right:max(30px, env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Native landscape gets normal left/right safe-area protection. */
+body.landscapeGameplay.nativeLandscape .app{
+  padding-top:max(8px, env(safe-area-inset-top, 0px)) !important;
+  padding-bottom:max(8px, env(safe-area-inset-bottom, 0px)) !important;
+  padding-left:max(18px, env(safe-area-inset-left, 0px)) !important;
+  padding-right:max(18px, env(safe-area-inset-right, 0px)) !important;
+}
+
+/* Keep Home inside the usable safe area in either landscape mode. */
+body.landscapeGameplay.forceRotateLandscape #homeButton{
+  left:max(46px, env(safe-area-inset-top, 0px)) !important;
+  top:8px !important;
+}
+body.landscapeGameplay.nativeLandscape #homeButton{
+  left:max(18px, env(safe-area-inset-left, 0px)) !important;
+  top:max(8px, env(safe-area-inset-top, 0px)) !important;
+}
+
+/* Slightly slimmer side panels leave more useful width for the table after
+   safe-area gutters are applied. */
+body.landscapeGameplay #realTrainer{
+  grid-template-columns:minmax(138px,.72fr) minmax(330px,2.45fr) minmax(152px,.82fr) !important;
+}
+body.landscapeGameplay #s8{
+  grid-template-columns:minmax(145px,.74fr) minmax(340px,2.5fr) minmax(158px,.84fr) !important;
+}
+
+/* Pull the seat arc inward from every table edge. */
+body.landscapeGameplay #realTrainer .trainerSeatArc,
+body.landscapeGameplay #s8 .stage8SeatArc{
+  left:14px !important;
+  right:14px !important;
+  bottom:14px !important;
+  height:126px !important;
+  gap:4px !important;
+}
+
+/* YOU must never hang below the green felt where overflow clips the cards. */
+body.landscapeGameplay #realTrainer .trainerYouSeat,
+body.landscapeGameplay #s8 .stage8YouSeat{
+  transform:translateY(-2px) !important;
+  padding-left:3px !important;
+  padding-right:3px !important;
+}
+
+/* Slightly larger, more readable cards for every seat. */
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCards,
+body.landscapeGameplay #s8 .stage8Seat .miniCards{
+  min-height:40px !important;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard,
+body.landscapeGameplay #s8 .stage8Seat .miniCard{
+  width:29px !important;
+  height:41px !important;
+  font-size:11px !important;
+  margin-left:-9px !important;
+  border-radius:5px !important;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard:first-child,
+body.landscapeGameplay #s8 .stage8Seat .miniCard:first-child{
+  margin-left:0 !important;
+}
+
+/* Make YOU's cards a touch larger because this is the user's focal hand. */
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard,
+body.landscapeGameplay #s8 .stage8YouSeat .miniCard{
+  width:32px !important;
+  height:45px !important;
+  font-size:12px !important;
+  margin-left:-8px !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard:first-child,
+body.landscapeGameplay #s8 .stage8YouSeat .miniCard:first-child{
+  margin-left:0 !important;
+}
+
+/* Dealer cards are also enlarged for quick table scanning. */
+body.landscapeGameplay #realTrainer .dealerTableCards{
+  min-height:48px !important;
+}
+body.landscapeGameplay #realTrainer .dealerTableCards .miniCard,
+body.landscapeGameplay #s8 .stage8DealerCards .miniCard{
+  width:37px !important;
+  height:50px !important;
+  font-size:14px !important;
+  border-radius:7px !important;
+}
+body.landscapeGameplay #s8 .stage8DealerCards{
+  min-height:50px !important;
+}
+
+/* Give the larger player cards room without pushing them through the table. */
+body.landscapeGameplay #realTrainer .tableArea,
+body.landscapeGameplay #s8 .stage8Table{
+  padding-left:12px !important;
+  padding-right:12px !important;
+  padding-bottom:12px !important;
+}
+
+/* Seat text remains readable but compact enough for five simulated players. */
+body.landscapeGameplay #realTrainer .otherSeatTitle,
+body.landscapeGameplay #s8 .stage8Seat b{
+  font-size:8px !important;
+}
+body.landscapeGameplay #realTrainer .otherSeatTotal{
+  font-size:7px !important;
+}
+body.landscapeGameplay #realTrainer .otherActionBadge{
+  font-size:7px !important;
+  min-height:14px !important;
+}
+
+/* Extra density fallback for especially narrow logical landscape canvases. */
+@media (max-width:720px) and (orientation:landscape){
+  body.landscapeGameplay #realTrainer,
+  body.landscapeGameplay #s8{gap:5px !important}
+  body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard,
+  body.landscapeGameplay #s8 .stage8Seat .miniCard{
+    width:27px !important;
+    height:39px !important;
+    font-size:10px !important;
+  }
+  body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard,
+  body.landscapeGameplay #s8 .stage8YouSeat .miniCard{
+    width:30px !important;
+    height:42px !important;
+  }
+}
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -1991,7 +2138,7 @@ body.landscapeGameplay #s8 .stage8LandscapeRight > .small.center{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v6 true-landscape-fit -->
+<!-- Blackjack Academy build: v7 safe-landscape-larger-cards -->
 
 <div class="app">
 
@@ -8549,6 +8696,27 @@ setTimeout(function(){
   if(blackjackLandscapeRequested){ syncBlackjackLandscape(); }
 },0);
 
+
+
+/* ==========================================================
+   V7 — Stage 8 lesson remains portrait
+   ========================================================== */
+var _showLessonV7=showLesson;
+showLesson=function(stage){
+  _showLessonV7(stage);
+  /* Stage 8 Quick Lesson should read normally. Only its practice screen is
+     landscape. Stages 1–7 were already portrait. */
+  if(Number(stage)===8){
+    setBlackjackLandscape(false);
+  }
+};
+
+/* Re-apply the current layout once more after V7 is installed. */
+setTimeout(function(){
+  if(typeof blackjackLandscapeRequested!=='undefined' && blackjackLandscapeRequested){
+    syncBlackjackLandscape();
+  }
+},0);
 </script>
 
 </body>
