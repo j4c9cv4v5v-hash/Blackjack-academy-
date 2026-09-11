@@ -982,6 +982,102 @@ button:disabled{
   .stage7ChoiceGrid{grid-template-columns:repeat(3,1fr)}
 }
 
+
+/* MULTI-PLAYER TABLE + STAGE 8 */
+.tableSizeControls{
+  margin-top:12px;
+}
+.tableSizeControls select{
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #34425e;
+  background:#091322;
+  color:white;
+  font-size:16px;
+}
+.otherPlayersGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:10px 0 4px;
+}
+.otherPlayerSeat{
+  background:rgba(4,34,25,.55);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  padding:10px 8px;
+  min-width:0;
+}
+.otherPlayerSeat .miniCards{
+  min-height:54px;
+  gap:5px;
+}
+.otherPlayerSeat .miniCard{
+  width:38px;
+  height:52px;
+  font-size:15px;
+  border-radius:7px;
+}
+.otherSeatTitle{
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+.otherSeatTotal{
+  text-align:center;
+  font-size:11px;
+  opacity:.82;
+  margin-top:5px;
+}
+.stage8Table{
+  background:linear-gradient(180deg,#0d5b42,#083d2e);
+  border:1px solid #28725d;
+  border-radius:18px;
+  padding:14px;
+  margin:14px 0;
+}
+.stage8Seats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.stage8Seat{
+  background:rgba(4,34,25,.55);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  padding:10px 7px;
+  min-width:0;
+}
+.stage8Seat b{
+  display:block;
+  text-align:center;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.stage8Seat .miniCards{
+  min-height:54px;
+  gap:5px;
+}
+.stage8Seat .miniCard{
+  width:38px;
+  height:52px;
+  font-size:15px;
+  border-radius:7px;
+}
+.stage8StepBox{
+  background:#0c1627;
+  border:1px solid #293855;
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+}
+@media(max-width:420px){
+  .otherPlayersGrid,.stage8Seats{grid-template-columns:1fr 1fr}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -991,7 +1087,7 @@ button:disabled{
 </head>
 
 <body>
-<!-- Blackjack Academy build: final-v2 counts-hidden-bets-shuffle-screen -->
+<!-- Blackjack Academy build: final-v3 share-app -->
 
 <div class="app">
 
@@ -1003,7 +1099,7 @@ button:disabled{
 <p class="sub">Complete Hi-Lo Card Counting Course</p>
 
 <div class="box">
-  <div id="stageText" class="small">Stage 1 of 7</div>
+  <div id="stageText" class="small">Stage 1 of 8</div>
 
   <div class="progress">
     <div id="bar" class="bar"></div>
@@ -1039,6 +1135,17 @@ button:disabled{
   <button class="deckEstimatorLaunch" onclick="openDeckEstimator(false)">
     Practice Deck Estimation
   </button>
+</div>
+
+<div class="box">
+  <h2 style="margin-bottom:6px">📤 Share Blackjack Academy</h2>
+  <p class="sub guideIntro">
+    Send the app to a friend. They will open their own fresh copy with separate progress and statistics.
+  </p>
+  <button onclick="shareBlackjackAcademy()">
+    Share App
+  </button>
+  <p id="shareStatus" class="small center" style="margin-bottom:0"></p>
 </div>
 
 <div class="box">
@@ -1323,6 +1430,25 @@ button:disabled{
     </p>
   </div>
 
+  <div class="lesson tableSizeControls">
+    <b>Players at the table</b>
+    <p class="small" style="margin-bottom:6px">
+      Add simulated players to make card counting more realistic. You sit at the last seat, so the other players act before you and expose extra cards to count.
+    </p>
+    <label class="small" for="trainerOtherPlayersSelect">Other players:</label>
+    <select id="trainerOtherPlayersSelect" onchange="trainerSetOtherPlayers(this.value)">
+      <option value="0">0 — heads-up</option>
+      <option value="1">1 other player</option>
+      <option value="2">2 other players</option>
+      <option value="3">3 other players</option>
+      <option value="4">4 other players</option>
+      <option value="5">5 other players</option>
+    </select>
+    <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">
+      Simulated seats use automatic Hit/Stand play. Their bankroll is not tracked.
+    </p>
+  </div>
+
   <div class="countVisibilityRow">
     <p class="small">Practice mode: hide Running Count, True Count and Cards Left when you want to track the shoe yourself.</p>
     <button id="trainerCountToggle" class="countToggleBtn" type="button" onclick="trainerToggleCounts()">🙈 Hide Counts</button>
@@ -1356,9 +1482,16 @@ button:disabled{
     <div id="trainerDealerCards" class="miniCards"></div>
     <div id="trainerDealerTotal" class="center small">Showing: —</div>
 
+    <div id="trainerOtherPlayersWrap" class="hidden">
+      <div style="height:18px"></div>
+      <div class="handLabel">OTHER PLAYERS</div>
+      <div id="trainerOtherPlayers" class="otherPlayersGrid"></div>
+      <div class="center small">Simulated seats — you are at the last seat.</div>
+    </div>
+
     <div style="height:26px"></div>
 
-    <div class="handLabel">PLAYER</div>
+    <div class="handLabel">YOU</div>
     <div id="trainerPlayerCards" class="miniCards"></div>
     <div id="trainerPlayerTotal" class="center small">Total: —</div>
 
@@ -2110,6 +2243,102 @@ button:disabled{
 
 </div>
 
+
+<!-- STAGE 8 LESSON -->
+
+<div id="l8" class="box pageScreen hidden">
+
+  <h2>Stage 8 — Quick Lesson</h2>
+
+  <div class="lesson">
+    <h3>Counting a Full Blackjack Table</h3>
+
+    <p class="sub">
+      At a busy table, many more cards are exposed each round. Your job is still the same:
+      keep <b>one Running Count</b> for every exposed card — yours, the dealer's, and every other player's cards.
+    </p>
+
+    <div class="example">
+      <b>What changes with more players?</b><br><br>
+      • More cards appear before your decision, so the Running Count can move quickly.<br>
+      • Do not keep a separate count for each player — there is only <b>one count for the whole shoe</b>.<br>
+      • Count cards in a steady order around the table instead of jumping randomly between hands.<br>
+      • Dealer hole cards are counted only when they are revealed.
+    </div>
+
+    <p class="tip">
+      A simple rhythm is: scan each exposed hand from left to right, cancel +1 and −1 cards when possible,
+      then carry the final Running Count into the next round.
+    </p>
+
+    <div class="example">
+      <b>What you will do in this stage</b><br><br>
+      1. Start from the Running Count shown.<br>
+      2. Count every exposed card on a multi-player table.<br>
+      3. Enter the new Running Count.<br>
+      4. Convert it to the True Count using the decks remaining.<br><br>
+      Get <b>5 full table scenarios correct in a row</b>. A mistake resets the streak to 0 and the app explains the correct count.
+    </div>
+  </div>
+
+  <button onclick="startStage8()">Got it — Start Stage 8</button>
+
+</div>
+
+<!-- STAGE 8 PRACTICE -->
+
+<div id="s8" class="box pageScreen hidden">
+
+  <h2>8. Multi-Player Table Counting</h2>
+
+  <p class="sub">
+    Count every exposed card at the table, then convert the result to a True Count.
+  </p>
+
+  <div id="stage8Scenario" class="stage8StepBox"></div>
+
+  <div id="stage8Table" class="stage8Table">
+    <div class="handLabel">DEALER UP CARD</div>
+    <div id="stage8Dealer" class="miniCards"></div>
+
+    <div style="height:14px"></div>
+    <div class="handLabel">OTHER PLAYERS</div>
+    <div id="stage8Others" class="stage8Seats"></div>
+
+    <div style="height:14px"></div>
+    <div class="handLabel">YOU</div>
+    <div id="stage8You" class="miniCards"></div>
+  </div>
+
+  <div id="stage8RCSection">
+    <input id="stage8RCInput" type="number" inputmode="decimal" placeholder="New Running Count">
+    <div class="inputAssist">
+      <button type="button" onclick="toggleInputSign('stage8RCInput')">± Change Sign</button>
+    </div>
+    <button id="stage8CheckRCBtn" onclick="stage8CheckRC()">Check Running Count</button>
+  </div>
+
+  <div id="stage8TCSection" class="hidden">
+    <input id="stage8TCInput" type="number" inputmode="decimal" step="0.1" placeholder="True Count">
+    <div class="inputAssist">
+      <button type="button" onclick="toggleInputSign('stage8TCInput')">± Change Sign</button>
+    </div>
+    <button id="stage8CheckTCBtn" onclick="stage8CheckTC()">Check True Count</button>
+  </div>
+
+  <p id="stage8Message" class="center"></p>
+  <div id="stage8Explain"></div>
+
+  <button id="stage8NextBtn" class="secondary hidden" onclick="stage8NextAfterMistake()">Next Table</button>
+
+  <div class="center big">
+    <span id="stage8Score">0</span>/5
+  </div>
+  <p class="small center">Full table scenarios correct in a row</p>
+
+</div>
+
+
 <div id="passScreen" class="box pageScreen hidden">
 
   <h2 id="passTitle" class="good center">
@@ -2207,6 +2436,7 @@ var progress={
   stage7Part:1,
   stage7MaxPart:1,
   stage7Score:0,
+  stage8Score:0,
 
   daily:{
     lastVisit:null,
@@ -2248,6 +2478,7 @@ if(typeof progress.stage7MaxPart!=="number"){
 }
 if(progress.completed.includes(7)){ progress.stage7MaxPart=3; }
 if(typeof progress.stage7Score!=="number"){ progress.stage7Score=0; }
+if(typeof progress.stage8Score!=="number"){ progress.stage8Score=0; }
 
 if(!progress.daily){
 
@@ -2597,7 +2828,7 @@ function renderStageMenu(){
 
   for(
     let i=1;
-    i<=7;
+    i<=8;
     i++
   ){
 
@@ -2834,7 +3065,7 @@ function hideAll(){
 
   for(
     var i=1;
-    i<=7;
+    i<=8;
     i++
   ){
 
@@ -2869,14 +3100,14 @@ function updateHeader(stage){
   +
   stage
   +
-  " of 7";
+  " of 8";
 
   document
   .getElementById(
     "bar"
   )
   .style.width=
-  ((stage-1)/6*100)
+  ((stage-1)/7*100)
   +
   "%";
 
@@ -3063,7 +3294,7 @@ function showStagePassed(stage){
   var textEl=document.getElementById("passText");
   var next=document.getElementById("passNextButton");
 
-  if(stage<7){
+  if(stage<8){
 
     title.innerText="Stage "+stage+" Passed ✓";
 
@@ -3073,6 +3304,9 @@ function showStagePassed(stage){
     }else if(stage===6){
       textEl.innerText=
         "You passed the full-deck checkpoint test. Stage 7 — Using the Count at the Table — is now unlocked.";
+    }else if(stage===7){
+      textEl.innerText=
+        "You completed the count-at-the-table training. Stage 8 — Multi-Player Table Counting — is now unlocked.";
     }else{
       textEl.innerText=
         "You completed the practice requirement. Stage "+(stage+1)+" is now unlocked.";
@@ -3083,7 +3317,7 @@ function showStagePassed(stage){
 
     title.innerText="Course Complete ✓";
     textEl.innerText=
-      "You completed the full Hi-Lo course, including using the count at the table. Every stage remains available for review.";
+      "You completed the full Hi-Lo course, including multi-player table counting. Every stage remains available for review.";
     next.innerText="Back to Home";
 
   }
@@ -3098,7 +3332,7 @@ function showStagePassed(stage){
 
 function continueAfterPass(){
 
-  if(passedStage>=1 && passedStage<7){
+  if(passedStage>=1 && passedStage<8){
     showLesson(passedStage+1);
   }else{
     showHome();
@@ -3108,7 +3342,7 @@ function continueAfterPass(){
 
 function reviewPassedStage(){
 
-  if(passedStage>=1 && passedStage<=7){
+  if(passedStage>=1 && passedStage<=8){
     showLesson(passedStage);
   }else{
     showHome();
@@ -4283,6 +4517,216 @@ function stage7NextAfterMistake(){
 }
 
 
+
+/* STAGE 8 — MULTI-PLAYER TABLE COUNTING */
+
+var stage8Current=null;
+var stage8WaitingForNext=false;
+
+function stage8Signed(v){
+  return v>0?'+'+v:String(v);
+}
+
+function stage8Card(){
+  var rank=ranks[Math.floor(Math.random()*ranks.length)];
+  var suit=suits[Math.floor(Math.random()*suits.length)];
+  return {rank:rank,suit:suit};
+}
+
+function stage8CardHtml(card){
+  var red=(card.suit==='♥'||card.suit==='♦')?' red':'';
+  return '<div class="miniCard'+red+'">'+card.rank+card.suit+'</div>';
+}
+
+function stage8GenerateScenario(){
+  var otherCount=2+Math.floor(Math.random()*4); /* 2–5 other players */
+  var others=[];
+  var exposed=[];
+
+  for(var i=0;i<otherCount;i++){
+    var h=[stage8Card(),stage8Card()];
+    others.push(h);
+    exposed=exposed.concat(h);
+  }
+
+  var you=[stage8Card(),stage8Card()];
+  var dealer=[stage8Card()];
+  exposed=exposed.concat(you).concat(dealer);
+
+  var start=-6+Math.floor(Math.random()*13);
+  var delta=exposed.reduce(function(sum,c){ return sum+cardValue(c.rank); },0);
+  var finalRC=start+delta;
+
+  var deckChoices=[2,2.5,3,3.5,4,4.5,5];
+  var decks=deckChoices[Math.floor(Math.random()*deckChoices.length)];
+  var tc=Math.round((finalRC/decks)*10)/10;
+
+  return {
+    start:start,
+    delta:delta,
+    finalRC:finalRC,
+    decks:decks,
+    tc:tc,
+    others:others,
+    you:you,
+    dealer:dealer,
+    exposed:exposed
+  };
+}
+
+function startStage8(){
+  showPractice(8);
+  progress.stage8Score=0;
+  save();
+  stage8LoadScenario();
+}
+
+function stage8LoadScenario(){
+  stage8WaitingForNext=false;
+  stage8Current=stage8GenerateScenario();
+
+  document.getElementById('stage8Score').innerText=Math.min(progress.stage8Score||0,5);
+  document.getElementById('stage8Message').innerText='';
+  clearExplain('stage8Explain');
+
+  var rcInput=document.getElementById('stage8RCInput');
+  var tcInput=document.getElementById('stage8TCInput');
+  rcInput.value='';
+  tcInput.value='';
+  rcInput.disabled=false;
+  tcInput.disabled=false;
+  document.getElementById('stage8CheckRCBtn').disabled=false;
+  document.getElementById('stage8CheckTCBtn').disabled=false;
+  document.getElementById('stage8RCSection').classList.remove('hidden');
+  document.getElementById('stage8TCSection').classList.add('hidden');
+  document.getElementById('stage8NextBtn').classList.add('hidden');
+
+  document.getElementById('stage8Scenario').innerHTML=
+    '<b>Starting Running Count:</b> '+stage8Signed(stage8Current.start)+
+    '<br><b>Decks Remaining:</b> '+stage8Current.decks+
+    '<br><br><b>Step 1:</b> Count every exposed card on the table and enter the new Running Count.';
+
+  document.getElementById('stage8Dealer').innerHTML=stage8Current.dealer.map(stage8CardHtml).join('');
+
+  var othersEl=document.getElementById('stage8Others');
+  othersEl.innerHTML='';
+  stage8Current.others.forEach(function(hand,idx){
+    othersEl.innerHTML+=
+      '<div class="stage8Seat"><b>Player '+(idx+1)+'</b><div class="miniCards">'+
+      hand.map(stage8CardHtml).join('')+
+      '</div></div>';
+  });
+
+  document.getElementById('stage8You').innerHTML=stage8Current.you.map(stage8CardHtml).join('');
+}
+
+function stage8Breakdown(){
+  return stage8Current.exposed.map(function(c){
+    return c.rank+c.suit+' ('+valueText(cardValue(c.rank))+')';
+  }).join(' · ');
+}
+
+function stage8Fail(message,explanation){
+  progress.stage8Score=0;
+  save();
+  document.getElementById('stage8Score').innerText=0;
+  document.getElementById('stage8Message').innerText=message+' — streak reset to 0';
+  document.getElementById('stage8Message').className='center bad';
+  setExplain('stage8Explain',explanation,true);
+  stage8WaitingForNext=true;
+  document.getElementById('stage8RCSection').classList.add('hidden');
+  document.getElementById('stage8TCSection').classList.add('hidden');
+  document.getElementById('stage8NextBtn').classList.remove('hidden');
+}
+
+function stage8CheckRC(){
+  if(stage8WaitingForNext || !stage8Current){ return; }
+  var input=document.getElementById('stage8RCInput');
+  if(input.value===''){ return; }
+
+  var answer=Number(input.value);
+  var correct=answer===stage8Current.finalRC;
+  recordDailyAttempt(correct);
+
+  if(!correct){
+    stage8Fail(
+      'Not quite',
+      '<b>Count every exposed card on the whole table.</b><br><br>'+
+      'Starting count: <b>'+stage8Signed(stage8Current.start)+'</b><br>'+
+      'Card change this table: <b>'+stage8Signed(stage8Current.delta)+'</b><br>'+
+      'Correct Running Count: <b>'+stage8Signed(stage8Current.finalRC)+'</b><br><br>'+
+      '<b>Card values:</b><br>'+stage8Breakdown()+
+      '<br><br>There is one Running Count for the entire shoe — not one count per player.'
+    );
+    return;
+  }
+
+  document.getElementById('stage8Message').innerText='Running Count correct ✓';
+  document.getElementById('stage8Message').className='center good';
+  setExplain(
+    'stage8Explain',
+    'Correct: '+stage8Signed(stage8Current.start)+' + ('+stage8Signed(stage8Current.delta)+') = <b>'+stage8Signed(stage8Current.finalRC)+'</b>.'+
+    '<br><br><b>Step 2:</b> divide that Running Count by '+stage8Current.decks+' decks remaining.',
+    false
+  );
+
+  input.disabled=true;
+  document.getElementById('stage8CheckRCBtn').disabled=true;
+  document.getElementById('stage8TCSection').classList.remove('hidden');
+  document.getElementById('stage8Scenario').innerHTML=
+    '<b>Running Count:</b> '+stage8Signed(stage8Current.finalRC)+
+    '<br><b>Decks Remaining:</b> '+stage8Current.decks+
+    '<br><br><b>Step 2:</b> Enter the True Count. Round to one decimal if needed.';
+}
+
+function stage8CheckTC(){
+  if(stage8WaitingForNext || !stage8Current){ return; }
+  var input=document.getElementById('stage8TCInput');
+  if(input.value===''){ return; }
+
+  var answer=Number(input.value);
+  var correct=Math.abs(answer-stage8Current.tc)<0.051;
+  recordDailyAttempt(correct);
+
+  if(!correct){
+    stage8Fail(
+      'Not quite',
+      'Running Count <b>'+stage8Signed(stage8Current.finalRC)+'</b> ÷ <b>'+stage8Current.decks+'</b> decks = True Count <b>'+stage8Signed(stage8Current.tc)+'</b>.'+
+      '<br><br>First keep one accurate Running Count across every exposed card, then convert it using the decks remaining.'
+    );
+    return;
+  }
+
+  progress.stage8Score=(progress.stage8Score||0)+1;
+  save();
+
+  document.getElementById('stage8Score').innerText=Math.min(progress.stage8Score,5);
+  document.getElementById('stage8Message').innerText='Full table correct ✓';
+  document.getElementById('stage8Message').className='center good';
+  setExplain(
+    'stage8Explain',
+    'Running Count <b>'+stage8Signed(stage8Current.finalRC)+'</b> ÷ '+stage8Current.decks+' decks = True Count <b>'+stage8Signed(stage8Current.tc)+'</b>.',
+    false
+  );
+
+  document.getElementById('stage8TCInput').disabled=true;
+  document.getElementById('stage8CheckTCBtn').disabled=true;
+
+  if(progress.stage8Score>=5){
+    completeStage(8);
+    setTimeout(function(){ showStagePassed(8); },1000);
+  }else{
+    setTimeout(stage8LoadScenario,800);
+  }
+}
+
+function stage8NextAfterMistake(){
+  if(!stage8WaitingForNext){ return; }
+  stage8LoadScenario();
+}
+
+
+
 /* REAL BLACKJACK TABLE TRAINER */
 
 var trainerShoe=[];
@@ -4300,6 +4744,9 @@ var trainerRoundStartBankroll=0;
 var trainerFirstDecision=true;
 var trainerCountsVisible=true;
 var trainerShufflePending=false;
+var trainerHoleCounted=false;
+var trainerOtherPlayerCount=0;
+var trainerOtherHands=[];
 
 var trainerStats={
   bankroll:1000,
@@ -4319,6 +4766,7 @@ try{
     if(tp.stats){ trainerStats=Object.assign(trainerStats,tp.stats); }
     if(tp.currentBet){ trainerCurrentBet=tp.currentBet; }
     if(typeof tp.countsVisible==='boolean'){ trainerCountsVisible=tp.countsVisible; }
+    if(typeof tp.otherPlayers==='number'){ trainerOtherPlayerCount=Math.max(0,Math.min(5,Math.round(tp.otherPlayers))); }
   }
 }catch(e){}
 
@@ -4327,7 +4775,8 @@ function trainerSave(){
     localStorage.setItem("blackjackTrainerV2",JSON.stringify({
       stats:trainerStats,
       currentBet:trainerCurrentBet,
-      countsVisible:trainerCountsVisible
+      countsVisible:trainerCountsVisible,
+      otherPlayers:trainerOtherPlayerCount
     }));
   }catch(e){}
 }
@@ -4341,6 +4790,59 @@ function trainerToggleCounts(){
   trainerCountsVisible=!trainerCountsVisible;
   trainerSave();
   trainerRender();
+}
+
+function trainerSetOtherPlayers(value){
+  var n=Math.max(0,Math.min(5,Number(value)||0));
+  trainerOtherPlayerCount=n;
+  trainerSave();
+
+  var select=document.getElementById('trainerOtherPlayersSelect');
+  if(select){ select.value=String(n); }
+
+  var note=document.getElementById('trainerOtherPlayersNote');
+  if(note){
+    note.innerText=(trainerRoundFinished || !trainerHands.length)
+      ? 'Next hand will use '+n+' other player'+(n===1?'':'s')+'.'
+      : 'Table size saved. It will apply on the next hand.';
+  }
+}
+
+function trainerOtherRecommendation(hand){
+  var hv=trainerHandValue(hand);
+  var total=hv.total;
+  var dealer=trainerDealerUpValue();
+
+  if(hv.soft){
+    if(total>=19){ return 'stand'; }
+    if(total===18 && (dealer===2 || dealer===7 || dealer===8)){ return 'stand'; }
+    return 'hit';
+  }
+
+  if(total>=17){ return 'stand'; }
+  if(total>=13 && total<=16){ return dealer>=2 && dealer<=6?'stand':'hit'; }
+  if(total===12){ return dealer>=4 && dealer<=6?'stand':'hit'; }
+  return 'hit';
+}
+
+function trainerAutoPlayOtherPlayers(){
+  if(!trainerOtherHands.length){ return; }
+
+  trainerOtherHands.forEach(function(hand){
+    var guard=0;
+    while(guard<8 && trainerHandValue(hand).total<21 && trainerOtherRecommendation(hand)==='hit'){
+      hand.push(trainerDraw(true));
+      guard++;
+    }
+  });
+
+  trainerRender();
+
+  var coach=document.getElementById('trainerCoach');
+  if(coach && !trainerRoundFinished){
+    coach.className='coachBox';
+    coach.innerHTML='<b>Other players finished their turns.</b><br>You are at the last seat. Keep the count from every exposed card, then make your move.';
+  }
 }
 
 function trainerSetBet(amount){
@@ -4619,13 +5121,35 @@ function trainerRenderStats(){
 function trainerRender(){
   var dealerEl=document.getElementById('trainerDealerCards');
   var playerEl=document.getElementById('trainerPlayerCards');
+  var otherEl=document.getElementById('trainerOtherPlayers');
+  var otherWrap=document.getElementById('trainerOtherPlayersWrap');
 
   dealerEl.innerHTML='';
   playerEl.innerHTML='';
+  if(otherEl){ otherEl.innerHTML=''; }
 
   trainerDealer.forEach(function(c,i){
     dealerEl.innerHTML+=trainerRenderCard(c,i===1 && !trainerRoundFinished);
   });
+
+  if(otherWrap && otherEl){
+    if(trainerOtherHands.length){
+      otherWrap.classList.remove('hidden');
+      trainerOtherHands.forEach(function(hand,idx){
+        otherEl.innerHTML+=
+          '<div class="otherPlayerSeat">'+
+          '<div class="otherSeatTitle">Player '+(idx+1)+'</div>'+
+          '<div class="miniCards">'+hand.map(function(c){ return trainerRenderCard(c,false); }).join('')+'</div>'+
+          '<div class="otherSeatTotal">Total: '+trainerHandValue(hand).total+'</div>'+
+          '</div>';
+      });
+    }else{
+      otherWrap.classList.add('hidden');
+    }
+  }
+
+  var tableSelect=document.getElementById('trainerOtherPlayersSelect');
+  if(tableSelect){ tableSelect.value=String(trainerOtherPlayerCount); }
 
   var current=trainerHands[trainerHandIndex] || trainerHands[0] || [];
 
@@ -4765,6 +5289,7 @@ function trainerDealRound(){
 
   trainerDealer=[];
   trainerHands=[];
+  trainerOtherHands=[];
   trainerHandBets=[];
   trainerHandIndex=0;
   trainerSplitUsed=false;
@@ -4772,12 +5297,25 @@ function trainerDealRound(){
   trainerInsurancePending=false;
   trainerInsuranceBet=0;
   trainerFirstDecision=true;
+  trainerHoleCounted=false;
 
   trainerRoundStartBankroll=trainerStats.bankroll;
   trainerStats.bankroll-=trainerCurrentBet;
 
+  for(var op=0;op<trainerOtherPlayerCount;op++){
+    trainerOtherHands.push([]);
+  }
+
+  /* Deal around the table. You are the last player seat. */
+  for(var op1=0;op1<trainerOtherHands.length;op1++){
+    trainerOtherHands[op1].push(trainerDraw(true));
+  }
   var p1=trainerDraw(true);
   var d1=trainerDraw(true);
+
+  for(var op2=0;op2<trainerOtherHands.length;op2++){
+    trainerOtherHands[op2].push(trainerDraw(true));
+  }
   var p2=trainerDraw(true);
   var d2=trainerDraw(false);
 
@@ -4817,6 +5355,9 @@ function trainerDealRound(){
     trainerResolveDealerBlackjack();
     return;
   }
+
+  /* Other seats act before you because the training seat is last base. */
+  trainerAutoPlayOtherPlayers();
 
   /* Player natural blackjack if dealer does not have blackjack. */
   if(trainerHandValue(trainerHands[0]).total===21){
@@ -4882,6 +5423,8 @@ function trainerInsurance(takeIt){
     coach.innerHTML+='<br><br>Dealer does not have blackjack, so the insurance bet loses.';
   }
 
+  trainerAutoPlayOtherPlayers();
+
   if(trainerHandValue(trainerHands[0]).total===21){
     trainerFinishNaturalBlackjack();
     return;
@@ -4894,8 +5437,9 @@ function trainerInsurance(takeIt){
 }
 
 function trainerRevealHole(){
-  if(!trainerRoundFinished && trainerDealer.length>1){
+  if(!trainerHoleCounted && trainerDealer.length>1){
     trainerRunningCount+=cardValue(trainerDealer[1].rank);
+    trainerHoleCounted=true;
   }
 }
 
@@ -5217,6 +5761,7 @@ function trainerResetStats(){
   trainerCurrentBet=10;
   trainerShoe=[];
   trainerHands=[];
+  trainerOtherHands=[];
   trainerDealer=[];
   trainerRoundFinished=true;
   trainerSave();
@@ -5225,6 +5770,63 @@ function trainerResetStats(){
   trainerNewRound();
 }
 
+
+/* SHARE APP */
+
+function shareSetStatus(message,isError){
+  var el=document.getElementById('shareStatus');
+  if(!el){ return; }
+  el.innerText=message;
+  el.className='small center '+(isError?'bad':'good');
+}
+
+async function shareBlackjackAcademy(){
+  var shareUrl=window.location.origin+window.location.pathname;
+  var shareData={
+    title:'Blackjack Counting Academy',
+    text:'Blackjack Counting Academy — learn Hi-Lo card counting, True Count and blackjack strategy with interactive practice.',
+    url:shareUrl
+  };
+
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      shareSetStatus('Share sheet opened ✓',false);
+      return;
+    }
+  }catch(e){
+    if(e && e.name==='AbortError'){
+      shareSetStatus('',false);
+      return;
+    }
+  }
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(shareUrl);
+      shareSetStatus('App link copied ✓',false);
+      return;
+    }
+  }catch(e){}
+
+  var temp=document.createElement('textarea');
+  temp.value=shareUrl;
+  temp.setAttribute('readonly','');
+  temp.style.position='absolute';
+  temp.style.left='-9999px';
+  document.body.appendChild(temp);
+  temp.select();
+  try{
+    if(document.execCommand('copy')){
+      shareSetStatus('App link copied ✓',false);
+    }else{
+      shareSetStatus('Could not open sharing. Copy this page link from your browser.',true);
+    }
+  }catch(e){
+    shareSetStatus('Could not open sharing. Copy this page link from your browser.',true);
+  }
+  document.body.removeChild(temp);
+}
 
 /* BACKUP & RESTORE */
 
@@ -5253,7 +5855,8 @@ function buildBackupCode(){
     trainer:{
       stats:trainerStats,
       currentBet:trainerCurrentBet,
-      countsVisible:trainerCountsVisible
+      countsVisible:trainerCountsVisible,
+      otherPlayers:trainerOtherPlayerCount
     }
   };
 
@@ -5334,7 +5937,8 @@ function restoreBackupCode(){
       var restoredTrainer={
         stats:payload.trainer.stats || trainerStats,
         currentBet:payload.trainer.currentBet || 10,
-        countsVisible:typeof payload.trainer.countsVisible==='boolean' ? payload.trainer.countsVisible : true
+        countsVisible:typeof payload.trainer.countsVisible==='boolean' ? payload.trainer.countsVisible : true,
+        otherPlayers:typeof payload.trainer.otherPlayers==='number' ? Math.max(0,Math.min(5,Math.round(payload.trainer.otherPlayers))) : 0
       };
       localStorage.setItem('blackjackTrainerV2',JSON.stringify(restoredTrainer));
     }
@@ -5387,6 +5991,7 @@ function resetCourse(){
       stage7Part:1,
   stage7MaxPart:1,
       stage7Score:0,
+      stage8Score:0,
 
       daily:{
         lastVisit:null,
