@@ -1528,6 +1528,460 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
   body.nativeLandscape .app{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
 }
 
+
+
+/* ==========================================================
+   V6 — TRUE LANDSCAPE GAMEPLAY LAYOUT
+   The previous build rotated a portrait page. V6 lays the two
+   gameplay screens out as genuine wide three-panel views so the
+   full table stays visible on an iPhone-sized landscape canvas.
+   ========================================================== */
+.trainerLandscapeLeft,
+.trainerLandscapeCenter,
+.trainerLandscapeRight,
+.stage8LandscapeLeft,
+.stage8LandscapeCenter,
+.stage8LandscapeRight{display:contents}
+
+/* During gameplay the outer canvas no longer scrolls. Side panels may scroll
+   independently when an explanation is unusually long, so Home never leaves
+   the screen and the table itself remains fixed in view. */
+body.landscapeGameplay.forceRotateLandscape .app{
+  overflow:hidden !important;
+  padding:6px 10px 8px;
+}
+body.landscapeGameplay.nativeLandscape .app{
+  height:100dvh;
+  overflow:hidden !important;
+  padding-top:max(6px,env(safe-area-inset-top,0px));
+  padding-bottom:max(6px,env(safe-area-inset-bottom,0px));
+  padding-left:max(10px,env(safe-area-inset-left,0px));
+  padding-right:max(10px,env(safe-area-inset-right,0px));
+}
+body.landscapeGameplay #homeButton{
+  position:absolute !important;
+  top:8px !important;
+  left:8px !important;
+  min-width:78px;
+  min-height:42px;
+  padding:8px 12px;
+  font-size:13px;
+  z-index:10050;
+}
+
+/* ---------- Real Blackjack ---------- */
+body.landscapeGameplay #realTrainer.hidden,
+body.landscapeGameplay #s8.hidden{display:none !important}
+
+body.landscapeGameplay #realTrainer{
+  display:grid;
+  grid-template-columns:minmax(155px,.78fr) minmax(360px,2.25fr) minmax(175px,.92fr);
+  gap:8px;
+  width:100%;
+  height:100%;
+  max-width:none;
+  min-height:0;
+  margin:0;
+  padding:6px !important;
+  overflow:hidden;
+  border-radius:14px;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft,
+body.landscapeGameplay #realTrainer .trainerLandscapeCenter,
+body.landscapeGameplay #realTrainer .trainerLandscapeRight{
+  display:block;
+  min-width:0;
+  min-height:0;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft{
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:46px 4px 4px;
+  scrollbar-width:none;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft::-webkit-scrollbar,
+body.landscapeGameplay #realTrainer .trainerLandscapeRight::-webkit-scrollbar,
+body.landscapeGameplay #s8 .stage8LandscapeLeft::-webkit-scrollbar,
+body.landscapeGameplay #s8 .stage8LandscapeRight::-webkit-scrollbar{display:none}
+body.landscapeGameplay #realTrainer .trainerLandscapeCenter{
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  gap:4px;
+  overflow:hidden;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight{
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:2px 3px 3px;
+  scrollbar-width:none;
+}
+body.landscapeGameplay #realTrainer h2{
+  font-size:16px;
+  line-height:1.12;
+  margin:0 0 5px;
+}
+body.landscapeGameplay #realTrainer > .trainerLandscapeLeft > .sub,
+body.landscapeGameplay #realTrainer > .trainerLandscapeLeft > .trainerRule,
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .lesson p{display:none}
+body.landscapeGameplay #realTrainer .shoeNotice{
+  margin:3px 0;
+  padding:6px;
+  font-size:10px;
+}
+body.landscapeGameplay #realTrainer .bankrollGrid{
+  grid-template-columns:1fr 1fr;
+  gap:3px;
+  margin:4px 0;
+}
+body.landscapeGameplay #realTrainer .bankrollStat{
+  padding:5px 2px;
+  font-size:8px;
+  border-radius:8px;
+}
+body.landscapeGameplay #realTrainer .bankrollStat b{font-size:13px}
+body.landscapeGameplay #realTrainer .lesson{
+  padding:6px;
+  margin:4px 0;
+  border-radius:10px;
+  font-size:10px;
+}
+body.landscapeGameplay #realTrainer .betControls{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:2px;
+  margin-top:4px;
+}
+body.landscapeGameplay #realTrainer .betControls button{
+  min-height:34px;
+  padding:5px 1px;
+  font-size:9px;
+  border-radius:8px;
+}
+body.landscapeGameplay #realTrainer .tableSizeControls label{display:none}
+body.landscapeGameplay #realTrainer .tableSizeControls select{
+  width:100%;
+  min-height:36px;
+  margin-top:4px;
+  font-size:11px;
+  padding:6px;
+  border-radius:8px;
+}
+body.landscapeGameplay #realTrainer .countVisibilityRow{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  margin:0;
+  min-height:36px;
+}
+body.landscapeGameplay #realTrainer .countVisibilityRow .small{display:none}
+body.landscapeGameplay #realTrainer .countToggleBtn{
+  width:auto;
+  min-width:112px;
+  min-height:34px;
+  margin:0;
+  padding:6px 9px;
+  font-size:10px;
+}
+body.landscapeGameplay #realTrainer .trainerTop{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:4px;
+  margin:0;
+}
+body.landscapeGameplay #realTrainer .trainerStat{
+  padding:4px 2px;
+  font-size:8px;
+  border-radius:8px;
+}
+body.landscapeGameplay #realTrainer .trainerStat b{font-size:14px}
+body.landscapeGameplay #realTrainer .tableArea{
+  width:100%;
+  height:100%;
+  min-height:0 !important;
+  margin:0;
+  padding:32px 8px 8px;
+  border-radius:12px 12px 48% 48% / 12px 12px 28% 28%;
+  overflow:hidden;
+}
+body.landscapeGameplay #realTrainer .tableArea::before{
+  top:6px;
+  width:72%;
+  font-size:7px;
+  letter-spacing:.35px;
+}
+body.landscapeGameplay #realTrainer .dealerTableLabel{
+  margin:0;
+  font-size:10px;
+  line-height:1.05;
+}
+body.landscapeGameplay #realTrainer .dealerTableCards{
+  min-height:38px;
+  margin:1px 0 0;
+}
+body.landscapeGameplay #realTrainer .dealerTableCards .miniCard{
+  width:31px;
+  height:42px;
+  font-size:12px;
+}
+body.landscapeGameplay #realTrainer .dealerTableTotal{
+  font-size:8px;
+  margin:0;
+}
+body.landscapeGameplay #realTrainer .tableDeckEstimate{
+  top:5px;
+  right:6px;
+  width:68px;
+  padding:4px;
+}
+body.landscapeGameplay #realTrainer .tableDeckEstimateTitle{font-size:6px}
+body.landscapeGameplay #realTrainer .tableDeckShoe{height:10px;margin-top:3px}
+body.landscapeGameplay #realTrainer .tableDeckEstimateText{font-size:7px;margin-top:2px}
+body.landscapeGameplay #realTrainer .trainerSeatArc{
+  position:absolute;
+  left:8px;
+  right:8px;
+  bottom:7px;
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:3px;
+  height:112px;
+  min-height:0;
+  margin:0;
+  padding:0;
+  align-items:end;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat{
+  padding:3px 1px;
+  border-radius:8px;
+}
+body.landscapeGameplay #realTrainer .otherSeatTitle{font-size:7px;margin-bottom:1px}
+body.landscapeGameplay #realTrainer .otherSeatTotal{font-size:6px;margin-top:1px}
+body.landscapeGameplay #realTrainer .otherActionBadge{
+  min-height:12px;
+  margin:1px 0;
+  font-size:6px;
+  line-height:1.05;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCards{min-height:30px}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard{
+  width:23px;
+  height:32px;
+  font-size:9px;
+  margin-left:-8px;
+  border-radius:4px;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat{
+  transform:translateY(10px) !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat .handBetLabel{
+  font-size:6px;
+  line-height:1;
+}
+body.landscapeGameplay #realTrainer .trainerSeatNote{display:none}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .coachBox{
+  margin:3px 0;
+  padding:7px;
+  font-size:10px;
+  line-height:1.25;
+  border-radius:9px;
+}
+body.landscapeGameplay #realTrainer #trainerInsuranceBox{
+  font-size:9px;
+  line-height:1.2;
+}
+body.landscapeGameplay #realTrainer #trainerInsuranceBox .specialActions{margin-top:4px}
+body.landscapeGameplay #realTrainer .actionGrid{
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  margin:2px 0 0;
+}
+body.landscapeGameplay #realTrainer .specialActions{
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  margin:4px 0 0;
+}
+body.landscapeGameplay #realTrainer .actionGrid button,
+body.landscapeGameplay #realTrainer .specialActions button,
+body.landscapeGameplay #realTrainer #trainerNextBtn{
+  min-height:40px;
+  margin:0;
+  padding:7px 3px;
+  font-size:11px;
+  border-radius:9px;
+}
+body.landscapeGameplay #realTrainer #trainerCoach{
+  max-height:82px;
+  overflow-y:auto;
+}
+body.landscapeGameplay #realTrainer .trainerStatsGrid{
+  grid-template-columns:repeat(3,1fr);
+  gap:3px;
+  margin:4px 0;
+}
+body.landscapeGameplay #realTrainer .trainerMiniStat{
+  padding:4px 2px;
+  font-size:7px;
+  border-radius:7px;
+}
+body.landscapeGameplay #realTrainer .trainerMiniStat b{font-size:12px}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight > button.secondary{
+  min-height:34px;
+  margin-top:4px;
+  padding:6px;
+  font-size:9px;
+}
+body.landscapeGameplay #realTrainer .trainerBackToCourse{display:none}
+
+/* ---------- Stage 8 ---------- */
+body.landscapeGameplay #s8{
+  display:grid;
+  grid-template-columns:minmax(170px,.85fr) minmax(390px,2.2fr) minmax(190px,.95fr);
+  gap:8px;
+  width:100%;
+  height:100%;
+  max-width:none;
+  min-height:0;
+  margin:0;
+  padding:6px !important;
+  overflow:hidden;
+  border-radius:14px;
+}
+body.landscapeGameplay #s8 .stage8LandscapeLeft,
+body.landscapeGameplay #s8 .stage8LandscapeCenter,
+body.landscapeGameplay #s8 .stage8LandscapeRight{
+  display:block;
+  min-width:0;
+  min-height:0;
+}
+body.landscapeGameplay #s8 .stage8LandscapeLeft{
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:46px 4px 4px;
+  scrollbar-width:none;
+}
+body.landscapeGameplay #s8 .stage8LandscapeCenter{overflow:hidden}
+body.landscapeGameplay #s8 .stage8LandscapeRight{
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:4px 3px;
+  scrollbar-width:none;
+}
+body.landscapeGameplay #s8 h2{
+  font-size:17px;
+  line-height:1.12;
+  margin:0 0 5px;
+}
+body.landscapeGameplay #s8 > .stage8LandscapeLeft > .sub{
+  font-size:10px;
+  line-height:1.25;
+  margin:0 0 5px;
+}
+body.landscapeGameplay #s8 #stage8Scenario{
+  margin:5px 0 0;
+  padding:8px;
+  font-size:10px;
+  line-height:1.3;
+  border-radius:9px;
+}
+body.landscapeGameplay #s8 .stage8Table{
+  width:100%;
+  height:100%;
+  min-height:0 !important;
+  margin:0;
+  padding:30px 8px 8px;
+  border-radius:12px 12px 48% 48% / 12px 12px 28% 28%;
+}
+body.landscapeGameplay #s8 .stage8DealerLabel{
+  margin:0;
+  font-size:10px;
+}
+body.landscapeGameplay #s8 .stage8DealerCards{
+  min-height:38px;
+  margin:2px 0;
+}
+body.landscapeGameplay #s8 .stage8DealerCards .miniCard{
+  width:31px;
+  height:42px;
+  font-size:12px;
+}
+body.landscapeGameplay #s8 .stage8SeatArc{
+  position:absolute;
+  left:8px;
+  right:8px;
+  bottom:8px;
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:3px;
+  height:118px;
+  min-height:0;
+  margin:0;
+  padding:0;
+  align-items:end;
+}
+body.landscapeGameplay #s8 .stage8Seat{
+  padding:3px 1px;
+  border-radius:8px;
+}
+body.landscapeGameplay #s8 .stage8Seat b{font-size:7px;margin-bottom:1px}
+body.landscapeGameplay #s8 .stage8Seat .miniCards{min-height:30px}
+body.landscapeGameplay #s8 .stage8Seat .miniCard{
+  width:23px;
+  height:32px;
+  font-size:9px;
+  margin-left:-8px;
+  border-radius:4px;
+}
+body.landscapeGameplay #s8 .stage8YouSeat{
+  transform:translateY(10px) !important;
+}
+body.landscapeGameplay #s8 .stage8SeatNote{display:none}
+body.landscapeGameplay #s8 #stage8RCSection,
+body.landscapeGameplay #s8 #stage8TCSection{
+  margin:0 0 5px;
+}
+body.landscapeGameplay #s8 input{
+  min-height:40px;
+  padding:7px;
+  font-size:16px;
+  border-radius:9px;
+}
+body.landscapeGameplay #s8 .inputAssist{margin-top:4px}
+body.landscapeGameplay #s8 .inputAssist button,
+body.landscapeGameplay #s8 #stage8CheckRCBtn,
+body.landscapeGameplay #s8 #stage8CheckTCBtn,
+body.landscapeGameplay #s8 #stage8NextBtn{
+  min-height:40px;
+  margin-top:4px;
+  padding:7px 4px;
+  font-size:11px;
+  border-radius:9px;
+}
+body.landscapeGameplay #s8 #stage8Message{
+  margin:4px 0;
+  font-size:10px;
+}
+body.landscapeGameplay #s8 #stage8Explain{
+  max-height:92px;
+  overflow-y:auto;
+  font-size:9px;
+  line-height:1.25;
+}
+body.landscapeGameplay #s8 .big{
+  font-size:34px;
+  line-height:1;
+  margin-top:4px;
+}
+body.landscapeGameplay #s8 .stage8LandscapeRight > .small.center{
+  font-size:8px;
+  margin:3px 0 0;
+}
+
+/* Very short landscape canvases get one more density step. */
+@media (max-height:390px) and (orientation:landscape){
+  body.landscapeGameplay #realTrainer,
+  body.landscapeGameplay #s8{gap:6px;padding:4px !important}
+  body.landscapeGameplay #realTrainer .tableArea,
+  body.landscapeGameplay #s8 .stage8Table{padding-top:27px}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -1537,7 +1991,7 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
 </head>
 
 <body>
-<!-- Blackjack Academy build: v5 landscape-turn-order-stage7-polish -->
+<!-- Blackjack Academy build: v6 true-landscape-fit -->
 
 <div class="app">
 
@@ -1856,6 +2310,8 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
 
 <div id="realTrainer" class="box hidden pageScreen">
 
+  <div class="trainerLandscapeLeft">
+
   <h2>♣ Real Blackjack Table Practice</h2>
 
   <p class="sub">
@@ -1913,6 +2369,10 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
     </p>
   </div>
 
+  </div>
+
+  <div class="trainerLandscapeCenter">
+
   <div class="countVisibilityRow">
     <p class="small">Practice mode: hide Running Count, True Count and Cards Left when you want to track the shoe yourself.</p>
     <button id="trainerCountToggle" class="countToggleBtn" type="button" onclick="trainerToggleCounts()">🙈 Hide Counts</button>
@@ -1967,6 +2427,10 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
 
   </div>
 
+  </div>
+
+  <div class="trainerLandscapeRight">
+
   <div id="trainerInsuranceBox" class="coachBox hidden">
     <b>Dealer shows an Ace.</b><br>
     Insurance costs half your main bet and pays 2:1 if the dealer has blackjack.
@@ -2009,9 +2473,11 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
     Reset Table Stats & Bankroll
   </button>
 
-  <button class="secondary" onclick="showLesson(progress.stage||1)">
+  <button class="secondary trainerBackToCourse" onclick="showLesson(progress.stage||1)">
     Back to Course
   </button>
+
+  </div>
 
 </div>
 
@@ -2764,6 +3230,8 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
 
 <div id="s8" class="box pageScreen hidden">
 
+  <div class="stage8LandscapeLeft">
+
   <h2>8. Multi-Player Table Counting</h2>
 
   <p class="sub">
@@ -2771,6 +3239,10 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
   </p>
 
   <div id="stage8Scenario" class="stage8StepBox"></div>
+
+  </div>
+
+  <div class="stage8LandscapeCenter">
 
   <div id="stage8Table" class="stage8Table">
     <div class="handLabel stage8DealerLabel">DEALER UP CARD</div>
@@ -2785,6 +3257,10 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
     </div>
     <div class="center small stage8SeatNote">Keep one count across every exposed seat.</div>
   </div>
+
+  </div>
+
+  <div class="stage8LandscapeRight">
 
   <div id="stage8RCSection">
     <input id="stage8RCInput" type="number" inputmode="decimal" placeholder="New Running Count">
@@ -2811,6 +3287,8 @@ body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
     <span id="stage8Score">0</span>/5
   </div>
   <p class="small center">Full table scenarios correct in a row</p>
+
+  </div>
 
 </div>
 
@@ -7997,6 +8475,79 @@ renderStageMenu();
 
 /* Refresh the current header/table after V4 overrides are installed. */
 renderStageMenu();
+
+
+
+/* ==========================================================
+   V6 — LANDSCAPE GAMEPLAY FIT + FIXED HOME
+   ========================================================== */
+var _syncBlackjackLandscapeV6=syncBlackjackLandscape;
+syncBlackjackLandscape=function(){
+  _syncBlackjackLandscapeV6();
+  var body=document.body;
+  var real=document.getElementById('realTrainer');
+  var s8=document.getElementById('s8');
+  var realVisible=!!(real && !real.classList.contains('hidden'));
+  var stage8Visible=!!(s8 && !s8.classList.contains('hidden'));
+  var gameplay=blackjackLandscapeRequested && (realVisible || stage8Visible);
+  body.classList.toggle('landscapeGameplay',gameplay);
+  body.classList.toggle('landscapeReal',gameplay && realVisible);
+  body.classList.toggle('landscapeStage8',gameplay && stage8Visible);
+
+  if(gameplay){
+    var app=document.querySelector('.app');
+    if(app){ app.scrollTop=0; }
+    setTimeout(function(){
+      if(realVisible && typeof trainerRender==='function'){ trainerRender(); }
+      if(stage8Visible && typeof stage8PositionSeats==='function'){ stage8PositionSeats(); }
+    },30);
+  }
+};
+
+/* Re-sync after view switches, because V5 chooses the orientation before/after
+   different render functions depending on the route. */
+var _setBlackjackLandscapeV6=setBlackjackLandscape;
+setBlackjackLandscape=function(on){
+  blackjackLandscapeRequested=!!on;
+  syncBlackjackLandscape();
+};
+
+/* Smaller vertical offsets keep every seat inside the short landscape table. */
+blackjackArcOffset=function(column){
+  if(document.body && document.body.classList.contains('landscapeGameplay')){
+    return {1:0,2:7,3:17,4:24,5:17,6:7,7:0}[column] || 0;
+  }
+  return {1:4,2:20,3:38,4:52,5:38,6:20,7:4}[column] || 0;
+};
+
+/* Stage 8 auto-scroll now targets its own side panel in landscape rather than
+   moving the entire rotated application away from the table. */
+stage8ScrollTo=function(id,block){
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(!el){ return; }
+    if(document.body.classList.contains('landscapeGameplay')){
+      var panel=el.closest('.stage8LandscapeLeft,.stage8LandscapeRight');
+      if(panel){
+        var target=Math.max(0,el.offsetTop-panel.offsetTop-6);
+        panel.scrollTo({top:target,behavior:'smooth'});
+      }
+      return;
+    }
+    var app=document.querySelector('.app');
+    if(document.body.classList.contains('landscapeRequested') && app){
+      app.scrollTo({top:Math.max(0,el.offsetTop-92),behavior:'smooth'});
+    }else{
+      var top=window.scrollY+el.getBoundingClientRect().top-104;
+      window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+    }
+  },110);
+};
+
+/* Make sure current screen receives V6 classes immediately after load. */
+setTimeout(function(){
+  if(blackjackLandscapeRequested){ syncBlackjackLandscape(); }
+},0);
 
 </script>
 
