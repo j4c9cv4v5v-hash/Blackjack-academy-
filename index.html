@@ -1253,6 +1253,149 @@ button:disabled{
   .tableDeckEstimate{width:76px}
 }
 
+
+
+/* ==========================================================
+   V4 — SETTINGS + CENTER-SEAT CASINO TABLE POLISH
+   ========================================================== */
+.homeTitleRow{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:4px;
+}
+.homeTitleText{min-width:0}
+.homeTitleText h1{margin-bottom:3px}
+.homeTitleText .sub{margin-top:0}
+.settingsLaunch{
+  width:auto;
+  flex:0 0 auto;
+  margin-top:6px;
+  padding:10px 12px;
+  font-size:13px;
+  background:#22304a;
+  color:white;
+}
+.settingsPage{max-width:720px}
+.settingsSection{
+  border-top:1px solid #293855;
+  padding-top:18px;
+  margin-top:18px;
+}
+.settingsSection:first-of-type{margin-top:8px}
+.settingsSection h3{margin:0 0 6px}
+.settingsStatus{min-height:18px}
+.dangerSection{border-top-color:rgba(251,113,133,.38)}
+button.dangerButton{
+  background:#7f1d2d;
+  color:white;
+  border:1px solid rgba(251,113,133,.55);
+}
+
+/* Wider table with the casino curve on the bottom edge. */
+#realTrainer .tableArea,
+.stage8Table{
+  border-radius:18px 18px 49% 49% / 18px 18px 30% 30%;
+  width:calc(100% + 12px);
+  margin-left:-6px;
+  padding-left:8px;
+  padding-right:8px;
+  padding-bottom:34px;
+}
+#realTrainer .tableArea{min-height:390px;padding-top:54px}
+#realTrainer .tableArea::before{
+  position:absolute;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%);
+  width:68%;
+  margin:0;
+}
+.dealerTableLabel,.stage8DealerLabel{margin-top:4px}
+.dealerTableCards,.stage8DealerCards{justify-content:center}
+.dealerTableTotal{margin-top:2px}
+
+.trainerSeatArc,
+.stage8SeatArc{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:2px;
+  align-items:start;
+  position:relative;
+  margin-top:78px;
+  padding:0 1px 30px;
+  min-height:122px;
+}
+#trainerOtherPlayersWrap:not(.hidden){display:contents}
+#trainerOtherPlayers{display:contents}
+.stage8Seats{display:contents !important}
+
+#realTrainer .otherPlayerSeat,
+.stage8Seat{
+  min-width:0;
+  padding:5px 1px;
+  border-radius:11px;
+  background:rgba(3,42,30,.60);
+  align-self:start;
+}
+#realTrainer .trainerYouSeat,
+.stage8YouSeat{
+  grid-column:4;
+  transform:translateY(52px);
+  border-color:#5eead4;
+  background:rgba(16,80,63,.94);
+  box-shadow:0 0 0 2px rgba(94,234,212,.16);
+  z-index:3;
+}
+#realTrainer .trainerYouSeat .otherSeatTitle,
+.stage8YouSeat b{
+  color:#d9fffa;
+  letter-spacing:.4px;
+}
+#realTrainer .trainerYouSeat .miniCards,
+.stage8YouSeat .miniCards{
+  overflow:visible;
+}
+#realTrainer .trainerYouSeat .handBetLabel{
+  font-size:8px;
+  margin:1px 0 2px;
+  line-height:1.15;
+}
+.trainerSeatNote,.stage8SeatNote{margin-top:4px;opacity:.72}
+
+#realTrainer .otherPlayerSeat .miniCards,
+.stage8Seat .miniCards{
+  display:flex;
+  justify-content:center;
+  flex-wrap:nowrap;
+  gap:0;
+  min-height:42px;
+}
+#realTrainer .otherPlayerSeat .miniCard,
+.stage8Seat .miniCard{
+  width:29px;
+  height:42px;
+  font-size:12px;
+  margin-left:-10px;
+  border-radius:6px;
+  flex:0 0 auto;
+}
+#realTrainer .otherPlayerSeat .miniCard:first-child,
+.stage8Seat .miniCard:first-child{margin-left:0}
+#realTrainer .otherSeatTitle,.stage8Seat b{font-size:9px}
+#realTrainer .otherSeatTotal{font-size:8px}
+#realTrainer .otherActionBadge{font-size:8px;min-height:20px}
+
+@media(max-width:420px){
+  .homeTitleRow{align-items:center}
+  .settingsLaunch{padding:9px 10px;font-size:12px}
+  #realTrainer .tableArea,.stage8Table{width:calc(100% + 8px);margin-left:-4px}
+  .trainerSeatArc,.stage8SeatArc{margin-top:68px;gap:0}
+  #realTrainer .otherPlayerSeat .miniCard,.stage8Seat .miniCard{width:26px;height:39px;font-size:11px;margin-left:-10px}
+  #realTrainer .trainerYouSeat,.stage8YouSeat{transform:translateY(48px)}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -1262,7 +1405,7 @@ button:disabled{
 </head>
 
 <body>
-<!-- Blackjack Academy build: final-v3 share-app -->
+<!-- Blackjack Academy build: v4 settings-scroll-table-polish -->
 
 <div class="app">
 
@@ -1270,8 +1413,13 @@ button:disabled{
 
 <div id="homeView">
 
-<h1>♠ Blackjack Counting Academy</h1>
-<p class="sub">Complete Hi-Lo Card Counting Course</p>
+<div class="homeTitleRow">
+  <div class="homeTitleText">
+    <h1>♠ Blackjack Counting Academy</h1>
+    <p class="sub">Complete Hi-Lo Card Counting Course</p>
+  </div>
+  <button class="settingsLaunch" type="button" onclick="openSettings()" aria-label="Open settings">⚙️ Settings</button>
+</div>
 
 <div class="box">
   <div id="stageText" class="small">Stage 1 of 8</div>
@@ -1312,16 +1460,6 @@ button:disabled{
   </button>
 </div>
 
-<div class="box">
-  <h2 style="margin-bottom:6px">📤 Share Blackjack Academy</h2>
-  <p class="sub guideIntro">
-    Send the app to a friend. They will open their own fresh copy with separate progress and statistics.
-  </p>
-  <button onclick="shareBlackjackAcademy()">
-    Share App
-  </button>
-  <p id="shareStatus" class="small center" style="margin-bottom:0"></p>
-</div>
 
 <div class="box">
   <h2 style="margin-bottom:6px">Daily Progress</h2>
@@ -1360,31 +1498,50 @@ button:disabled{
   </p>
 </div>
 
-<div class="box backupBox">
-  <h2 style="margin-bottom:6px">☁️ Backup &amp; Restore Progress</h2>
-  <p class="sub" style="margin-top:0">
-    Safari and a Home Screen web app can keep separate local progress. Use a backup code to move your course progress and table statistics between them.
-  </p>
 
-  <div class="backupSteps">
-    <b>To move your progress to the Home Screen app:</b><br>
-    1. Open this site in Safari and tap <b>Copy Backup Code</b>.<br>
-    2. Open the Home Screen app, paste the code below, and tap <b>Restore Backup</b>.
-  </div>
-
-  <button onclick="copyBackupCode()">Copy Backup Code</button>
-  <textarea id="backupExportCode" class="backupCodeArea hidden" readonly aria-label="Backup code"></textarea>
-
-  <p class="small" style="margin:12px 0 4px"><b>Restore from a backup code</b></p>
-  <textarea id="backupImportCode" class="backupCodeArea" placeholder="Paste backup code here" aria-label="Paste backup code" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-  <div class="backupActions">
-    <button onclick="restoreBackupCode()">Restore Backup</button>
-    <button class="secondary" onclick="clearBackupFields()">Clear</button>
-  </div>
-  <p id="backupStatus" class="small center backupStatus"></p>
-  <p class="small center" style="margin-bottom:0">The backup contains only this app's saved course progress and simulated blackjack statistics.</p>
 </div>
 
+
+<!-- SETTINGS -->
+<div id="settingsView" class="box hidden pageScreen settingsPage">
+  <h2>⚙️ Settings</h2>
+  <p class="sub">Manage sharing, progress backup and course reset options.</p>
+
+  <section class="settingsSection">
+    <h3>📤 Share Blackjack Academy</h3>
+    <p class="sub guideIntro">Send the app to a friend. They will open their own fresh copy with separate progress and statistics.</p>
+    <button onclick="shareBlackjackAcademy()">Share App</button>
+    <p id="shareStatus" class="small center settingsStatus"></p>
+  </section>
+
+  <section class="settingsSection backupBox">
+    <h3>☁️ Backup &amp; Restore Progress</h3>
+    <p class="sub">Safari and a Home Screen web app can keep separate local progress. Use a backup code to move your course progress and table statistics between them.</p>
+
+    <div class="backupSteps">
+      <b>To move your progress to the Home Screen app:</b><br>
+      1. Open this site in Safari and tap <b>Copy Backup Code</b>.<br>
+      2. Open the Home Screen app, paste the code below, and tap <b>Restore Backup</b>.
+    </div>
+
+    <button onclick="copyBackupCode()">Copy Backup Code</button>
+    <textarea id="backupExportCode" class="backupCodeArea hidden" readonly aria-label="Backup code"></textarea>
+
+    <p class="small" style="margin:12px 0 4px"><b>Restore from a backup code</b></p>
+    <textarea id="backupImportCode" class="backupCodeArea" placeholder="Paste backup code here" aria-label="Paste backup code" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <div class="backupActions">
+      <button onclick="restoreBackupCode()">Restore Backup</button>
+      <button class="secondary" onclick="clearBackupFields()">Clear</button>
+    </div>
+    <p id="backupStatus" class="small center backupStatus settingsStatus"></p>
+    <p class="small center" style="margin-bottom:0">The backup contains only this app's saved course progress and simulated blackjack statistics.</p>
+  </section>
+
+  <section class="settingsSection dangerSection">
+    <h3>🗑️ Reset Course Progress</h3>
+    <p class="sub">Start the course again from Stage 1. You will be asked to confirm before anything is reset.</p>
+    <button class="dangerButton" onclick="resetCourse()">Reset Course Progress</button>
+  </section>
 </div>
 
 <!-- BLACKJACK RULES & TABLE GUIDE -->
@@ -1608,7 +1765,7 @@ button:disabled{
   <div class="lesson tableSizeControls">
     <b>Players at the table</b>
     <p class="small" style="margin-bottom:6px">
-      Add simulated players to make card counting more realistic. You sit at the last seat, so the other players act before you and expose extra cards to count.
+      Add simulated players to make card counting more realistic. Your seat stays in the center of the player arc, directly in front of you, while the other players act one at a time and expose extra cards to count.
     </p>
     <label class="small" for="trainerOtherPlayersSelect">Other players:</label>
     <select id="trainerOtherPlayersSelect" onchange="trainerSetOtherPlayers(this.value)">
@@ -1620,7 +1777,7 @@ button:disabled{
       <option value="5">5 other players</option>
     </select>
     <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">
-      Simulated seats use automatic Hit/Stand play. Their bankroll is not tracked.
+      Simulated seats play automatically one at a time and may Hit, Stand, Double or Split. Their bankroll is not tracked.
     </p>
   </div>
 
@@ -1659,22 +1816,22 @@ button:disabled{
       <div id="trainerDeckEstimateText" class="tableDeckEstimateText">Full shoe</div>
     </div>
 
-    <div class="handLabel">DEALER</div>
-    <div id="trainerDealerCards" class="miniCards"></div>
-    <div id="trainerDealerTotal" class="center small">Showing: —</div>
+    <div class="handLabel dealerTableLabel">DEALER</div>
+    <div id="trainerDealerCards" class="miniCards dealerTableCards"></div>
+    <div id="trainerDealerTotal" class="center small dealerTableTotal">Showing: —</div>
 
-    <div id="trainerOtherPlayersWrap" class="hidden">
-      <div style="height:18px"></div>
-      <div class="handLabel">OTHER PLAYERS</div>
-      <div id="trainerOtherPlayers" class="otherPlayersGrid"></div>
-      <div class="center small">Simulated seats — you are at the last seat.</div>
+    <div id="trainerSeatArc" class="trainerSeatArc" aria-label="Blackjack player seats">
+      <div id="trainerOtherPlayersWrap" class="trainerOtherPlayersWrap hidden">
+        <div id="trainerOtherPlayers"></div>
+      </div>
+
+      <div id="trainerYouSeat" class="otherPlayerSeat trainerYouSeat">
+        <div class="otherSeatTitle">YOU</div>
+        <div id="trainerPlayerCards" class="miniCards"></div>
+        <div id="trainerPlayerTotal" class="otherSeatTotal">Total: —</div>
+      </div>
     </div>
-
-    <div style="height:26px"></div>
-
-    <div class="handLabel">YOU</div>
-    <div id="trainerPlayerCards" class="miniCards"></div>
-    <div id="trainerPlayerTotal" class="center small">Total: —</div>
+    <div class="center small trainerSeatNote">You are always the center seat.</div>
 
   </div>
 
@@ -2480,16 +2637,17 @@ button:disabled{
   <div id="stage8Scenario" class="stage8StepBox"></div>
 
   <div id="stage8Table" class="stage8Table">
-    <div class="handLabel">DEALER UP CARD</div>
-    <div id="stage8Dealer" class="miniCards"></div>
+    <div class="handLabel stage8DealerLabel">DEALER UP CARD</div>
+    <div id="stage8Dealer" class="miniCards stage8DealerCards"></div>
 
-    <div style="height:14px"></div>
-    <div class="handLabel">OTHER PLAYERS</div>
-    <div id="stage8Others" class="stage8Seats"></div>
-
-    <div style="height:14px"></div>
-    <div class="handLabel">YOU</div>
-    <div id="stage8You" class="miniCards"></div>
+    <div class="stage8SeatArc" aria-label="Stage 8 blackjack seats">
+      <div id="stage8Others" class="stage8Seats"></div>
+      <div class="stage8Seat stage8YouSeat">
+        <b>YOU</b>
+        <div id="stage8You" class="miniCards"></div>
+      </div>
+    </div>
+    <div class="center small stage8SeatNote">Keep one count across every exposed seat.</div>
   </div>
 
   <div id="stage8RCSection">
@@ -2541,21 +2699,6 @@ button:disabled{
 
 </div>
 
-<div class="box">
-
-  <p class="small center">
-    Your progress, unlocked stages and daily activity
-    are saved on this device.
-  </p>
-
-  <button
-    class="secondary"
-    onclick="resetCourse()"
-  >
-    Reset Course
-  </button>
-
-</div>
 
 </div>
 
@@ -6946,6 +7089,326 @@ trainerDraw=function(exposed){
 };
 
 /* Ensure current progress header is correct on first load after overrides are installed. */
+renderStageMenu();
+
+
+/* ==========================================================
+   V4 — SETTINGS, AUTO-SCROLL, CENTER SEATS, SLOWER TABLE FLOW
+   ========================================================== */
+
+/* Settings page */
+var _hideAllBeforeV4=hideAll;
+hideAll=function(){
+  _hideAllBeforeV4();
+  var settings=document.getElementById('settingsView');
+  if(settings){ settings.classList.add('hidden'); }
+};
+
+function openSettings(){
+  hideAll();
+  setPageMode(false);
+  var settings=document.getElementById('settingsView');
+  if(settings){ settings.classList.remove('hidden'); }
+  progress.mode='settings';
+  save();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Shared smooth-scroll behavior for Stage 7. */
+function stage7ScrollTo(id,block){
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(el && el.scrollIntoView){
+      el.scrollIntoView({behavior:'smooth',block:block||'start'});
+    }
+  },100);
+}
+
+var _stage7LoadScenarioV4=stage7LoadScenario;
+stage7LoadScenario=function(){
+  _stage7LoadScenarioV4();
+  stage7ScrollTo('stage7Scenario','start');
+};
+
+var _stage7FailV4=stage7Fail;
+stage7Fail=function(message,explanation){
+  _stage7FailV4(message,explanation);
+  stage7ScrollTo('stage7Explain','center');
+};
+
+var _stage7CheckTrueCountV4=stage7CheckTrueCount;
+stage7CheckTrueCount=function(){
+  _stage7CheckTrueCountV4();
+  if(!stage7WaitingForNext && stage7Step==='bet'){
+    stage7ScrollTo('stage7BetSection','center');
+  }
+};
+
+var _stage7ChooseBetV4=stage7ChooseBet;
+stage7ChooseBet=function(units){
+  _stage7ChooseBetV4(units);
+  if(!stage7WaitingForNext && stage7Step==='decision'){
+    stage7ScrollTo('stage7DecisionSection','center');
+  }
+};
+
+var _stage7UseHintV4=stage7UseHint;
+stage7UseHint=function(){
+  _stage7UseHintV4();
+  if(stage7WaitingForNext){ stage7ScrollTo('stage7Explain','center'); }
+};
+
+var _stage7NextAfterMistakeV4=stage7NextAfterMistake;
+stage7NextAfterMistake=function(){
+  _stage7NextAfterMistakeV4();
+  stage7ScrollTo('stage7Scenario','start');
+};
+
+/* Stage 8 uses a fixed center seat for YOU and curves the other seats around it. */
+function blackjackArcSlots(count){
+  var configs={
+    0:[],
+    1:[2],
+    2:[2,6],
+    3:[1,3,6],
+    4:[1,3,5,7],
+    5:[1,2,3,5,6]
+  };
+  return configs[Math.max(0,Math.min(5,count))] || [];
+}
+
+function blackjackArcOffset(column){
+  return {1:4,2:20,3:38,4:52,5:38,6:20,7:4}[column] || 0;
+}
+
+function stage8PositionSeats(){
+  var others=document.getElementById('stage8Others');
+  if(!others){ return; }
+  var seats=Array.from(others.querySelectorAll('.stage8Seat'));
+  var slots=blackjackArcSlots(seats.length);
+  seats.forEach(function(seat,idx){
+    var col=slots[idx] || (idx<3?idx+1:idx+2);
+    seat.style.gridColumn=String(col);
+    seat.style.transform='translateY('+blackjackArcOffset(col)+'px)';
+  });
+}
+
+var _stage8LoadScenarioV4=stage8LoadScenario;
+stage8LoadScenario=function(){
+  _stage8LoadScenarioV4();
+  stage8PositionSeats();
+};
+
+var _stage8CheckRCV4=stage8CheckRC;
+stage8CheckRC=function(){
+  _stage8CheckRCV4();
+  var tc=document.getElementById('stage8TCSection');
+  if(tc && !tc.classList.contains('hidden') && !stage8WaitingForNext){
+    stage8ScrollTo('stage8TCSection','start');
+  }
+};
+
+/* Real Blackjack — YOU stays in the middle; other players fan out around you. */
+trainerRender=function(){
+  var dealerEl=document.getElementById('trainerDealerCards');
+  var playerEl=document.getElementById('trainerPlayerCards');
+  var otherEl=document.getElementById('trainerOtherPlayers');
+  var otherWrap=document.getElementById('trainerOtherPlayersWrap');
+
+  dealerEl.innerHTML='';
+  playerEl.innerHTML='';
+  if(otherEl){ otherEl.innerHTML=''; }
+
+  trainerDealer.forEach(function(c,i){
+    dealerEl.innerHTML+=trainerRenderCard(c,i===1 && !trainerRoundFinished);
+  });
+
+  if(otherWrap && otherEl){
+    if(trainerOtherHands.length){
+      otherWrap.classList.remove('hidden');
+      var slots=blackjackArcSlots(trainerOtherHands.length);
+      trainerOtherHands.forEach(function(rawSeat,idx){
+        var seat=trainerOtherSeatObject(rawSeat);
+        trainerOtherHands[idx]=seat;
+        var col=slots[idx] || (idx<3?idx+1:idx+2);
+        var handHtml=seat.hands.map(function(hand,hidx){
+          return '<div class="'+(seat.hands.length>1?'otherSplitHand':'')+'">'+
+            (seat.hands.length>1?'<div class="otherSplitLabel">Hand '+(hidx+1)+' • '+trainerHandValue(hand).total+'</div>':'')+
+            '<div class="miniCards">'+hand.map(function(c){ return trainerRenderCard(c,false); }).join('')+'</div></div>';
+        }).join('');
+        var finalTotal=seat.hands.length===1 && seat.hands[0].length ? trainerHandValue(seat.hands[0]).total : '';
+        otherEl.innerHTML+=
+          '<div class="otherPlayerSeat '+(idx===trainerOtherActiveIndex?'activeSeat':'')+'" style="grid-column:'+col+';transform:translateY('+blackjackArcOffset(col)+'px)">'+
+            '<div class="otherSeatTitle">Player '+(idx+1)+'</div>'+handHtml+
+            '<div class="otherActionBadge">'+(seat.status||'Waiting')+'</div>'+ 
+            (seat.hands.length===1?'<div class="otherSeatTotal">Total: '+finalTotal+'</div>':'')+
+          '</div>';
+      });
+    }else{
+      otherWrap.classList.add('hidden');
+    }
+  }
+
+  var tableSelect=document.getElementById('trainerOtherPlayersSelect');
+  if(tableSelect){ tableSelect.value=String(trainerOtherPlayerCount); }
+
+  var current=trainerHands[trainerHandIndex] || trainerHands[0] || [];
+  if(trainerHands.length>1){
+    trainerHands.forEach(function(hand,idx){
+      var handBet=trainerHandBets[idx] || 0;
+      playerEl.innerHTML+='<div class="handBetLabel">Hand '+(idx+1)+' — '+trainerMoney(handBet)+(idx===trainerHandIndex && !trainerRoundFinished?' • current':'')+'</div>';
+      playerEl.innerHTML+='<div class="miniCards">'+hand.map(function(c){ return trainerRenderCard(c,false); }).join('')+'</div>';
+    });
+  }else{
+    if(current.length){
+      var singleBet=trainerHandBets[0] || trainerCurrentBet;
+      playerEl.innerHTML+='<div class="handBetLabel">Bet: '+trainerMoney(singleBet)+'</div>';
+    }
+    current.forEach(function(c){ playerEl.innerHTML+=trainerRenderCard(c,false); });
+  }
+
+  var up=trainerDealer.length?trainerCardNumber(trainerDealer[0].rank):0;
+  document.getElementById('trainerDealerTotal').innerText=
+    trainerRoundFinished && trainerDealer.length ? 'Total: '+trainerHandValue(trainerDealer).total : 'Showing: '+(up===11?'A / 11':up);
+  document.getElementById('trainerPlayerTotal').innerText=current.length ? 'Total: '+trainerHandValue(current).total : 'Total: —';
+
+  var rcEl=document.getElementById('trainerRC');
+  var tcEl=document.getElementById('trainerTC');
+  var cardsLeftEl=document.getElementById('trainerCardsLeft');
+  var countToggle=document.getElementById('trainerCountToggle');
+  var decksRemaining=Math.max(trainerShoe.length/52,0.25);
+  var tc=trainerRunningCount/decksRemaining;
+
+  if(trainerCountsVisible){
+    rcEl.innerText=(trainerRunningCount>0?'+':'')+trainerRunningCount;
+    tcEl.innerText=(tc>0?'+':'')+tc.toFixed(1);
+    cardsLeftEl.innerText=trainerShoe.length;
+    rcEl.classList.remove('countHiddenValue'); tcEl.classList.remove('countHiddenValue'); cardsLeftEl.classList.remove('countHiddenValue');
+    if(countToggle){ countToggle.innerText='🙈 Hide Counts'; }
+  }else{
+    rcEl.innerText='•••'; tcEl.innerText='•••'; cardsLeftEl.innerText='•••';
+    rcEl.classList.add('countHiddenValue'); tcEl.classList.add('countHiddenValue'); cardsLeftEl.classList.add('countHiddenValue');
+    if(countToggle){ countToggle.innerText='👁 Show Counts'; }
+  }
+
+  trainerRenderDeckEstimate();
+
+  var hitBtn=document.getElementById('trainerHitBtn');
+  var standBtn=document.getElementById('trainerStandBtn');
+  var splitBtn=document.getElementById('trainerSplitBtn');
+  var doubleBtn=document.getElementById('trainerDoubleBtn');
+  var surrenderBtn=document.getElementById('trainerSurrenderBtn');
+
+  if(current.length && !trainerRoundFinished && !trainerOtherBusy && !trainerInsurancePending){
+    var currentTotal=trainerHandValue(current).total;
+    hitBtn.disabled=currentTotal>=21;
+    standBtn.disabled=currentTotal>=21;
+    splitBtn.disabled=!(trainerIsPair(current) && !trainerSplitUsed && current.length===2);
+    doubleBtn.disabled=current.length!==2 || currentTotal>=21 || trainerStats.bankroll<trainerHandBets[trainerHandIndex];
+    surrenderBtn.disabled=!trainerCanSurrender(current);
+  }else{
+    hitBtn.disabled=true; standBtn.disabled=true; splitBtn.disabled=true; doubleBtn.disabled=true; surrenderBtn.disabled=true;
+  }
+
+  trainerRenderStats();
+};
+
+/* Give enough time to visually count every decision and every new card. */
+trainerProcessOtherSeat=function(seq,seatIndex,done){
+  if(seq!==trainerOtherSequenceId){ return; }
+  if(seatIndex>=trainerOtherHands.length){
+    trainerOtherBusy=false;
+    trainerOtherActiveIndex=-1;
+    trainerRender();
+    if(typeof done==='function'){ done(); }
+    return;
+  }
+
+  var ACTION_PAUSE=950;
+  var CARD_PAUSE=1150;
+  var RESULT_PAUSE=1000;
+  var NEXT_SEAT_PAUSE=850;
+
+  trainerOtherActiveIndex=seatIndex;
+  var seat=trainerOtherSeatObject(trainerOtherHands[seatIndex]);
+  trainerOtherHands[seatIndex]=seat;
+  seat.activeHand=0;
+  seat.status='Player '+(seatIndex+1)+' turn';
+  trainerRender();
+
+  function nextHand(){
+    seat.activeHand++;
+    if(seat.activeHand>=seat.hands.length){
+      seat.status='Done';
+      trainerRender();
+      setTimeout(function(){ trainerProcessOtherSeat(seq,seatIndex+1,done); },NEXT_SEAT_PAUSE);
+    }else{
+      setTimeout(playHand,NEXT_SEAT_PAUSE);
+    }
+  }
+
+  function playHand(){
+    if(seq!==trainerOtherSequenceId){ return; }
+    var hand=seat.hands[seat.activeHand];
+    var hv=trainerHandValue(hand);
+    var handPrefix=seat.hands.length>1?'Hand '+(seat.activeHand+1)+' — ':'';
+
+    if(hv.total>21){
+      seat.status=handPrefix+'BUST '+hv.total;
+      trainerRender();
+      setTimeout(nextHand,RESULT_PAUSE);
+      return;
+    }
+    if(hv.total===21){
+      seat.status=handPrefix+(hand.length===2?'BLACKJACK 21':'21 — STAND');
+      trainerRender();
+      setTimeout(nextHand,RESULT_PAUSE);
+      return;
+    }
+
+    var action=trainerOtherRecommendation(hand,!seat.splitUsed && hand.length===2);
+    seat.status=handPrefix+action.toUpperCase();
+    trainerRender();
+
+    setTimeout(function(){
+      if(seq!==trainerOtherSequenceId){ return; }
+      if(action==='hit'){
+        var c=trainerDraw(true);
+        hand.push(c);
+        seat.status=handPrefix+'HIT → '+c.rank+c.suit;
+        trainerRender();
+        setTimeout(playHand,CARD_PAUSE);
+        return;
+      }
+      if(action==='double'){
+        var dc=trainerDraw(true);
+        hand.push(dc);
+        seat.status=handPrefix+'DOUBLE → '+dc.rank+dc.suit+' • '+trainerHandValue(hand).total;
+        trainerRender();
+        setTimeout(nextHand,CARD_PAUSE);
+        return;
+      }
+      if(action==='split'){
+        seat.splitUsed=true;
+        var a=hand[0], b=hand[1];
+        var first=[a,trainerDraw(true)];
+        var second=[b,trainerDraw(true)];
+        seat.hands.splice(seat.activeHand,1,first,second);
+        seat.status='SPLIT — two hands';
+        trainerRender();
+        setTimeout(playHand,CARD_PAUSE);
+        return;
+      }
+      seat.status=handPrefix+'STAND '+hv.total;
+      trainerRender();
+      setTimeout(nextHand,RESULT_PAUSE);
+    },ACTION_PAUSE);
+  }
+
+  setTimeout(playHand,NEXT_SEAT_PAUSE);
+};
+
+/* Refresh the current header/table after V4 overrides are installed. */
 renderStageMenu();
 
 </script>
