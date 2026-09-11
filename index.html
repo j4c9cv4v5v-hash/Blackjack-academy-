@@ -2129,6 +2129,177 @@ body.landscapeGameplay #realTrainer .otherActionBadge{
     height:42px !important;
   }
 }
+
+
+/* ==========================================================
+   V8 — CASINO TABLE SHAPE + BET-BEFORE-DEAL + COMPACT STATS
+   ========================================================== */
+
+/* Selected wager is obvious, but the hand never starts until Deal is tapped. */
+#trainerBetControls button.betSelected{
+  outline:2px solid #5eead4;
+  background:#304464;
+  color:#fff;
+}
+.trainerDealBtn{
+  margin-top:7px;
+  background:#fbbf24;
+  color:#2b2104;
+}
+.trainerBetPrompt{margin-top:6px;line-height:1.25}
+.trainerDecisionFeedback{border-left-width:4px}
+.trainerStatsToggle{width:100%}
+.trainerStatsPanel{margin-top:4px}
+.trainerResetInsideStats{margin-top:5px !important}
+
+/* Classic blackjack-table silhouette: straight dealer edge, wide shallow
+   elliptical player edge.  The shallow vertical radius makes it stretch
+   farther to the sides, matching the reference table rather than a box. */
+body.landscapeGameplay #realTrainer .tableArea,
+body.landscapeGameplay #s8 .stage8Table{
+  border-radius:8px 8px 50% 50% / 8px 8px 35% 35% !important;
+  border-top-width:3px !important;
+}
+
+/* The Real Blackjack table gets more of the available width. Action buttons
+   keep their V7 dimensions; space is recovered from the side panels/stats. */
+body.landscapeGameplay #realTrainer{
+  grid-template-columns:minmax(126px,.62fr) minmax(430px,3.35fr) minmax(142px,.70fr) !important;
+  gap:6px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight{
+  padding-left:2px !important;
+  padding-right:2px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight > .trainerStatsGrid{display:none !important}
+body.landscapeGameplay #realTrainer .trainerStatsToggle{
+  min-height:32px !important;
+  margin-top:4px !important;
+  padding:5px 7px !important;
+  font-size:9px !important;
+}
+body.landscapeGameplay #realTrainer .trainerStatsPanel{
+  max-height:148px;
+  overflow-y:auto;
+  padding:2px;
+}
+body.landscapeGameplay #realTrainer .trainerStatsPanel .trainerStatsGrid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:3px;
+  margin:3px 0;
+}
+body.landscapeGameplay #realTrainer .trainerResetInsideStats{
+  min-height:30px !important;
+  font-size:8px !important;
+}
+/* Decision accuracy lives in Stats in landscape; bankroll/bet/P&L remain. */
+body.landscapeGameplay #realTrainer .bankrollGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+}
+body.landscapeGameplay #realTrainer .bankrollGrid .bankrollStat:nth-child(4){display:none}
+
+/* Betting state stays compact. */
+body.landscapeGameplay #realTrainer .trainerDealBtn{
+  min-height:34px !important;
+  margin-top:4px !important;
+  padding:5px !important;
+  font-size:10px !important;
+}
+body.landscapeGameplay #realTrainer .trainerBetPrompt{font-size:7px;margin-top:3px}
+body.landscapeGameplay #realTrainer .betControls button.betSelected{outline-width:1.5px}
+
+/* Split hands stay as two clear rows in the SAME seat.  Hand 1 sits a touch
+   higher and Hand 2 a touch lower; neither may fall behind the felt edge. */
+body.landscapeGameplay #realTrainer .otherPlayerSeat:has(.otherSplitHand){
+  transform:translateY(-8px) !important;
+  padding-top:2px !important;
+  padding-bottom:2px !important;
+}
+body.landscapeGameplay #realTrainer .otherSplitHand{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin:0;
+  line-height:1;
+}
+body.landscapeGameplay #realTrainer .otherSplitHand:nth-of-type(2){transform:translateY(-3px)}
+body.landscapeGameplay #realTrainer .otherSplitHand:nth-of-type(3){transform:translateY(3px)}
+body.landscapeGameplay #realTrainer .otherSplitHand .miniCards{
+  min-height:30px !important;
+}
+body.landscapeGameplay #realTrainer .otherSplitHand .miniCard{
+  width:25px !important;
+  height:35px !important;
+  font-size:9px !important;
+  margin-left:-9px !important;
+}
+body.landscapeGameplay #realTrainer .otherSplitLabel{
+  font-size:6px !important;
+  line-height:1 !important;
+  margin:0 0 1px !important;
+}
+
+/* YOU split: current markup already renders each hand on its own row. */
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:1px !important;
+  overflow:visible !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .handBetLabel{
+  margin:0 !important;
+  font-size:5.5px !important;
+  line-height:1 !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards{
+  min-height:31px !important;
+  margin:0 !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards .miniCard{
+  width:27px !important;
+  height:37px !important;
+  font-size:10px !important;
+  margin-left:-8px !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards .miniCard:first-child{margin-left:0 !important}
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  transform:translateY(-10px) !important;
+}
+
+/* A little more room inside the curved bottom for all seats. */
+body.landscapeGameplay #realTrainer .trainerSeatArc,
+body.landscapeGameplay #s8 .stage8SeatArc{
+  bottom:19px !important;
+  height:132px !important;
+}
+
+/* Stage 8 gets the same table silhouette while keeping its existing
+   portrait Quick Lesson and landscape-only Practice behavior. */
+body.landscapeGameplay #s8{
+  grid-template-columns:minmax(142px,.72fr) minmax(385px,2.72fr) minmax(154px,.80fr) !important;
+  gap:6px !important;
+}
+
+/* Persistent feedback is separate from turn-status text, so autoplay cannot
+   overwrite a Correct / Incorrect explanation. */
+body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
+  max-height:94px;
+  overflow-y:auto;
+  margin:3px 0;
+  padding:7px;
+  font-size:9px;
+  line-height:1.2;
+}
+
+@media (max-height:390px) and (orientation:landscape){
+  body.landscapeGameplay #realTrainer .trainerSeatArc,
+  body.landscapeGameplay #s8 .stage8SeatArc{bottom:14px !important;height:120px !important}
+  body.landscapeGameplay #realTrainer .otherSplitHand .miniCard{width:23px !important;height:33px !important}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2485,13 +2656,15 @@ body.landscapeGameplay #realTrainer .otherActionBadge{
 
   <div class="lesson">
     <b>Choose your bet</b>
-    <div class="betControls">
-      <button onclick="trainerSetBet(5)">$5</button>
-      <button onclick="trainerSetBet(10)">$10</button>
-      <button onclick="trainerSetBet(25)">$25</button>
-      <button onclick="trainerSetBet(50)">$50</button>
-      <button onclick="trainerSetBet(100)">$100</button>
+    <div class="betControls" id="trainerBetControls">
+      <button data-bet="5" onclick="trainerSetBet(5)">$5</button>
+      <button data-bet="10" onclick="trainerSetBet(10)">$10</button>
+      <button data-bet="25" onclick="trainerSetBet(25)">$25</button>
+      <button data-bet="50" onclick="trainerSetBet(50)">$50</button>
+      <button data-bet="100" onclick="trainerSetBet(100)">$100</button>
     </div>
+    <button id="trainerDealBtn" class="trainerDealBtn" type="button" onclick="trainerConfirmDeal()">Deal — $10</button>
+    <div id="trainerBetPrompt" class="small center trainerBetPrompt">Choose or confirm your bet before the cards are dealt.</div>
     <p class="small center" style="margin-bottom:0">
       Betting is only for simulation. Your bankroll and statistics are saved on this device.
     </p>
@@ -2603,22 +2776,25 @@ body.landscapeGameplay #realTrainer .otherActionBadge{
     Deal Next Hand
   </button>
 
+  <div id="trainerDecisionFeedback" class="coachBox trainerDecisionFeedback hidden" aria-live="polite"></div>
+
   <div id="trainerCoach" class="coachBox">
     Make your decision. The explanation will appear here after you act.
   </div>
 
-  <div class="trainerStatsGrid">
-    <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
-    <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
-    <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
-    <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
-    <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
-    <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
+  <button id="trainerStatsToggle" class="secondary trainerStatsToggle" type="button" onclick="trainerToggleStats()">📊 Stats</button>
+  <div id="trainerStatsPanel" class="trainerStatsPanel hidden">
+    <div class="trainerStatsGrid">
+      <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
+      <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
+      <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
+      <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
+      <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
+      <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
+      <div class="trainerMiniStat"><b id="trainerAccuracyStat">—</b>Accuracy</div>
+    </div>
+    <button class="secondary trainerResetInsideStats" onclick="trainerResetStats()">Reset Table Stats &amp; Bankroll</button>
   </div>
-
-  <button class="secondary" onclick="trainerResetStats()">
-    Reset Table Stats & Bankroll
-  </button>
 
   <button class="secondary trainerBackToCourse" onclick="showLesson(progress.stage||1)">
     Back to Course
@@ -8717,6 +8893,261 @@ setTimeout(function(){
     syncBlackjackLandscape();
   }
 },0);
+
+
+/* ==========================================================
+   V8 — REAL BLACKJACK FLOW / FEEDBACK / PERSISTENT USER HAND
+   ========================================================== */
+var trainerBettingPhase=true;
+var trainerStatsOpen=false;
+var trainerUserHandsSnapshot=[];
+var trainerUserBetsSnapshot=[];
+
+function trainerCloneHands(hands){
+  return (hands||[]).map(function(hand){
+    return (hand||[]).map(function(c){ return {rank:c.rank,suit:c.suit}; });
+  });
+}
+
+function trainerToggleStats(){
+  trainerStatsOpen=!trainerStatsOpen;
+  var panel=document.getElementById('trainerStatsPanel');
+  var btn=document.getElementById('trainerStatsToggle');
+  if(panel){ panel.classList.toggle('hidden',!trainerStatsOpen); }
+  if(btn){ btn.innerText=trainerStatsOpen?'📊 Hide Stats':'📊 Stats'; }
+}
+
+function trainerUpdateBetUI(){
+  var controls=document.getElementById('trainerBetControls');
+  if(controls){
+    Array.from(controls.querySelectorAll('button[data-bet]')).forEach(function(btn){
+      var bet=Number(btn.getAttribute('data-bet'));
+      btn.classList.toggle('betSelected',bet===Number(trainerCurrentBet));
+      btn.disabled=!trainerBettingPhase;
+    });
+  }
+  var deal=document.getElementById('trainerDealBtn');
+  if(deal){
+    deal.innerText='Deal — '+trainerMoney(trainerCurrentBet);
+    deal.classList.toggle('hidden',!trainerBettingPhase);
+    deal.disabled=!trainerBettingPhase || trainerCurrentBet<=0 || trainerCurrentBet>trainerStats.bankroll;
+  }
+  var prompt=document.getElementById('trainerBetPrompt');
+  if(prompt){ prompt.classList.toggle('hidden',!trainerBettingPhase); }
+}
+
+function trainerClearDecisionFeedback(){
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(box){ box.className='coachBox trainerDecisionFeedback hidden'; box.innerHTML=''; }
+}
+
+function trainerShowDecisionFeedback(action,recommended,correct,oldHand,extra){
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(!box){ return; }
+  box.className='coachBox trainerDecisionFeedback '+(correct?'goodCoach':'badCoach');
+  var why='';
+  try{ why=trainerDecisionWhy(recommended,oldHand); }catch(e){}
+  box.innerHTML=
+    '<b class="'+(correct?'good':'bad')+'">'+(correct?'Correct decision ✓':'Incorrect decision ✗')+'</b><br>'+ 
+    'You chose <b>'+String(action||'').toUpperCase()+'</b>. '+
+    (correct?'Basic strategy agrees with that play.':'Recommended: <b>'+String(recommended||'').toUpperCase()+'</b>.')+
+    (why?'<br><b>Why:</b> '+why:'')+
+    (extra?'<br>'+extra:'');
+}
+
+/* Each hand starts at a betting screen. No cards exist until Deal is tapped. */
+function trainerPrepareBettingPhase(){
+  if(trainerShufflePending){ return; }
+  trainerOtherSequenceId++;
+  trainerOtherBusy=false;
+  trainerOtherActiveIndex=-1;
+  trainerAfterUserPlayersDone=false;
+  trainerBettingPhase=true;
+  trainerRoundFinished=true;
+  trainerInsurancePending=false;
+  trainerDealer=[];
+  trainerHands=[];
+  trainerHandBets=[];
+  trainerOtherHands=[];
+  trainerHandIndex=0;
+  trainerUserHandsSnapshot=[];
+  trainerUserBetsSnapshot=[];
+  trainerClearDecisionFeedback();
+
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+
+  var coach=document.getElementById('trainerCoach');
+  if(coach){
+    coach.className='coachBox';
+    coach.innerHTML='<b>Place your bet.</b><br>Choose or confirm the wager for this hand, then tap <b>Deal</b>. No cards are dealt before you confirm.';
+  }
+  trainerUpdateBetUI();
+  trainerRender();
+  trainerSave();
+}
+
+var _trainerSetBetV8=trainerSetBet;
+trainerSetBet=function(amount){
+  if(!trainerBettingPhase){
+    var coach=document.getElementById('trainerCoach');
+    if(coach){ coach.innerHTML='<b>Finish the current hand first.</b><br>You can choose the next wager before the next deal.'; }
+    return;
+  }
+  _trainerSetBetV8(amount);
+  trainerUpdateBetUI();
+};
+
+var _trainerDealRoundV8=trainerDealRound;
+function trainerConfirmDeal(){
+  if(!trainerBettingPhase || trainerShufflePending){ return; }
+  if(trainerCurrentBet<=0 || trainerCurrentBet>trainerStats.bankroll){
+    var coach=document.getElementById('trainerCoach');
+    if(coach){ coach.innerHTML='<b class="bad">Choose a valid wager.</b><br>Your bankroll is '+trainerMoney(trainerStats.bankroll)+'.'; }
+    return;
+  }
+
+  trainerBettingPhase=false;
+  trainerUpdateBetUI();
+  trainerClearDecisionFeedback();
+
+  if(trainerShoe.length<60){
+    var hadCards=trainerShoe.length>0;
+    trainerBuildShoe();
+    if(hadCards){
+      trainerShowTableShuffle(function(){ _trainerDealRoundV8(); });
+      return;
+    }
+  }
+  _trainerDealRoundV8();
+  if(trainerHands.length){
+    trainerUserHandsSnapshot=trainerCloneHands(trainerHands);
+    trainerUserBetsSnapshot=trainerHandBets.slice();
+  }
+}
+
+/* Existing Deal Next Hand button now opens the wager phase instead of
+   instantly dealing another hand. */
+trainerNewRound=function(){ trainerPrepareBettingPhase(); };
+
+/* Persistent user cards: once the initial deal exists, autoplay on other
+   seats cannot make YOUR hand disappear before the user's turn. */
+var _trainerRenderV8=trainerRender;
+trainerRender=function(){
+  if(!trainerBettingPhase && !trainerRoundFinished && !trainerHands.length && trainerUserHandsSnapshot.length){
+    trainerHands=trainerCloneHands(trainerUserHandsSnapshot);
+    trainerHandBets=trainerUserBetsSnapshot.slice();
+    trainerHandIndex=Math.max(0,Math.min(trainerHandIndex,trainerHands.length-1));
+  }
+
+  _trainerRenderV8();
+
+  if(trainerBettingPhase){
+    var dealerTotalEl=document.getElementById('trainerDealerTotal');
+    var playerTotalEl=document.getElementById('trainerPlayerTotal');
+    if(dealerTotalEl){ dealerTotalEl.innerText='Showing: —'; }
+    if(playerTotalEl){ playerTotalEl.innerText='Total: —'; }
+  }
+
+  if(!trainerBettingPhase && trainerHands.length){
+    trainerUserHandsSnapshot=trainerCloneHands(trainerHands);
+    trainerUserBetsSnapshot=trainerHandBets.slice();
+  }
+
+  var playerEl=document.getElementById('trainerPlayerCards');
+  if(playerEl){ playerEl.classList.toggle('splitStack',trainerHands.length>1); }
+
+  var accuracy=document.getElementById('trainerAccuracyStat');
+  if(accuracy){
+    var decisions=trainerStats.correctDecisions+trainerStats.mistakes;
+    accuracy.innerText=decisions?Math.round(trainerStats.correctDecisions/decisions*100)+'%':'—';
+  }
+  trainerUpdateBetUI();
+};
+
+/* Every user action gets a dedicated feedback panel. Other-player autoplay
+   may update trainerCoach, but it can no longer erase this result. */
+var _trainerActionV8=trainerAction;
+trainerAction=function(action){
+  if(trainerBettingPhase || trainerRoundFinished || trainerInsurancePending || trainerOtherBusy){ return; }
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand){ return; }
+  var oldHand=hand.slice();
+  var recommended=trainerRecommendation(hand);
+  var correct=action===recommended;
+  _trainerActionV8(action);
+  trainerShowDecisionFeedback(action,recommended,correct,oldHand,'');
+  trainerRender();
+};
+
+var _trainerInsuranceV8=trainerInsurance;
+trainerInsurance=function(takeIt){
+  if(!trainerInsurancePending || trainerOtherBusy){ return; }
+  var decksRemaining=Math.max(trainerShoe.length/52,0.25);
+  var tc=trainerRunningCount/decksRemaining;
+  var recommended=tc>=3;
+  var correct=(!!takeIt===recommended);
+  _trainerInsuranceV8(takeIt);
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(box){
+    box.className='coachBox trainerDecisionFeedback '+(correct?'goodCoach':'badCoach');
+    box.innerHTML='<b class="'+(correct?'good':'bad')+'">'+(correct?'Correct decision ✓':'Incorrect decision ✗')+'</b><br>'+ 
+      'Insurance choice: <b>'+(takeIt?'TAKE INSURANCE':'NO INSURANCE')+'</b>.<br>'+ 
+      'Current True Count: <b>'+(tc>0?'+':'')+tc.toFixed(1)+'</b>. '+
+      (recommended?'At about TC +3 or higher, insurance becomes the count-aware choice.':'Below about TC +3, declining insurance is the count-aware choice.');
+  }
+};
+
+/* Ensure the end-of-round button clearly leads back to betting. */
+var _trainerEndControlsV8=trainerEndControls;
+trainerEndControls=function(){
+  _trainerEndControlsV8();
+  var next=document.getElementById('trainerNextBtn');
+  if(next){ next.innerText='Next Hand — Choose Bet'; }
+};
+
+/* If a round-end helper reveals the Next button without calling
+   trainerEndControls, normalize its label after rendering. */
+var _trainerShowRoundEndV8=trainerShowRoundEnd;
+trainerShowRoundEnd=function(message,cssClass){
+  _trainerShowRoundEndV8(message,cssClass);
+  var next=document.getElementById('trainerNextBtn');
+  if(next){ next.innerText='Next Hand — Choose Bet'; }
+};
+
+/* Opening Real Blackjack now begins with betting, never an automatic deal. */
+var _openRealGameV8=openRealGame;
+openRealGame=function(){
+  hideAll();
+  setPageMode(false);
+  progress.mode='trainer';
+  save();
+  var el=document.getElementById('realTrainer');
+  el.classList.remove('hidden');
+  setBlackjackLandscape(true);
+  if(trainerShoe.length===0){ trainerBuildShoe(); }
+  trainerPrepareBettingPhase();
+  setTimeout(function(){
+    syncBlackjackLandscape();
+    window.scrollTo({top:0,behavior:'smooth'});
+  },50);
+};
+
+/* Keep stats collapsed by default whenever the trainer is opened. */
+var _trainerToggleStatsInit=function(){
+  trainerStatsOpen=false;
+  var p=document.getElementById('trainerStatsPanel');
+  var b=document.getElementById('trainerStatsToggle');
+  if(p){ p.classList.add('hidden'); }
+  if(b){ b.innerText='📊 Stats'; }
+};
+setTimeout(function(){
+  _trainerToggleStatsInit();
+  trainerUpdateBetUI();
+},0);
+
 </script>
 
 </body>
