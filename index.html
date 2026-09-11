@@ -1396,6 +1396,138 @@ button.dangerButton{
   #realTrainer .trainerYouSeat,.stage8YouSeat{transform:translateY(48px)}
 }
 
+
+/* ==========================================================
+   V5 — SAFE AREAS, LANDSCAPE TRAINING VIEWS, COMPACT STAGE 7
+   ========================================================== */
+
+/* Keep Home controls comfortably below iPhone status / Dynamic Island areas. */
+#homeView .homeTitleRow{
+  padding-top:calc(env(safe-area-inset-top, 0px) + 16px);
+}
+.settingsLaunch{
+  min-height:44px;
+  padding:11px 13px;
+}
+
+/* Prevent iOS focus zoom in Backup & Restore inputs. */
+.backupCodeArea,
+#settingsView textarea,
+#settingsView input,
+#settingsView select{
+  font-size:16px !important;
+}
+
+/* Give automatic scrolling a safe landing point below the Home control. */
+#stage7Scenario,#stage7BetSection,#stage7DecisionSection,#stage7Explain,
+#stage8Scenario,#stage8RCSection,#stage8TCSection,#stage8Explain{
+  scroll-margin-top:104px;
+}
+.stage7CompactSummary{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:8px 0 10px;
+}
+.stage7CompactSummary span{
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#0c1627;
+  border:1px solid #293855;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* Stage 8 start information stays clear of navigation controls. */
+#s8 #stage8Scenario{margin-top:14px}
+
+/* Landscape is requested only for Real Blackjack and Stage 8.
+   If the phone is still physically portrait, rotate the app itself so iOS
+   orientation-lock limitations do not prevent the wide-table layout. */
+body.landscapeRequested{background:#08111f}
+body.forceRotateLandscape{overflow:hidden}
+body.forceRotateLandscape .app{
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:100vh;
+  width:100dvh;
+  height:100vw;
+  height:100dvw;
+  max-width:none;
+  margin:0;
+  padding:16px 28px 24px;
+  transform:translate(-50%,-50%) rotate(90deg);
+  transform-origin:center center;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+body.nativeLandscape .app{
+  max-width:none;
+  width:100%;
+  padding:16px 28px 24px;
+}
+body.landscapeRequested #homeButton{
+  position:absolute;
+  top:16px;
+  left:20px;
+  min-height:44px;
+}
+body.landscapeRequested .pageScreen{
+  min-height:0;
+  padding-top:82px !important;
+}
+body.landscapeRequested #realTrainer,
+body.landscapeRequested #s8,
+body.landscapeRequested #l8{
+  max-width:none;
+  width:100%;
+}
+body.landscapeRequested #realTrainer .tableArea,
+body.landscapeRequested .stage8Table{
+  width:100%;
+  margin-left:0;
+  min-height:320px;
+  padding-left:22px;
+  padding-right:22px;
+  padding-bottom:42px;
+  border-radius:18px 18px 50% 50% / 18px 18px 36% 36%;
+}
+body.landscapeRequested .trainerSeatArc,
+body.landscapeRequested .stage8SeatArc{
+  margin-top:54px;
+  padding:0 14px 34px;
+  min-height:132px;
+  gap:8px;
+}
+body.landscapeRequested #realTrainer .otherPlayerSeat,
+body.landscapeRequested .stage8Seat{
+  padding:6px 4px;
+}
+body.landscapeRequested #realTrainer .otherPlayerSeat .miniCard,
+body.landscapeRequested .stage8Seat .miniCard{
+  width:34px;
+  height:48px;
+  font-size:13px;
+  margin-left:-8px;
+}
+body.landscapeRequested #realTrainer .trainerYouSeat,
+body.landscapeRequested .stage8YouSeat{
+  transform:translateY(48px);
+}
+body.landscapeRequested #realTrainer .bankrollGrid{grid-template-columns:repeat(4,1fr)}
+body.landscapeRequested #realTrainer .trainerTop{grid-template-columns:repeat(3,1fr)}
+body.landscapeRequested #realTrainer .betControls{grid-template-columns:repeat(5,1fr)}
+body.landscapeRequested #realTrainer .actionGrid{grid-template-columns:repeat(4,1fr)}
+body.landscapeRequested #realTrainer .specialActions{grid-template-columns:repeat(2,1fr)}
+body.landscapeRequested #s8 #stage8Scenario{margin-top:4px}
+
+@media (orientation:landscape){
+  body.nativeLandscape .app{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -1405,7 +1537,7 @@ button.dangerButton{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v4 settings-scroll-table-polish -->
+<!-- Blackjack Academy build: v5 landscape-turn-order-stage7-polish -->
 
 <div class="app">
 
@@ -2564,6 +2696,10 @@ button.dangerButton{
         💡 Hint — resets streak to 0
       </button>
     </div>
+
+    <button id="stage7PartAHintBtn" class="secondary hintButton hidden" type="button" onclick="stage7UsePartAHint()">
+      💡 Hint — resets streak to 0
+    </button>
 
     <p id="stage7Message" class="center"></p>
     <div id="stage7Explain"></div>
@@ -6421,7 +6557,7 @@ stage7RenderCountScenario=function(stepText){
     html+='<br><b>Player:</b> '+stage7Current.player+
           '<br><b>Dealer:</b> '+stage7Current.dealer;
   }else if(part===3){
-    html+='<br><span class="small">Cards are dealt only after the bet is chosen — just like at a real table.</span>';
+    html+='<br><span class="small">Cards will be dealt after you choose the correct bet.</span>';
   }
   scenario.innerHTML=html+'<br><br>'+stepText;
 };
@@ -6461,7 +6597,7 @@ stage7LoadScenario=function(){
     stage7RenderDecisionButtons(stage7Current.key==='insurance' ? ['insurance','noinsurance'] : ['hit','stand']);
   }else{
     phase.innerText='Part C — Full Table Integration';
-    instructions.innerText='Do the real-table sequence: calculate True Count → choose bet → receive cards → choose the count-aware play. Get 5 full scenarios correct in a row.';
+    instructions.innerText='Do the full sequence: calculate True Count → choose bet → receive cards → choose the count-aware play. Get 5 full scenarios correct in a row.';
     stage7Current=stage7IntegrationScenario();
     stage7RenderCountScenario('Step 1: calculate the True Count.');
   }
@@ -7005,7 +7141,7 @@ trainerDealRound=function(){
   document.getElementById('trainerNextBtn').classList.add('hidden');
   document.getElementById('trainerInsuranceBox').classList.add('hidden');
   document.getElementById('trainerCoach').className='coachBox';
-  document.getElementById('trainerCoach').innerHTML='<b>Initial deal.</b><br>Count every exposed card. Other players will act one at a time before your turn.';
+  document.getElementById('trainerCoach').innerHTML='<b>Initial deal.</b><br>Count every exposed card. Players before your seat act first; players to your right act after you.';
 
   trainerRender();
   trainerSave();
@@ -7407,6 +7543,457 @@ trainerProcessOtherSeat=function(seq,seatIndex,done){
 
   setTimeout(playHand,NEXT_SEAT_PAUSE);
 };
+
+
+
+/* ==========================================================
+   V5 — LANDSCAPE VIEWS, STAGE 7 COMPACT FLOW, TRUE SEAT ORDER
+   ========================================================== */
+
+/* ---------- Landscape request: Real Blackjack + Stage 8 only ---------- */
+var blackjackLandscapeRequested=false;
+function syncBlackjackLandscape(){
+  var body=document.body;
+  var app=document.querySelector('.app');
+  if(!body || !app){ return; }
+  body.classList.toggle('landscapeRequested',blackjackLandscapeRequested);
+  if(!blackjackLandscapeRequested){
+    body.classList.remove('forceRotateLandscape','nativeLandscape');
+    app.scrollTop=0;
+    return;
+  }
+  var natural=window.innerWidth>window.innerHeight;
+  body.classList.toggle('nativeLandscape',natural);
+  body.classList.toggle('forceRotateLandscape',!natural);
+  setTimeout(function(){ app.scrollTop=0; },40);
+}
+function setBlackjackLandscape(on){
+  blackjackLandscapeRequested=!!on;
+  syncBlackjackLandscape();
+}
+window.addEventListener('resize',function(){
+  if(blackjackLandscapeRequested){ syncBlackjackLandscape(); }
+});
+window.addEventListener('orientationchange',function(){
+  if(blackjackLandscapeRequested){ setTimeout(syncBlackjackLandscape,120); }
+});
+
+var _hideAllV5=hideAll;
+hideAll=function(){
+  setBlackjackLandscape(false);
+  _hideAllV5();
+};
+
+var _showLessonV5=showLesson;
+showLesson=function(stage){
+  _showLessonV5(stage);
+  setBlackjackLandscape(Number(stage)===8);
+};
+
+var _showPracticeV5=showPractice;
+showPractice=function(stage){
+  _showPracticeV5(stage);
+  setBlackjackLandscape(Number(stage)===8);
+};
+
+var _openRealGameV5=openRealGame;
+openRealGame=function(){
+  _openRealGameV5();
+  setBlackjackLandscape(true);
+};
+
+/* ---------- Restore: avoid leaving iPhone zoomed into the textarea ---------- */
+var _restoreBackupCodeV5=restoreBackupCode;
+restoreBackupCode=function(){
+  try{
+    if(document.activeElement && document.activeElement.blur){ document.activeElement.blur(); }
+    window.scrollTo(0,0);
+    var app=document.querySelector('.app');
+    if(app){ app.scrollTop=0; }
+  }catch(e){}
+  _restoreBackupCodeV5();
+};
+
+/* ---------- Stage 7: safe scroll + compact completed steps ---------- */
+stage7ScrollTo=function(id,block){
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(!el){ return; }
+    var app=document.querySelector('.app');
+    if(document.body.classList.contains('forceRotateLandscape') && app){
+      var target=Math.max(0,el.offsetTop-92);
+      app.scrollTo({top:target,behavior:'smooth'});
+      return;
+    }
+    var top=window.scrollY+el.getBoundingClientRect().top-104;
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  },110);
+};
+
+/* Exact wording requested for Part C before the cards appear. */
+stage7RenderCountScenario=function(stepText){
+  var scenario=document.getElementById('stage7Scenario');
+  var part=progress.stage7Part||1;
+  var showCards=(part===2) || (part===3 && stage7Step==='decision');
+  var html='<b>Running Count:</b> '+stage7Signed(stage7Current.rc)+
+    '<br><b>Decks Remaining:</b> '+stage7Current.decks;
+  if(showCards){
+    html+='<br><b>Player:</b> '+stage7Current.player+
+          '<br><b>Dealer:</b> '+stage7Current.dealer;
+  }else if(part===3){
+    html+='<br><span class="small">Cards will be dealt after you choose the correct bet.</span>';
+  }
+  scenario.innerHTML=html+'<br><br>'+stepText;
+};
+
+var _stage7ResetUIV5=stage7ResetUI;
+stage7ResetUI=function(){
+  _stage7ResetUIV5();
+  var aHint=document.getElementById('stage7PartAHintBtn');
+  if(aHint){ aHint.classList.add('hidden'); }
+};
+
+var _stage7LoadScenarioV5=stage7LoadScenario;
+stage7LoadScenario=function(){
+  _stage7LoadScenarioV5();
+  var part=progress.stage7Part||1;
+  var aHint=document.getElementById('stage7PartAHintBtn');
+  if(aHint){ aHint.classList.toggle('hidden',part!==1); }
+  if(part===3){
+    var instructions=document.getElementById('stage7Instructions');
+    if(instructions){ instructions.innerText='Do the full sequence: calculate True Count → choose bet → receive cards → choose the count-aware play. Get 5 full scenarios correct in a row.'; }
+  }
+};
+
+function stage7UsePartAHint(){
+  if(stage7WaitingForNext || (progress.stage7Part||1)!==1 || !stage7Current){ return; }
+  progress.stage7Score=0;
+  save();
+  document.getElementById('stage7Score').innerText=0;
+  document.getElementById('stage7Message').innerText='Hint used — streak reset to 0';
+  document.getElementById('stage7Message').className='center bad';
+
+  var bet=stage7Current.bet;
+  var hint='<b>Hint:</b><br>'+ 
+    'Running Count <b>'+stage7Signed(stage7Current.rc)+'</b> ÷ <b>'+stage7Current.decks+'</b> decks = True Count <b>'+stage7Signed(stage7Current.tc)+'</b>.'+
+    '<br><br>At True Count <b>'+stage7Signed(stage7Current.tc)+'</b>, the training ramp uses <b>'+bet+' unit'+(bet===1?'':'s')+'</b>.'+
+    '<br><br><b>Training ramp:</b><br>TC ≤ 0 → 1 unit<br>TC +1 → 2 units<br>TC +2 → 4 units<br>TC +3 → 6 units<br>TC +4+ → 8 units.';
+  setExplain('stage7Explain',hint,false);
+
+  stage7WaitingForNext=true;
+  document.getElementById('stage7TCSection').classList.add('hidden');
+  document.getElementById('stage7BetSection').classList.add('hidden');
+  var aHint=document.getElementById('stage7PartAHintBtn');
+  if(aHint){ aHint.classList.add('hidden'); }
+  document.getElementById('stage7NextBtn').classList.remove('hidden');
+  stage7ScrollTo('stage7Explain','center');
+}
+
+var _stage7FailV5=stage7Fail;
+stage7Fail=function(message,explanation){
+  _stage7FailV5(message,explanation);
+  var aHint=document.getElementById('stage7PartAHintBtn');
+  if(aHint){ aHint.classList.add('hidden'); }
+};
+
+var _stage7CheckTrueCountV5=stage7CheckTrueCount;
+stage7CheckTrueCount=function(){
+  _stage7CheckTrueCountV5();
+  if(stage7WaitingForNext || stage7Step!=='bet'){ return; }
+  var part=progress.stage7Part||1;
+  if(part!==1 && part!==3){ return; }
+  document.getElementById('stage7TCSection').classList.add('hidden');
+  var scenario=document.getElementById('stage7Scenario');
+  if(part===1){
+    scenario.innerHTML=
+      '<div class="stage7CompactSummary"><span>True Count: '+stage7Signed(stage7Current.tc)+' ✓</span></div>'+ 
+      '<b>Step 2:</b> choose the correct training bet size.';
+  }else{
+    scenario.innerHTML=
+      '<div class="stage7CompactSummary"><span>True Count: '+stage7Signed(stage7Current.tc)+' ✓</span></div>'+ 
+      '<span class="small">Cards will be dealt after you choose the correct bet.</span><br><br>'+ 
+      '<b>Step 2:</b> choose the correct training bet size.';
+  }
+  stage7ScrollTo('stage7BetSection','center');
+};
+
+var _stage7ChooseBetV5=stage7ChooseBet;
+stage7ChooseBet=function(units){
+  var part=progress.stage7Part||1;
+  _stage7ChooseBetV5(units);
+  if(stage7WaitingForNext){ return; }
+  if(part===1){
+    var aHint=document.getElementById('stage7PartAHintBtn');
+    if(aHint){ aHint.classList.add('hidden'); }
+  }
+  if(part===3 && stage7Step==='decision'){
+    document.getElementById('stage7TCSection').classList.add('hidden');
+    document.getElementById('stage7BetSection').classList.add('hidden');
+    document.getElementById('stage7Scenario').innerHTML=
+      '<div class="stage7CompactSummary">'+
+        '<span>True Count: '+stage7Signed(stage7Current.tc)+' ✓</span>'+ 
+        '<span>Bet: '+stage7Current.bet+' unit'+(stage7Current.bet===1?'':'s')+' ✓</span>'+ 
+      '</div>'+ 
+      '<b>Player:</b> '+stage7Current.player+'<br>'+ 
+      '<b>Dealer:</b> '+stage7Current.dealer+'<br><br>'+ 
+      '<b>Step 3:</b> choose the correct count-aware play.';
+    stage7ScrollTo('stage7DecisionSection','center');
+  }
+};
+
+/* ---------- Stage 8: scroll safely inside either portrait or rotated app ---------- */
+stage8ScrollTo=function(id,block){
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(!el){ return; }
+    var app=document.querySelector('.app');
+    if(document.body.classList.contains('landscapeRequested') && app){
+      app.scrollTo({top:Math.max(0,el.offsetTop-92),behavior:'smooth'});
+    }else{
+      var top=window.scrollY+el.getBoundingClientRect().top-104;
+      window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+    }
+  },110);
+};
+
+/* ---------- Real Blackjack: seat order follows the visible table ---------- */
+var trainerAfterUserPlayersDone=false;
+
+function trainerSeatSides(){
+  var slots=blackjackArcSlots(trainerOtherHands.length);
+  var left=[];
+  var right=[];
+  slots.forEach(function(col,idx){
+    if(col<4){ left.push(idx); }
+    else if(col>4){ right.push(idx); }
+  });
+  return {left:left,right:right};
+}
+
+function trainerPlayOtherSeatList(indices,done,phaseLabel){
+  indices=(indices||[]).slice();
+  if(!indices.length){
+    trainerOtherBusy=false;
+    trainerOtherActiveIndex=-1;
+    trainerRender();
+    if(typeof done==='function'){ done(); }
+    return;
+  }
+
+  trainerOtherBusy=true;
+  var seq=++trainerOtherSequenceId;
+  var pos=0;
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  var coach=document.getElementById('trainerCoach');
+  if(coach){
+    coach.className='coachBox';
+    coach.innerHTML='<b>'+(phaseLabel||'Other players are acting.')+'</b><br>Follow every new card and keep one Running Count for the whole table.';
+  }
+
+  var ACTION_PAUSE=1200;
+  var CARD_PAUSE=1350;
+  var RESULT_PAUSE=1150;
+  var NEXT_HAND_PAUSE=900;
+  var NEXT_SEAT_PAUSE=950;
+
+  function finishList(){
+    trainerOtherBusy=false;
+    trainerOtherActiveIndex=-1;
+    trainerRender();
+    if(typeof done==='function'){ done(); }
+  }
+
+  function playSeat(){
+    if(seq!==trainerOtherSequenceId){ return; }
+    if(pos>=indices.length){ finishList(); return; }
+    var seatIndex=indices[pos];
+    trainerOtherActiveIndex=seatIndex;
+    var seat=trainerOtherSeatObject(trainerOtherHands[seatIndex]);
+    trainerOtherHands[seatIndex]=seat;
+    seat.activeHand=0;
+    seat.status='Player '+(seatIndex+1)+' turn';
+    trainerRender();
+
+    function nextHand(){
+      seat.activeHand++;
+      if(seat.activeHand>=seat.hands.length){
+        seat.status='Done';
+        trainerRender();
+        pos++;
+        setTimeout(playSeat,NEXT_SEAT_PAUSE);
+      }else{
+        setTimeout(playHand,NEXT_HAND_PAUSE);
+      }
+    }
+
+    function playHand(){
+      if(seq!==trainerOtherSequenceId){ return; }
+      var hand=seat.hands[seat.activeHand];
+      var hv=trainerHandValue(hand);
+      var handPrefix=seat.hands.length>1?'Hand '+(seat.activeHand+1)+' — ':'';
+
+      if(hv.total>21){
+        seat.status=handPrefix+'BUST '+hv.total;
+        trainerRender();
+        setTimeout(nextHand,RESULT_PAUSE);
+        return;
+      }
+      if(hv.total===21){
+        seat.status=handPrefix+(hand.length===2?'BLACKJACK 21':'21 — STAND');
+        trainerRender();
+        setTimeout(nextHand,RESULT_PAUSE);
+        return;
+      }
+
+      var action=trainerOtherRecommendation(hand,!seat.splitUsed && hand.length===2);
+      seat.status=handPrefix+action.toUpperCase();
+      trainerRender();
+
+      setTimeout(function(){
+        if(seq!==trainerOtherSequenceId){ return; }
+        if(action==='hit'){
+          var c=trainerDraw(true);
+          hand.push(c);
+          seat.status=handPrefix+'HIT → '+c.rank+c.suit;
+          trainerRender();
+          setTimeout(playHand,CARD_PAUSE);
+          return;
+        }
+        if(action==='double'){
+          var dc=trainerDraw(true);
+          hand.push(dc);
+          seat.status=handPrefix+'DOUBLE → '+dc.rank+dc.suit+' • '+trainerHandValue(hand).total;
+          trainerRender();
+          setTimeout(nextHand,CARD_PAUSE);
+          return;
+        }
+        if(action==='split'){
+          seat.splitUsed=true;
+          var a=hand[0],b=hand[1];
+          var first=[a,trainerDraw(true)];
+          var second=[b,trainerDraw(true)];
+          seat.hands.splice(seat.activeHand,1,first,second);
+          seat.status='SPLIT — two hands';
+          trainerRender();
+          setTimeout(playHand,CARD_PAUSE);
+          return;
+        }
+        seat.status=handPrefix+'STAND '+hv.total;
+        trainerRender();
+        setTimeout(nextHand,RESULT_PAUSE);
+      },ACTION_PAUSE);
+    }
+
+    setTimeout(playHand,NEXT_HAND_PAUSE);
+  }
+
+  playSeat();
+}
+
+/* Before YOU: only seats visually left of YOU act. */
+trainerAutoPlayOtherPlayers=function(done){
+  var sides=trainerSeatSides();
+  trainerPlayOtherSeatList(sides.left,done,'Players before you are acting.');
+};
+
+/* Natural blackjack still waits for the seats on your right to finish. */
+trainerBeginUserTurn=function(){
+  trainerRender();
+  if(trainerHandValue(trainerHands[0]).total===21){
+    trainerAfterUserPlayersDone=true;
+    var right=trainerSeatSides().right;
+    trainerPlayOtherSeatList(right,function(){
+      trainerRevealHole();
+      trainerFinishNaturalBlackjack();
+    },'Players after you are acting.');
+    return;
+  }
+  document.getElementById('trainerActions').classList.remove('hidden');
+  document.getElementById('trainerSpecialActions').classList.remove('hidden');
+  var coach=document.getElementById('trainerCoach');
+  coach.className='coachBox';
+  coach.innerHTML='<b>Your turn.</b><br>Players to your left are finished. Make your play; players to your right will act after your hand is finished.';
+  trainerRender();
+  trainerSave();
+};
+
+var _trainerDealRoundV5=trainerDealRound;
+trainerDealRound=function(){
+  trainerAfterUserPlayersDone=false;
+  _trainerDealRoundV5();
+};
+
+/* After YOU finishes every hand, the seats on the right play before dealer resolution. */
+var _trainerFinishAllHandsV5=trainerFinishAllHands;
+trainerFinishAllHands=function(){
+  if(trainerRoundFinished){ return; }
+  if(!trainerAfterUserPlayersDone){
+    trainerAfterUserPlayersDone=true;
+    var right=trainerSeatSides().right;
+    if(right.length){
+      trainerPlayOtherSeatList(right,function(){ _trainerFinishAllHandsV5(); },'Players after you are acting.');
+      return;
+    }
+  }
+  _trainerFinishAllHandsV5();
+};
+
+function trainerFinishSurrenderAfterRight(coach){
+  trainerRevealHole();
+  while(true){
+    var dv=trainerHandValue(trainerDealer);
+    if(dv.total<17){ trainerDealer.push(trainerDraw(true)); continue; }
+    break;
+  }
+  trainerRoundFinished=true;
+  if(coach){ coach.innerHTML+='<br><br><b>Dealer finishes:</b> '+trainerHandValue(trainerDealer).total+'.'; }
+  trainerEndControls();
+  trainerRender();
+  trainerSave();
+}
+
+/* Surrender also respects the seats to the right before the dealer finishes. */
+var _trainerActionV5=trainerAction;
+trainerAction=function(action){
+  if(action!=='surrender'){
+    _trainerActionV5(action);
+    return;
+  }
+  if(trainerRoundFinished || trainerInsurancePending || trainerOtherBusy){ return; }
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand || !trainerCanSurrender(hand)){ return; }
+
+  var recommended=trainerRecommendation(hand);
+  var correct=action===recommended;
+  var oldHand=hand.slice();
+  trainerRecordDecision(correct);
+  trainerFirstDecision=false;
+
+  var coach=document.getElementById('trainerCoach');
+  coach.className='coachBox '+(correct?'goodCoach':'badCoach');
+  coach.innerHTML='<b class="'+(correct?'good':'bad')+'">'+(correct?'Correct decision ✓':'Not the best decision')+'</b><br>'+ 
+    'You chose <b>SURRENDER</b>. '+(correct?'Basic strategy agrees with that play.':'The recommended play is <b>'+recommended.toUpperCase()+'</b>.')+
+    '<br><br><b>Why:</b> '+trainerDecisionWhy(recommended,oldHand)+
+    '<br><br><b>Result:</b> You surrender and receive half the original wager back.';
+
+  trainerStats.bankroll+=trainerHandBets[trainerHandIndex]/2;
+  trainerStats.losses++;
+  trainerStats.hands++;
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+  trainerAfterUserPlayersDone=true;
+  trainerRender();
+  trainerSave();
+
+  var right=trainerSeatSides().right;
+  trainerPlayOtherSeatList(right,function(){ trainerFinishSurrenderAfterRight(coach); },'Players after you are acting.');
+};
+
+/* Keep the current UI/header fresh after V5 overrides are installed. */
+renderStageMenu();
+
 
 /* Refresh the current header/table after V4 overrides are installed. */
 renderStageMenu();
