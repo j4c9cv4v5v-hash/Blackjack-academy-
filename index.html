@@ -2787,6 +2787,156 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
   #trainerStatsPanel.v10GlobalModal .trainerMiniStat{min-height:47px !important}
 }
 
+
+
+/* ==========================================================
+   V12 — SYMMETRIC SEATS, APP PLAYER PICKER, READABLE STATS,
+          CLICK-TO-EXPAND FEEDBACK, HAND META + ROUND RESULTS
+   ========================================================== */
+
+/* Remove the always-changing status box from the compact game rail. Important
+   feedback lives in the dedicated decision card / overlays instead. */
+body.landscapeGameplay #realTrainer #trainerCoach{display:none !important}
+
+/* Player count uses an in-app modal rather than the iOS native select. */
+body.landscapeGameplay #realTrainer .trainerPlayersToggle{
+  width:100% !important;
+  min-height:34px !important;
+  margin:5px 0 2px !important;
+  padding:6px !important;
+  font-size:9px !important;
+}
+.trainerPlayersModalCard{width:min(460px,76%);max-height:88%;padding:12px}
+.trainerPlayersChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}
+.trainerPlayersChoices button{margin:0;min-height:42px;font-size:12px;padding:8px}
+.trainerPlayersChoices button.selected{outline:2px solid #5eead4;background:#173f45;color:#eafffb}
+
+/* Stats: label above value, slightly larger copy while keeping the compact card. */
+#trainerStatsPanel.v10GlobalModal .trainerMiniStat{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+  font-size:9px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatLabel{
+  display:block;
+  font-size:9.5px;
+  line-height:1.08;
+  font-weight:750;
+  color:#d8e1f2;
+  text-align:center;
+}
+#trainerStatsPanel.v10GlobalModal .trainerMiniStat b{font-size:16px !important;line-height:1 !important}
+
+/* Small side feedback is tappable; full explanation opens in a centered modal. */
+body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
+  cursor:pointer;
+  max-height:58px !important;
+  overflow:hidden !important;
+  position:relative;
+  padding-bottom:15px !important;
+}
+body.landscapeGameplay #realTrainer .trainerDecisionFeedback:not(.hidden)::after{
+  content:'Tap to read';
+  position:absolute;
+  left:7px;
+  bottom:3px;
+  font-size:7px;
+  opacity:.68;
+}
+.trainerFeedbackModalCard{width:min(620px,82%);max-height:86%;padding:12px}
+.trainerFeedbackModalBody{font-size:14px;line-height:1.5;overflow:auto;max-height:60vh;color:#e8eef9}
+
+/* Stage 8 scenario box: same position, slightly larger/easier to scan. */
+body.landscapeGameplay #s8 #stage8Scenario.stage8ScenarioOnTable{
+  min-width:154px !important;
+  max-width:188px !important;
+  padding:10px 11px !important;
+  font-size:11px !important;
+  line-height:1.35 !important;
+}
+body.landscapeGameplay #s8 #stage8Scenario.stage8ScenarioOnTable b{font-size:11.5px !important}
+
+/* YOU: each hand is its own vertical block. Cards first, then Total + Bet,
+   exactly as requested. Split hands stack without moving any neighbour. */
+body.landscapeGameplay #realTrainer #trainerPlayerCards.trainerHandsV12{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:4px !important;
+  width:100% !important;
+  overflow:visible !important;
+}
+body.landscapeGameplay #realTrainer .trainerUserHand{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+body.landscapeGameplay #realTrainer .trainerUserHand.current{
+  background:rgba(94,234,212,.08);
+  border-radius:7px;
+  padding:2px;
+}
+body.landscapeGameplay #realTrainer .trainerUserHandCards{
+  display:grid !important;
+  grid-template-columns:repeat(3,max-content) !important;
+  justify-content:center !important;
+  gap:1px !important;
+  width:100% !important;
+}
+body.landscapeGameplay #realTrainer .trainerUserHandCards .miniCard{
+  width:25px !important;
+  height:36px !important;
+  margin:0 !important;
+  font-size:10px !important;
+}
+body.landscapeGameplay #realTrainer .trainerHandMeta{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  flex-wrap:wrap;
+  font-size:7.5px;
+  line-height:1.05;
+  font-weight:800;
+  white-space:nowrap;
+  color:#f5f7fb;
+}
+body.landscapeGameplay #realTrainer .trainerHandMeta .bet{color:#5eead4}
+body.landscapeGameplay #realTrainer .trainerHandResult{
+  font-size:8px;
+  font-weight:900;
+  line-height:1.05;
+  text-align:center;
+  padding:2px 5px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+body.landscapeGameplay #realTrainer .trainerHandResult.resultWin{background:rgba(94,234,212,.14)}
+body.landscapeGameplay #realTrainer .trainerHandResult.resultLoss{background:rgba(251,113,133,.14)}
+body.landscapeGameplay #realTrainer .trainerHandResult.resultPush{background:rgba(251,191,36,.14)}
+body.landscapeGameplay #realTrainer #trainerPlayerTotal{display:none !important}
+
+/* Symmetric fixed seat canvas. All seat positions are JS-anchored and a
+   neighbour's hand height never changes another seat's coordinates. */
+body.landscapeGameplay #realTrainer .trainerSeatArc{left:4px !important;right:4px !important}
+body.landscapeGameplay #realTrainer #trainerOtherPlayers .otherPlayerSeat,
+body.landscapeGameplay #realTrainer .trainerYouSeat{position:absolute !important}
+body.landscapeGameplay #realTrainer .trainerYouSeat{width:clamp(78px,15%,96px) !important;max-width:96px !important}
+
+@media (max-height:390px) and (orientation:landscape){
+  .trainerPlayersModalCard{width:min(430px,72%);padding:9px}
+  .trainerPlayersChoices{gap:5px}
+  .trainerPlayersChoices button{min-height:34px;font-size:10px;padding:5px}
+  .trainerFeedbackModalCard{width:min(560px,78%);padding:9px}
+  .trainerFeedbackModalBody{font-size:12px;max-height:56vh}
+  body.landscapeGameplay #s8 #stage8Scenario.stage8ScenarioOnTable{min-width:145px !important;max-width:176px !important;font-size:10px !important;padding:8px !important}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2796,7 +2946,7 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v11 wide-seats-panel-rebalance-compact-stats -->
+<!-- Blackjack Academy build: v12 symmetric-seats-feedback-modal-hand-results -->
 
 <div class="app">
 
@@ -3153,9 +3303,6 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
     </div>
     <button id="trainerDealBtn" class="trainerDealBtn" type="button" onclick="trainerConfirmDeal()">Deal — $10</button>
     <div id="trainerBetPrompt" class="small center trainerBetPrompt">Choose or confirm your bet before the cards are dealt.</div>
-    <p class="small center" style="margin-bottom:0">
-      Betting is only for simulation. Your bankroll and statistics are saved on this device.
-    </p>
   </div>
 
 
@@ -3213,7 +3360,7 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
         <div id="trainerPlayerTotal" class="otherSeatTotal">Total: —</div>
       </div>
     </div>
-    <div class="center small trainerSeatNote">You are always the center seat.</div>
+    <div class="center small trainerSeatNote">Seats are spaced symmetrically around the table.</div>
 
   </div>
 
@@ -3254,15 +3401,7 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
 
   <div class="lesson tableSizeControls trainerTableSizeRight">
     <b>Players at the table</b>
-    <label class="small" for="trainerOtherPlayersSelect">Other players:</label>
-    <select id="trainerOtherPlayersSelect" onchange="trainerSetOtherPlayers(this.value)">
-      <option value="0">0 — heads-up</option>
-      <option value="1">1 other player</option>
-      <option value="2">2 other players</option>
-      <option value="3">3 other players</option>
-      <option value="4">4 other players</option>
-      <option value="5">5 other players</option>
-    </select>
+    <button id="trainerPlayersToggle" class="secondary trainerPlayersToggle" type="button" onclick="trainerOpenPlayersModal()">👥 Players · 0 others</button>
     <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">Table size applies to the next hand.</p>
   </div>
 
@@ -3281,20 +3420,43 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
     <div class="trainerStatsModalCard">
       <div class="trainerStatsModalHeader"><b>📊 Table Statistics</b><button type="button" class="trainerStatsClose" onclick="trainerCloseStats()">✕ Close</button></div>
       <div class="trainerStatsGrid trainerStatsSummaryGrid">
-        <div class="trainerMiniStat"><b id="trainerStatsBankroll">$1000</b>Bankroll</div>
-        <div class="trainerMiniStat"><b id="trainerStatsProfit">$0</b>Session P/L</div>
-        <div class="trainerMiniStat"><b id="trainerStatsDecisionAcc">—</b>Decision accuracy</div>
+        <div class="trainerMiniStat"><span class="trainerStatLabel">Bankroll</span><b id="trainerStatsBankroll">$1000</b></div>
+        <div class="trainerMiniStat"><span class="trainerStatLabel">Session P/L</span><b id="trainerStatsProfit">$0</b></div>
+        <div class="trainerMiniStat"><span class="trainerStatLabel">Decision accuracy</span><b id="trainerStatsDecisionAcc">—</b></div>
       </div>
     <div class="trainerStatsGrid">
-      <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
-      <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
-      <div class="trainerMiniStat"><b id="trainerLossesStat">0</b>Losses</div>
-      <div class="trainerMiniStat"><b id="trainerPushesStat">0</b>Pushes</div>
-      <div class="trainerMiniStat"><b id="trainerCorrectStat">0</b>Correct decisions</div>
-      <div class="trainerMiniStat"><b id="trainerMistakesStat">0</b>Mistakes</div>
-      <div class="trainerMiniStat"><b id="trainerAccuracyStat">—</b>Accuracy</div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Hands</span><b id="trainerHandsStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Wins</span><b id="trainerWinsStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Losses</span><b id="trainerLossesStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Pushes</span><b id="trainerPushesStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Correct decisions</span><b id="trainerCorrectStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Mistakes</span><b id="trainerMistakesStat">0</b></div>
+      <div class="trainerMiniStat"><span class="trainerStatLabel">Accuracy</span><b id="trainerAccuracyStat">—</b></div>
     </div>
     <button class="secondary trainerResetInsideStats" onclick="trainerResetStats()">Reset Table Stats &amp; Bankroll</button>
+    </div>
+  </div>
+
+  <div id="trainerPlayersModal" class="appModal hidden" role="dialog" aria-modal="true" aria-labelledby="trainerPlayersModalTitle">
+    <div class="appModalBackdrop" onclick="trainerClosePlayersModal()"></div>
+    <div class="appModalCard trainerPlayersModalCard">
+      <div class="appModalHeader"><b id="trainerPlayersModalTitle">Players at the table</b><button type="button" class="appModalClose" onclick="trainerClosePlayersModal()">✕</button></div>
+      <div id="trainerPlayersChoices" class="trainerPlayersChoices">
+        <button type="button" data-count="0" onclick="trainerChoosePlayers(0)">0 — Heads-up</button>
+        <button type="button" data-count="1" onclick="trainerChoosePlayers(1)">1 other player</button>
+        <button type="button" data-count="2" onclick="trainerChoosePlayers(2)">2 other players</button>
+        <button type="button" data-count="3" onclick="trainerChoosePlayers(3)">3 other players</button>
+        <button type="button" data-count="4" onclick="trainerChoosePlayers(4)">4 other players</button>
+        <button type="button" data-count="5" onclick="trainerChoosePlayers(5)">5 other players</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="trainerFeedbackModal" class="appModal hidden" role="dialog" aria-modal="true" aria-labelledby="trainerFeedbackModalTitle">
+    <div class="appModalBackdrop" onclick="trainerCloseFeedbackDetail()"></div>
+    <div class="appModalCard trainerFeedbackModalCard">
+      <div class="appModalHeader"><b id="trainerFeedbackModalTitle">Decision Feedback</b><button type="button" class="appModalClose" onclick="trainerCloseFeedbackDetail()">✕ Close</button></div>
+      <div id="trainerFeedbackModalBody" class="trainerFeedbackModalBody"></div>
     </div>
   </div>
 
@@ -10463,6 +10625,290 @@ openRealGame=function(){
 setTimeout(function(){
   trainerV11ArrangePanels();
   trainerV10LayoutSeats();
+},0);
+
+
+
+/* ==========================================================
+   V12 — SYMMETRIC SEATS / PLAYER MODAL / FEEDBACK DETAIL /
+          HAND BET+TOTAL+RESULT DISPLAY
+   ========================================================== */
+var trainerPlayersModalOpen=false;
+var trainerFeedbackModalOpen=false;
+var trainerHandResults=[];
+var trainerPendingSpecialResults=null;
+
+function trainerV12RefreshPause(){
+  trainerFlowPaused=!!(trainerStatsOpen || trainerPlayersModalOpen || trainerFeedbackModalOpen);
+}
+
+function trainerUpdatePlayersUI(){
+  var btn=document.getElementById('trainerPlayersToggle');
+  if(btn){ btn.innerText='👥 Players · '+trainerOtherPlayerCount+' other'+(trainerOtherPlayerCount===1?'':'s'); }
+  var choices=document.getElementById('trainerPlayersChoices');
+  if(choices){
+    Array.from(choices.querySelectorAll('[data-count]')).forEach(function(b){
+      b.classList.toggle('selected',Number(b.getAttribute('data-count'))===Number(trainerOtherPlayerCount));
+    });
+  }
+}
+function trainerOpenPlayersModal(){
+  var modal=document.getElementById('trainerPlayersModal');
+  if(!modal){ return; }
+  var app=document.querySelector('.app');
+  if(app && modal.parentNode!==app){ app.appendChild(modal); }
+  trainerPlayersModalOpen=true;
+  trainerSpeedMenuOpen=false;
+  trainerUpdateSpeedUI();
+  trainerV12RefreshPause();
+  trainerUpdatePlayersUI();
+  modal.classList.remove('hidden');
+}
+function trainerClosePlayersModal(){
+  trainerPlayersModalOpen=false;
+  var modal=document.getElementById('trainerPlayersModal');
+  if(modal){ modal.classList.add('hidden'); }
+  trainerV12RefreshPause();
+}
+function trainerChoosePlayers(n){
+  trainerSetOtherPlayers(n);
+  trainerUpdatePlayersUI();
+  trainerClosePlayersModal();
+}
+
+var _trainerSetOtherPlayersV12=trainerSetOtherPlayers;
+trainerSetOtherPlayers=function(value){
+  _trainerSetOtherPlayersV12(value);
+  trainerUpdatePlayersUI();
+  trainerV10LayoutSeats();
+};
+
+/* Symmetric positions for TOTAL seats, with YOU occupying the left-middle
+   slot on even totals and the exact middle on odd totals. */
+function trainerV12SeatPlan(otherCount){
+  var total=Math.max(1,Math.min(6,Number(otherCount||0)+1));
+  var xs={
+    1:[50],
+    2:[34,66],
+    3:[20,50,80],
+    4:[13,37,63,87],
+    5:[8,29,50,71,92],
+    6:[8,25,42,58,75,92]
+  }[total];
+  var youIndex=Math.floor((total-1)/2);
+  var otherPositionIndices=[];
+  for(var i=0;i<total;i++){ if(i!==youIndex){ otherPositionIndices.push(i); } }
+  return {total:total,xs:xs,youIndex:youIndex,otherPositionIndices:otherPositionIndices};
+}
+function trainerV12SeatBottom(x,isYou){
+  var d=Math.min(1,Math.abs(x-50)/42);
+  var b=36+32*Math.pow(d,1.4);
+  if(isYou){ b-=7; }
+  return Math.max(25,Math.round(b));
+}
+trainerV10LayoutSeats=function(){
+  var others=Array.from(document.querySelectorAll('#trainerOtherPlayers .otherPlayerSeat'));
+  var plan=trainerV12SeatPlan(others.length);
+  others.forEach(function(seat,idx){
+    var posIndex=plan.otherPositionIndices[idx];
+    var x=plan.xs[posIndex];
+    seat.style.gridColumn='auto';
+    seat.style.left=x+'%';
+    seat.style.bottom=trainerV12SeatBottom(x,false)+'px';
+    seat.style.transform='translateX(-50%)';
+  });
+  var you=document.getElementById('trainerYouSeat');
+  if(you){
+    var ux=plan.xs[plan.youIndex];
+    you.style.left=ux+'%';
+    you.style.bottom=trainerV12SeatBottom(ux,true)+'px';
+    you.style.transform='translateX(-50%)';
+  }
+};
+trainerSeatSides=function(){
+  var plan=trainerV12SeatPlan(trainerOtherHands.length);
+  var left=[],right=[];
+  plan.otherPositionIndices.forEach(function(posIndex,otherIdx){
+    if(posIndex<plan.youIndex){ left.push(otherIdx); }
+    else if(posIndex>plan.youIndex){ right.push(otherIdx); }
+  });
+  return {left:left,right:right};
+};
+
+/* Full decision explanation modal. */
+function trainerOpenFeedbackDetail(){
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(!box || box.classList.contains('hidden') || !box.innerHTML.trim()){ return; }
+  var modal=document.getElementById('trainerFeedbackModal');
+  var body=document.getElementById('trainerFeedbackModalBody');
+  if(!modal || !body){ return; }
+  var app=document.querySelector('.app');
+  if(app && modal.parentNode!==app){ app.appendChild(modal); }
+  body.innerHTML=box.innerHTML;
+  trainerFeedbackModalOpen=true;
+  trainerV12RefreshPause();
+  modal.classList.remove('hidden');
+}
+function trainerCloseFeedbackDetail(){
+  trainerFeedbackModalOpen=false;
+  var modal=document.getElementById('trainerFeedbackModal');
+  if(modal){ modal.classList.add('hidden'); }
+  trainerV12RefreshPause();
+}
+(function installV12FeedbackClick(){
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(!box || box.dataset.v12Clickable){ return; }
+  box.dataset.v12Clickable='1';
+  box.setAttribute('role','button');
+  box.setAttribute('tabindex','0');
+  box.setAttribute('aria-label','Open full decision feedback');
+  box.addEventListener('click',trainerOpenFeedbackDetail);
+  box.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault();trainerOpenFeedbackDetail(); } });
+})();
+
+/* Hint remains available even though the changing status/coach box is hidden. */
+var _trainerShowHintV12=trainerShowHint;
+trainerShowHint=function(){
+  if(trainerRoundFinished || trainerInsurancePending){ return; }
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand){ return; }
+  var rec=trainerRecommendation(hand);
+  var box=document.getElementById('trainerDecisionFeedback');
+  if(box){
+    box.className='coachBox trainerDecisionFeedback';
+    box.innerHTML='<b>Hint</b><br>Basic strategy recommends <b>'+rec.toUpperCase()+'</b> here.<br><span class="small">Hints do not count as a correct or incorrect decision.</span>';
+    trainerOpenFeedbackDetail();
+  }else{ _trainerShowHintV12(); }
+};
+
+function trainerSignedMoneyV12(v){
+  if(Math.abs(v)<0.00001){ return '$0'; }
+  return (v>0?'+':'-')+trainerMoney(Math.abs(v));
+}
+function trainerV12Result(text,css){ return {text:text,css:css||''}; }
+function trainerV12ComputeStandardResults(){
+  if(!trainerHands.length){ return []; }
+  var dealerTotal=trainerDealer.length?trainerHandValue(trainerDealer).total:0;
+  return trainerHands.map(function(hand,idx){
+    var total=trainerHandValue(hand).total;
+    var bet=Number(trainerHandBets[idx]||trainerCurrentBet||0);
+    if(total>21){ return trainerV12Result('BUST '+trainerSignedMoneyV12(-bet),'resultLoss'); }
+    if(dealerTotal>21 || total>dealerTotal){ return trainerV12Result('WIN '+trainerSignedMoneyV12(bet),'resultWin'); }
+    if(total<dealerTotal){ return trainerV12Result('LOSS '+trainerSignedMoneyV12(-bet),'resultLoss'); }
+    return trainerV12Result('PUSH $0','resultPush');
+  });
+}
+
+/* Capture special single-hand outcomes that standard total comparison cannot
+   distinguish (natural blackjack and surrender). */
+var _trainerFinishNaturalBlackjackV12=trainerFinishNaturalBlackjack;
+trainerFinishNaturalBlackjack=function(){
+  var bet=Number(trainerHandBets[0]||trainerCurrentBet||0);
+  trainerPendingSpecialResults=[trainerV12Result('BLACKJACK '+trainerSignedMoneyV12(bet*1.5),'resultWin')];
+  _trainerFinishNaturalBlackjackV12();
+};
+var _trainerResolveDealerBlackjackV12=trainerResolveDealerBlackjack;
+trainerResolveDealerBlackjack=function(){
+  var bet=Number(trainerHandBets[0]||trainerCurrentBet||0);
+  var playerBJ=trainerHands[0] && trainerHandValue(trainerHands[0]).total===21;
+  trainerPendingSpecialResults=[playerBJ?trainerV12Result('PUSH $0','resultPush'):trainerV12Result('LOSS '+trainerSignedMoneyV12(-bet),'resultLoss')];
+  _trainerResolveDealerBlackjackV12();
+};
+var _trainerActionV12=trainerAction;
+trainerAction=function(action){
+  if(action==='surrender' && !trainerRoundFinished && !trainerInsurancePending && !trainerOtherBusy){
+    var hand=trainerHands[trainerHandIndex];
+    if(hand && trainerCanSurrender(hand)){
+      var bet=Number(trainerHandBets[trainerHandIndex]||trainerCurrentBet||0);
+      trainerPendingSpecialResults=[trainerV12Result('SURRENDER '+trainerSignedMoneyV12(-bet/2),'resultLoss')];
+    }
+  }
+  return _trainerActionV12(action);
+};
+
+var _trainerEndControlsV12=trainerEndControls;
+trainerEndControls=function(){
+  trainerHandResults=(trainerPendingSpecialResults && trainerPendingSpecialResults.length)
+    ? trainerPendingSpecialResults.slice()
+    : trainerV12ComputeStandardResults();
+  trainerPendingSpecialResults=null;
+  _trainerEndControlsV12();
+};
+
+/* Clear the previous hand result only when the new wager is confirmed. */
+var _trainerConfirmDealV12=trainerConfirmDeal;
+trainerConfirmDeal=function(){
+  if(trainerBettingPhase && !trainerShufflePending && trainerCurrentBet>0 && trainerCurrentBet<=trainerStats.bankroll){
+    trainerHandResults=[];
+    trainerPendingSpecialResults=null;
+  }
+  return _trainerConfirmDealV12();
+};
+
+function trainerV12RenderUserHands(){
+  var playerEl=document.getElementById('trainerPlayerCards');
+  if(!playerEl){ return; }
+  playerEl.classList.add('trainerHandsV12');
+  playerEl.classList.toggle('splitStack',trainerHands.length>1);
+  var html='';
+  trainerHands.forEach(function(hand,idx){
+    var total=hand.length?trainerHandValue(hand).total:'—';
+    var bet=Number(trainerHandBets[idx]||trainerCurrentBet||0);
+    var cards=(hand||[]).map(function(c){return trainerRenderCard(c,false);}).join('');
+    var result=trainerHandResults[idx];
+    html+='<div class="trainerUserHand '+(idx===trainerHandIndex && !trainerRoundFinished?'current':'')+'">'+
+      (trainerHands.length>1?'<div class="otherSplitLabel">Hand '+(idx+1)+'</div>':'')+
+      '<div class="miniCards trainerUserHandCards">'+cards+'</div>'+
+      '<div class="trainerHandMeta"><span>Total: '+total+'</span><span class="bet">Bet: '+trainerMoney(bet)+'</span></div>'+
+      (result?'<div class="trainerHandResult '+result.css+'">'+result.text+'</div>':'')+
+      '</div>';
+  });
+  playerEl.innerHTML=html;
+  var totalEl=document.getElementById('trainerPlayerTotal');
+  if(totalEl){ totalEl.innerText=''; }
+}
+
+/* Final render pass installs the V12 hand layout and keeps custom controls in
+   sync without touching already-tested game logic. */
+var _trainerRenderV12=trainerRender;
+trainerRender=function(){
+  _trainerRenderV12();
+  trainerV12RenderUserHands();
+  trainerUpdatePlayersUI();
+  trainerV10LayoutSeats();
+};
+
+/* Stats close/open now respect any other V12 pause overlay. */
+var _trainerToggleStatsV12=trainerToggleStats;
+trainerToggleStats=function(){
+  _trainerToggleStatsV12();
+  trainerV12RefreshPause();
+};
+var _trainerCloseStatsV12=trainerCloseStats;
+trainerCloseStats=function(){
+  _trainerCloseStatsV12();
+  trainerV12RefreshPause();
+};
+
+var _openRealGameV12=openRealGame;
+openRealGame=function(){
+  trainerClosePlayersModal();
+  trainerCloseFeedbackDetail();
+  _openRealGameV12();
+  trainerUpdatePlayersUI();
+  trainerV10LayoutSeats();
+};
+var _showHomeV12=showHome;
+showHome=function(){
+  trainerClosePlayersModal();
+  trainerCloseFeedbackDetail();
+  _showHomeV12();
+};
+
+setTimeout(function(){
+  trainerUpdatePlayersUI();
+  trainerV10LayoutSeats();
+  trainerV12RenderUserHands();
 },0);
 
 </script>
