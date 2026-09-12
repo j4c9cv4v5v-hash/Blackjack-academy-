@@ -2466,6 +2466,117 @@ body.landscapeGameplay #s8 input.v9ModalInput{
   .stage8ErrorBody{font-size:12px;max-height:48vh}
 }
 
+
+
+/* ==========================================================
+   V10 — PACED DEALING, FIXED SEATS, PAUSABLE STATS, SAFE MODALS
+   ========================================================== */
+
+/* Slightly wider / shallower blackjack silhouette. */
+body.landscapeGameplay #realTrainer .tableArea,
+body.landscapeGameplay #s8 .stage8Table{
+  border-radius:6px 6px 50% 50% / 6px 6px 22% 22% !important;
+}
+
+/* Game speed lives in one compact control above Stats. */
+.trainerSpeedControl{position:relative;margin:4px 0}
+body.landscapeGameplay #realTrainer .trainerSpeedToggle{
+  width:100%;min-height:34px!important;margin:0!important;padding:6px!important;font-size:9px!important;
+}
+.trainerSpeedMenu{
+  position:absolute;right:0;bottom:calc(100% + 4px);z-index:5000;
+  width:100%;padding:5px;background:#0c1627;border:1px solid #405273;border-radius:10px;
+}
+.trainerSpeedMenu button{margin:2px 0!important;min-height:31px!important;padding:5px!important;font-size:9px!important;background:#22304a;color:#fff}
+.trainerSpeedMenu button.selected{outline:2px solid #5eead4;background:#304464}
+
+/* The seat arc is now a fixed coordinate system: one seat can grow/split
+   without changing any other seat's position. */
+body.landscapeGameplay #realTrainer .trainerSeatArc{
+  display:block!important;position:absolute!important;left:10px!important;right:10px!important;bottom:8px!important;height:154px!important;
+}
+body.landscapeGameplay #realTrainer #trainerOtherPlayersWrap,
+body.landscapeGameplay #realTrainer #trainerOtherPlayers{display:block!important;position:absolute!important;inset:0!important}
+body.landscapeGameplay #realTrainer #trainerOtherPlayersWrap.hidden{display:none!important}
+body.landscapeGameplay #realTrainer #trainerOtherPlayers .otherPlayerSeat{
+  position:absolute!important;width:clamp(78px,16%,104px)!important;
+  margin:0!important;transform:translateX(-50%)!important;z-index:3;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat{
+  position:absolute!important;left:50%!important;bottom:24px!important;width:clamp(88px,18%,112px)!important;
+  margin:0!important;transform:translateX(-50%)!important;z-index:6!important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  transform:translateX(-50%)!important;bottom:20px!important;
+}
+
+/* Cards stay inside THEIR seat. Up to three per row; a long hand naturally
+   becomes 2 rows, then 3 rows, without covering a neighbour. */
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCards,
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCards,
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards{
+  display:grid!important;grid-template-columns:repeat(3,max-content)!important;
+  justify-content:center!important;align-items:center!important;gap:1px!important;
+  min-height:0!important;width:100%!important;overflow:visible!important;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard,
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard,
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards .miniCard{
+  margin:0!important;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard{width:25px!important;height:36px!important;font-size:9px!important}
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard{width:29px!important;height:41px!important;font-size:11px!important}
+body.landscapeGameplay #realTrainer .otherSplitHand{width:100%;margin:1px 0!important;transform:none!important}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{gap:4px!important;max-height:none!important;overflow:visible!important}
+
+/* Stats is moved to app-root when opened and must cover absolutely everything. */
+#trainerStatsPanel.v10GlobalModal{
+  position:absolute!important;inset:0!important;z-index:2147483000!important;
+  background:rgba(2,8,16,.90)!important;pointer-events:auto!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:32px 58px!important;overflow:hidden!important;
+}
+#trainerStatsPanel.v10GlobalModal.hidden{display:none!important}
+#trainerStatsPanel.v10GlobalModal .trainerStatsModalCard{position:relative!important;z-index:2!important;width:min(640px,82%)!important;max-height:84%!important}
+body.trainerStatsPaused #realTrainer{pointer-events:none}
+#trainerStatsPanel.v10GlobalModal{pointer-events:auto!important}
+
+/* Safe numeric popups: keep all bottom-row keys comfortably inside the iPhone safe area. */
+body.landscapeGameplay .appModal{padding:30px 62px 34px 62px!important}
+body.landscapeGameplay .numberEntryCard{width:min(370px,64%)!important;max-height:84%!important;padding:10px!important}
+body.landscapeGameplay .numberEntryDisplay{min-height:42px!important;font-size:28px!important;margin-bottom:6px!important}
+body.landscapeGameplay .numberKeypad{gap:4px!important}
+body.landscapeGameplay .numberKeypad button{min-height:34px!important;padding:4px!important;font-size:14px!important}
+body.landscapeGameplay #numberEntryError{min-height:14px!important;margin-top:4px!important;font-size:9px!important}
+
+/* Stage 8 scenario/details box now sits ON the felt, leaving the side panel cleaner. */
+body.landscapeGameplay #s8{position:relative}
+body.landscapeGameplay #s8 .stage8Table{position:relative}
+body.landscapeGameplay #s8 #stage8Scenario.stage8ScenarioOnTable{
+  position:absolute!important;top:12px!important;left:14px!important;z-index:7!important;
+  width:min(185px,34%)!important;margin:0!important;padding:8px 9px!important;
+  background:rgba(7,16,30,.90)!important;border:1px solid #405273!important;border-radius:10px!important;
+  font-size:9px!important;line-height:1.25!important;color:#e7edf8!important;
+}
+body.landscapeGameplay #s8 .stage8DealerLabel{margin-top:4px!important}
+
+/* Non-blocking Stage 8 correct feedback. */
+.stage8CorrectToast{
+  position:absolute;right:10px;top:44%;z-index:9000;width:150px;
+  padding:10px 11px;background:#0b3d31;border:1px solid #5eead4;border-radius:12px;
+  color:#eafff9;font-size:10px;line-height:1.3;box-shadow:0 8px 22px rgba(0,0,0,.28);
+  opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s;
+}
+.stage8CorrectToast.show{opacity:1;transform:translateY(0)}
+.stage8CorrectToast b{display:block;color:#5eead4;font-size:12px;margin-bottom:3px}
+
+@media (max-height:390px) and (orientation:landscape){
+  body.landscapeGameplay .appModal{padding:24px 56px 28px 56px!important}
+  body.landscapeGameplay .numberEntryCard{width:min(350px,62%)!important;max-height:82%!important}
+  body.landscapeGameplay .numberKeypad button{min-height:31px!important;font-size:13px!important}
+  body.landscapeGameplay #realTrainer .trainerSeatArc{height:145px!important}
+  #trainerStatsPanel.v10GlobalModal{padding:24px 54px!important}
+}
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2475,7 +2586,7 @@ body.landscapeGameplay #s8 input.v9ModalInput{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v9 betting-modal-stats-stage8-input -->
+<!-- Blackjack Academy build: v10 paced-deal-fixed-seats-paused-stats -->
 
 <div class="app">
 
@@ -2943,6 +3054,16 @@ body.landscapeGameplay #s8 input.v9ModalInput{
       <option value="5">5 other players</option>
     </select>
     <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">Table size applies to the next hand.</p>
+  </div>
+
+  <div id="trainerSpeedControl" class="trainerSpeedControl">
+    <button id="trainerSpeedToggle" class="secondary trainerSpeedToggle" type="button" onclick="trainerToggleSpeedMenu()">🎚️ Game Speed · Normal</button>
+    <div id="trainerSpeedMenu" class="trainerSpeedMenu hidden" aria-label="Game speed options">
+      <button type="button" data-speed="slow" onclick="trainerSetGameSpeed('slow')">Slow</button>
+      <button type="button" data-speed="normal" onclick="trainerSetGameSpeed('normal')">Normal</button>
+      <button type="button" data-speed="fast" onclick="trainerSetGameSpeed('fast')">Fast</button>
+      <button type="button" data-speed="veryfast" onclick="trainerSetGameSpeed('veryfast')">Very Fast</button>
+    </div>
   </div>
 
   <button id="trainerStatsToggle" class="secondary trainerStatsToggle" type="button" onclick="trainerToggleStats()">📊 Stats</button>
@@ -7397,7 +7518,8 @@ function restoreBackupCode(){
         stats:payload.trainer.stats || trainerStats,
         currentBet:payload.trainer.currentBet || 10,
         countsVisible:typeof payload.trainer.countsVisible==='boolean' ? payload.trainer.countsVisible : true,
-        otherPlayers:typeof payload.trainer.otherPlayers==='number' ? Math.max(0,Math.min(5,Math.round(payload.trainer.otherPlayers))) : 0
+        otherPlayers:typeof payload.trainer.otherPlayers==='number' ? Math.max(0,Math.min(5,Math.round(payload.trainer.otherPlayers))) : 0,
+        gameSpeed:typeof payload.trainer.gameSpeed==='string' ? payload.trainer.gameSpeed : 'normal'
       };
       localStorage.setItem('blackjackTrainerV2',JSON.stringify(restoredTrainer));
     }
@@ -9594,6 +9716,441 @@ setTimeout(function(){
   trainerRenderStats();
 },0);
 
+
+
+/* ==========================================================
+   V10 — PACED DEALING / GAME SPEED / FIXED SEATS / TRUE PAUSE
+   ========================================================== */
+var trainerGameSpeed='normal';
+var trainerFlowPaused=false;
+var trainerDealSequenceId=0;
+var trainerPreviousRoundVisible=false;
+var trainerSpeedMenuOpen=false;
+var stage8CorrectToastTimer=null;
+
+try{
+  var _v10Saved=JSON.parse(localStorage.getItem('blackjackTrainerV2')||'{}');
+  if(['slow','normal','fast','veryfast'].includes(_v10Saved.gameSpeed)){ trainerGameSpeed=_v10Saved.gameSpeed; }
+}catch(e){}
+
+function trainerSpeedLabel(speed){
+  return {slow:'Slow',normal:'Normal',fast:'Fast',veryfast:'Very Fast'}[speed]||'Normal';
+}
+function trainerSpeedBase(){
+  return {slow:1200,normal:800,fast:500,veryfast:300}[trainerGameSpeed]||800;
+}
+function trainerV10Wait(ms,callback,sequenceGetter,sequenceValue){
+  var remaining=Math.max(0,Number(ms)||0);
+  var last=Date.now();
+  function tick(){
+    if(sequenceGetter && sequenceGetter()!==sequenceValue){ return; }
+    if(trainerStatsOpen || trainerFlowPaused){
+      last=Date.now();
+      setTimeout(tick,70);
+      return;
+    }
+    var now=Date.now();
+    remaining-=Math.max(0,now-last);
+    last=now;
+    if(remaining<=0){ callback(); return; }
+    setTimeout(tick,Math.min(70,remaining));
+  }
+  setTimeout(tick,0);
+}
+
+/* Persist game speed alongside the existing trainer state. */
+var _trainerSaveV10=trainerSave;
+trainerSave=function(){
+  _trainerSaveV10();
+  try{
+    var data=JSON.parse(localStorage.getItem('blackjackTrainerV2')||'{}');
+    data.gameSpeed=trainerGameSpeed;
+    localStorage.setItem('blackjackTrainerV2',JSON.stringify(data));
+  }catch(e){}
+};
+
+/* Backups now include the chosen speed too. */
+buildBackupCode=function(){
+  var payload={
+    app:'BlackjackCountingAcademy',version:1,createdAt:new Date().toISOString(),course:progress,
+    trainer:{stats:trainerStats,currentBet:trainerCurrentBet,countsVisible:trainerCountsVisible,otherPlayers:trainerOtherPlayerCount,gameSpeed:trainerGameSpeed}
+  };
+  return 'BJACAD1:'+backupUtf8ToBase64(JSON.stringify(payload));
+};
+
+function trainerUpdateSpeedUI(){
+  var toggle=document.getElementById('trainerSpeedToggle');
+  if(toggle){ toggle.innerText='🎚️ Game Speed · '+trainerSpeedLabel(trainerGameSpeed); }
+  var menu=document.getElementById('trainerSpeedMenu');
+  if(menu){
+    menu.classList.toggle('hidden',!trainerSpeedMenuOpen);
+    Array.from(menu.querySelectorAll('[data-speed]')).forEach(function(b){
+      b.classList.toggle('selected',b.getAttribute('data-speed')===trainerGameSpeed);
+    });
+  }
+}
+function trainerToggleSpeedMenu(){
+  trainerSpeedMenuOpen=!trainerSpeedMenuOpen;
+  trainerUpdateSpeedUI();
+}
+function trainerSetGameSpeed(speed){
+  if(!['slow','normal','fast','veryfast'].includes(speed)){ return; }
+  trainerGameSpeed=speed;
+  trainerSpeedMenuOpen=false;
+  trainerSave();
+  trainerUpdateSpeedUI();
+}
+
+/* Stats is a genuine modal pause. Existing timed flows use trainerV10Wait,
+   so opening Stats freezes them and closing resumes the exact same step. */
+trainerToggleStats=function(){
+  if(trainerStatsOpen){ trainerCloseStats(); return; }
+  trainerStatsOpen=true;
+  trainerFlowPaused=true;
+  trainerSpeedMenuOpen=false;
+  trainerUpdateSpeedUI();
+  var panel=document.getElementById('trainerStatsPanel');
+  var app=document.querySelector('.app');
+  if(panel && app){
+    if(panel.parentNode!==app){ app.appendChild(panel); }
+    panel.classList.add('v10GlobalModal');
+    panel.classList.remove('hidden');
+  }
+  document.body.classList.add('trainerStatsPaused');
+  trainerRenderStats();
+};
+trainerCloseStats=function(){
+  trainerStatsOpen=false;
+  trainerFlowPaused=false;
+  var panel=document.getElementById('trainerStatsPanel');
+  if(panel){ panel.classList.add('hidden'); panel.classList.add('v10GlobalModal'); }
+  document.body.classList.remove('trainerStatsPaused');
+};
+
+/* Previous round remains visible while choosing the next wager. */
+trainerPrepareBettingPhase=function(preserveFeedback){
+  if(trainerShufflePending){ return; }
+  trainerOtherSequenceId++;
+  trainerDealSequenceId++;
+  trainerOtherBusy=false;
+  trainerOtherActiveIndex=-1;
+  trainerAfterUserPlayersDone=false;
+  trainerBettingPhase=true;
+  trainerRoundFinished=true;
+  trainerInsurancePending=false;
+  trainerPreviousRoundVisible=!!(trainerDealer.length || trainerHands.length || trainerOtherHands.length);
+  if(!preserveFeedback){ trainerClearDecisionFeedback(); }
+
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+  var coach=document.getElementById('trainerCoach');
+  if(coach){
+    coach.className='coachBox';
+    coach.innerHTML='<b>Place your next bet.</b><br>The last hand stays on the table until you confirm the next wager and tap <b>Deal</b>.';
+  }
+  trainerUpdateBetUI();
+  trainerRender();
+  trainerSave();
+};
+
+/* Make the preset/custom bet validation explicit. */
+trainerOpenOtherBet=function(){
+  if(!trainerBettingPhase){ return; }
+  openNumberModal({
+    title:'Custom Bet',value:String(trainerCurrentBet||''),allowNegative:false,allowDecimal:true,confirmText:'Use Bet',
+    validate:function(v){
+      if(!Number.isFinite(v)){ return 'Enter a valid bet amount.'; }
+      if(!(v>0)){ return 'Bet must be greater than $0.'; }
+      if(v>trainerStats.bankroll){ return 'Bet cannot exceed your bankroll.'; }
+      return '';
+    },
+    onConfirm:function(v){ trainerSetBet(Math.round(v*100)/100); trainerUpdateBetUI(); }
+  });
+};
+
+/* Fixed seat coordinates and independent internal card wrapping. */
+function trainerV10SeatGeometry(column){
+  var x={1:8,2:23,3:36,5:64,6:77,7:92}[column]||50;
+  var bottom={1:56,2:46,3:36,5:36,6:46,7:56}[column]||36;
+  return {x:x,bottom:bottom};
+}
+function trainerV10LayoutSeats(){
+  var others=document.querySelectorAll('#trainerOtherPlayers .otherPlayerSeat');
+  var slots=blackjackArcSlots(others.length);
+  Array.from(others).forEach(function(seat,idx){
+    var col=slots[idx] || 2;
+    var g=trainerV10SeatGeometry(col);
+    seat.style.gridColumn='auto';
+    seat.style.left=g.x+'%';
+    seat.style.bottom=g.bottom+'px';
+    seat.style.transform='translateX(-50%)';
+  });
+  var you=document.getElementById('trainerYouSeat');
+  if(you){
+    you.style.left='50%';
+    you.style.bottom=trainerHands.length>1?'20px':'24px';
+    you.style.transform='translateX(-50%)';
+  }
+}
+
+var _trainerRenderV10=trainerRender;
+trainerRender=function(){
+  _trainerRenderV10();
+  trainerV10LayoutSeats();
+
+  /* During betting, keep the just-finished totals/cards visible instead of
+     replacing them with dashes. */
+  if(trainerBettingPhase && trainerPreviousRoundVisible){
+    var dealerTotal=document.getElementById('trainerDealerTotal');
+    if(dealerTotal && trainerDealer.length){ dealerTotal.innerText='Total: '+trainerHandValue(trainerDealer).total; }
+    var playerTotal=document.getElementById('trainerPlayerTotal');
+    var hand=trainerHands[trainerHandIndex] || trainerHands[0] || [];
+    if(playerTotal && hand.length){ playerTotal.innerText='Total: '+trainerHandValue(hand).total; }
+  }
+};
+
+/* Animated initial deal. Cards are dealt around the visible table one at a
+   time so the user can update the Running Count at real-table pace. */
+function trainerV10StartDeal(){
+  if(trainerStats.bankroll<trainerCurrentBet || trainerCurrentBet<=0){
+    var coach=document.getElementById('trainerCoach');
+    if(coach){ coach.innerHTML='<b class="bad">Choose a valid wager.</b><br>Your bankroll is '+trainerMoney(trainerStats.bankroll)+'.'; }
+    trainerBettingPhase=true; trainerUpdateBetUI(); return;
+  }
+
+  trainerOtherSequenceId++;
+  var dealSeq=++trainerDealSequenceId;
+  trainerOtherBusy=true;
+  trainerOtherActiveIndex=-1;
+  trainerAfterUserPlayersDone=false;
+  trainerPreviousRoundVisible=false;
+
+  trainerDealer=[];trainerHands=[[]];trainerHandBets=[trainerCurrentBet];trainerOtherHands=[];
+  trainerHandIndex=0;trainerSplitUsed=false;trainerRoundFinished=false;trainerInsurancePending=false;trainerInsuranceBet=0;trainerFirstDecision=true;trainerHoleCounted=false;
+  trainerRoundStartBankroll=trainerStats.bankroll;
+  trainerStats.bankroll-=trainerCurrentBet;
+  for(var i=0;i<trainerOtherPlayerCount;i++){ trainerOtherHands.push({hands:[[]],activeHand:0,splitUsed:false,status:'Waiting'}); }
+
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  var coach=document.getElementById('trainerCoach');
+  if(coach){ coach.className='coachBox'; coach.innerHTML='<b>Dealing…</b><br>Watch each exposed card and keep the Running Count as the cards arrive.'; }
+  trainerRender();
+
+  var sides=trainerSeatSides();
+  var order=[];
+  sides.left.forEach(function(idx){ order.push({type:'other',idx:idx}); });
+  order.push({type:'you'});
+  sides.right.forEach(function(idx){ order.push({type:'other',idx:idx}); });
+  order.push({type:'dealer'});
+  var round=0,pos=0;
+
+  function dealOne(){
+    if(dealSeq!==trainerDealSequenceId){ return; }
+    if(round>=2){ finishDeal(); return; }
+    if(pos>=order.length){ round++;pos=0;trainerV10Wait(Math.max(120,trainerSpeedBase()*.30),dealOne,function(){return trainerDealSequenceId;},dealSeq);return; }
+    var target=order[pos++];
+    if(target.type==='other'){
+      var seat=trainerOtherSeatObject(trainerOtherHands[target.idx]);
+      trainerOtherHands[target.idx]=seat;
+      seat.hands[0].push(trainerDraw(true));
+      seat.status='Dealing';
+      trainerOtherActiveIndex=target.idx;
+    }else if(target.type==='you'){
+      trainerHands[0].push(trainerDraw(true));
+      trainerOtherActiveIndex=-1;
+    }else{
+      trainerDealer.push(trainerDraw(round===0)); /* second dealer card is the hole card */
+      trainerOtherActiveIndex=-1;
+    }
+    trainerRender();
+    trainerSave();
+    trainerV10Wait(trainerSpeedBase(),dealOne,function(){return trainerDealSequenceId;},dealSeq);
+  }
+
+  function finishDeal(){
+    if(dealSeq!==trainerDealSequenceId){ return; }
+    trainerOtherBusy=false;
+    trainerOtherActiveIndex=-1;
+    trainerOtherHands.forEach(function(raw,idx){ var seat=trainerOtherSeatObject(raw); seat.status='Waiting'; trainerOtherHands[idx]=seat; });
+    trainerUserHandsSnapshot=trainerCloneHands(trainerHands);
+    trainerUserBetsSnapshot=trainerHandBets.slice();
+    trainerRender();
+    trainerSave();
+
+    var dealerUp=trainerDealerUpValue();
+    if(dealerUp===11){
+      trainerInsurancePending=true;
+      document.getElementById('trainerInsuranceBox').classList.remove('hidden');
+      if(coach){ coach.innerHTML='<b>Insurance decision first.</b><br>Use the running/true count and decide whether insurance is justified.'; }
+      trainerRender();return;
+    }
+    if(dealerUp===10 && trainerHandValue(trainerDealer).total===21){ trainerRevealHole();trainerResolveDealerBlackjack();return; }
+    trainerAutoPlayOtherPlayers(trainerBeginUserTurn);
+  }
+
+  trainerV10Wait(Math.max(160,trainerSpeedBase()*.35),dealOne,function(){return trainerDealSequenceId;},dealSeq);
+}
+
+trainerConfirmDeal=function(){
+  if(!trainerBettingPhase || trainerShufflePending){ return; }
+  if(trainerCurrentBet<=0){
+    var c=document.getElementById('trainerCoach'); if(c){ c.innerHTML='<b class="bad">Bet must be greater than $0.</b>'; } return;
+  }
+  if(trainerCurrentBet>trainerStats.bankroll){
+    var c2=document.getElementById('trainerCoach'); if(c2){ c2.innerHTML='<b class="bad">Bet cannot exceed your bankroll.</b>'; } return;
+  }
+  trainerBettingPhase=false;trainerUpdateBetUI();trainerClearDecisionFeedback();
+  if(trainerShoe.length<60){
+    var hadCards=trainerShoe.length>0;trainerBuildShoe();
+    if(hadCards){ trainerShowTableShuffle(function(){ trainerV10StartDeal(); }); return; }
+  }
+  trainerV10StartDeal();
+};
+
+/* Other players use the same selected game speed and pause cleanly with Stats. */
+trainerPlayOtherSeatList=function(indices,done,phaseLabel){
+  indices=(indices||[]).slice();
+  if(!indices.length){ trainerOtherBusy=false;trainerOtherActiveIndex=-1;trainerRender();if(typeof done==='function'){done();}return; }
+  trainerOtherBusy=true;
+  var seq=++trainerOtherSequenceId;
+  var pos=0;
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  var coach=document.getElementById('trainerCoach');
+  if(coach){ coach.className='coachBox';coach.innerHTML='<b>'+(phaseLabel||'Other players are acting.')+'</b><br>Follow every new card and keep one Running Count for the whole table.'; }
+
+  function wait(mult,cb){ trainerV10Wait(Math.max(120,trainerSpeedBase()*mult),cb,function(){return trainerOtherSequenceId;},seq); }
+  function finishList(){ trainerOtherBusy=false;trainerOtherActiveIndex=-1;trainerRender();if(typeof done==='function'){done();} }
+  function playSeat(){
+    if(seq!==trainerOtherSequenceId){return;}
+    if(pos>=indices.length){finishList();return;}
+    var seatIndex=indices[pos];trainerOtherActiveIndex=seatIndex;
+    var seat=trainerOtherSeatObject(trainerOtherHands[seatIndex]);trainerOtherHands[seatIndex]=seat;seat.activeHand=0;seat.status='Player '+(seatIndex+1)+' turn';trainerRender();
+    function nextHand(){
+      seat.activeHand++;
+      if(seat.activeHand>=seat.hands.length){seat.status='Done';trainerRender();pos++;wait(.70,playSeat);}else{wait(.55,playHand);}
+    }
+    function playHand(){
+      if(seq!==trainerOtherSequenceId){return;}
+      var hand=seat.hands[seat.activeHand],hv=trainerHandValue(hand),prefix=seat.hands.length>1?'Hand '+(seat.activeHand+1)+' — ':'';
+      if(hv.total>21){seat.status=prefix+'BUST '+hv.total;trainerRender();wait(.75,nextHand);return;}
+      if(hv.total===21){seat.status=prefix+(hand.length===2?'BLACKJACK 21':'21 — STAND');trainerRender();wait(.75,nextHand);return;}
+      var action=trainerOtherRecommendation(hand,!seat.splitUsed && hand.length===2);seat.status=prefix+action.toUpperCase();trainerRender();
+      wait(.70,function(){
+        if(seq!==trainerOtherSequenceId){return;}
+        if(action==='hit'){
+          var c=trainerDraw(true);hand.push(c);seat.status=prefix+'HIT → '+c.rank+c.suit;trainerRender();wait(1.0,playHand);return;
+        }
+        if(action==='double'){
+          var dc=trainerDraw(true);hand.push(dc);seat.status=prefix+'DOUBLE → '+dc.rank+dc.suit+' • '+trainerHandValue(hand).total;trainerRender();wait(1.0,nextHand);return;
+        }
+        if(action==='split'){
+          seat.splitUsed=true;var a=hand[0],b=hand[1];var first=[a,trainerDraw(true)],second=[b,trainerDraw(true)];
+          seat.hands.splice(seat.activeHand,1,first,second);seat.status='SPLIT — two hands';trainerRender();wait(1.0,playHand);return;
+        }
+        seat.status=prefix+'STAND '+hv.total;trainerRender();wait(.75,nextHand);
+      });
+    }
+    wait(.55,playHand);
+  }
+  playSeat();
+};
+
+/* End of round: keep the result on felt, then enter betting without a second
+   Start/Next stop. This timer is also paused by the Stats modal. */
+trainerEndControls=function(){
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  var next=document.getElementById('trainerNextBtn');if(next){next.classList.add('hidden');}
+  clearTimeout(trainerNextBetTimer);
+  var endMarker=++trainerDealSequenceId;
+  trainerV10Wait(900,function(){
+    if(trainerRoundFinished && !trainerBettingPhase && !trainerShufflePending){ trainerPrepareBettingPhase(true); }
+  },function(){return trainerDealSequenceId;},endMarker);
+};
+
+/* Stage 8 details box moves onto the felt in practice. */
+function stage8PlaceScenarioOnTable(){
+  var scenario=document.getElementById('stage8Scenario');
+  var table=document.getElementById('stage8Table');
+  if(scenario && table && scenario.parentNode!==table){ table.insertBefore(scenario,table.firstChild); }
+  if(scenario){ scenario.classList.add('stage8ScenarioOnTable'); }
+}
+
+function stage8ShowCorrectToast(title,detail){
+  var s8=document.getElementById('s8');if(!s8){return;}
+  var toast=document.getElementById('stage8CorrectToast');
+  if(!toast){toast=document.createElement('div');toast.id='stage8CorrectToast';toast.className='stage8CorrectToast';s8.appendChild(toast);}
+  toast.innerHTML='<b>'+title+'</b>'+detail;
+  toast.classList.add('show');
+  clearTimeout(stage8CorrectToastTimer);
+  stage8CorrectToastTimer=setTimeout(function(){toast.classList.remove('show');},1250);
+}
+
+var _stage8LoadScenarioV10=stage8LoadScenario;
+stage8LoadScenario=function(){
+  _stage8LoadScenarioV10();
+  stage8PlaceScenarioOnTable();
+};
+var _stage8CheckRCV10=stage8CheckRC;
+stage8CheckRC=function(){
+  var wasWaiting=stage8WaitingForNext;
+  _stage8CheckRCV10();
+  if(!wasWaiting && !stage8WaitingForNext && stage8Current && !document.getElementById('stage8TCSection').classList.contains('hidden')){
+    stage8PlaceScenarioOnTable();
+    stage8ShowCorrectToast('Correct ✓','Running Count: <b>'+stage8Signed(stage8Current.finalRC)+'</b>');
+  }
+};
+var _stage8CheckTCV10=stage8CheckTC;
+stage8CheckTC=function(){
+  var before=progress.stage8Score||0;
+  _stage8CheckTCV10();
+  if(!stage8WaitingForNext && (progress.stage8Score||0)>before && stage8Current){
+    stage8ShowCorrectToast('Correct ✓','True Count: <b>'+stage8Signed(stage8Current.tc)+'</b>');
+  }
+};
+
+/* V10 initial state and view cleanup. */
+var _openRealGameV10=openRealGame;
+openRealGame=function(){
+  trainerCloseStats();
+  trainerSpeedMenuOpen=false;
+  _openRealGameV10();
+  trainerUpdateSpeedUI();
+};
+var _showHomeV10=showHome;
+showHome=function(){ trainerCloseStats();_showHomeV10(); };
+
+setTimeout(function(){
+  trainerUpdateSpeedUI();
+  stage8PlaceScenarioOnTable();
+  trainerV10LayoutSeats();
+},0);
+
+
+/* Shuffle screen also respects the Stats pause. */
+trainerShowTableShuffle=function(done){
+  var screen=document.getElementById('trainerShuffleScreen');
+  trainerShufflePending=true;
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  document.getElementById('trainerNextBtn').classList.add('hidden');
+  if(screen){screen.classList.remove('hidden');}
+  var coach=document.getElementById('trainerCoach');
+  if(coach){coach.className='coachBox';coach.innerHTML='<b>New shoe.</b><br>The cards are being shuffled. Start the Running Count again from 0.';}
+  var marker=trainerDealSequenceId;
+  trainerV10Wait(1700,function(){
+    if(screen){screen.classList.add('hidden');}
+    trainerShufflePending=false;
+    if(typeof done==='function'){done();}
+  },function(){return trainerDealSequenceId;},marker);
+};
 </script>
 
 </body>
