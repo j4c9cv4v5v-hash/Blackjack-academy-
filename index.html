@@ -2300,6 +2300,172 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
   body.landscapeGameplay #realTrainer .otherSplitHand .miniCard{width:23px !important;height:33px !important}
 }
 
+
+
+/* ==========================================================
+   V9 — larger felt, right-side table size, modal stats/input
+   ========================================================== */
+.app{position:relative}
+
+/* More of the landscape canvas belongs to the felt. */
+body.landscapeGameplay #realTrainer{
+  position:relative;
+  grid-template-columns:minmax(112px,.54fr) minmax(470px,3.75fr) minmax(150px,.76fr) !important;
+  gap:5px !important;
+}
+body.landscapeGameplay #realTrainer .tableArea,
+body.landscapeGameplay #s8 .stage8Table{
+  border-radius:6px 6px 50% 50% / 6px 6px 27% 27% !important;
+}
+
+/* Betting: two rows of three, with larger tap targets. */
+body.landscapeGameplay #realTrainer .betControls{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:4px !important;
+}
+body.landscapeGameplay #realTrainer .betControls button{
+  min-height:38px !important;
+  font-size:10px !important;
+  padding:6px 2px !important;
+}
+#trainerOtherBetBtn.betSelected{outline:2px solid #5eead4;background:#304464;color:#fff}
+
+/* Table-size selector now lives over Stats on the right. */
+body.landscapeGameplay #realTrainer .trainerTableSizeRight{
+  margin:4px 0 !important;
+  padding:6px !important;
+}
+body.landscapeGameplay #realTrainer .trainerTableSizeRight b{font-size:9px}
+body.landscapeGameplay #realTrainer .trainerTableSizeRight label,
+body.landscapeGameplay #realTrainer .trainerTableSizeRight p{display:none !important}
+body.landscapeGameplay #realTrainer .trainerTableSizeRight select{
+  min-height:34px !important;
+  font-size:9px !important;
+  padding:5px !important;
+}
+
+/* YOU is only slightly below the other seats, leaving room for a two-row split. */
+body.landscapeGameplay #realTrainer .trainerYouSeat{
+  transform:translateY(-18px) !important;
+  z-index:8;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  transform:translateY(-30px) !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
+  gap:3px !important;
+  max-height:94px;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards{
+  min-height:34px !important;
+}
+
+/* Legacy Next button never creates a second stop between rounds. */
+#trainerNextBtn{display:none !important}
+
+/* Stats opens as a blocking modal over the game. */
+#realTrainer .trainerStatsPanel{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:12000 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:14px !important;
+  background:rgba(3,9,18,.82) !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto !important;
+}
+#realTrainer .trainerStatsPanel.hidden{display:none !important}
+#realTrainer .trainerStatsModalCard{
+  width:min(620px,88%);
+  max-height:88%;
+  overflow:auto;
+  background:#0c1627;
+  border:1px solid #405273;
+  border-radius:16px;
+  padding:14px;
+}
+#realTrainer .trainerStatsModalHeader,
+.appModalHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+#realTrainer .trainerStatsClose,
+.appModalClose{width:auto;min-width:78px;margin:0;padding:8px 12px;background:#22304a;color:#fff}
+#realTrainer .trainerStatsSummaryGrid{margin-bottom:10px !important}
+body.landscapeGameplay #realTrainer .trainerStatsPanel .trainerStatsGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+body.landscapeGameplay #realTrainer .trainerStatsPanel .trainerMiniStat{
+  padding:9px 5px !important;
+  font-size:9px !important;
+}
+body.landscapeGameplay #realTrainer .trainerStatsPanel .trainerMiniStat b{font-size:17px !important}
+
+/* Reusable blocking modal (Stage 8 number entry and error explanation). */
+.appModal{
+  position:absolute;
+  inset:0;
+  z-index:15000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+}
+.appModal.hidden{display:none !important}
+.appModalBackdrop{position:absolute;inset:0;background:rgba(2,8,16,.78)}
+.appModalCard{
+  position:relative;
+  z-index:1;
+  width:min(520px,86%);
+  max-height:88%;
+  overflow:auto;
+  background:#0c1627;
+  border:1px solid #405273;
+  border-radius:16px;
+  padding:14px;
+}
+.numberEntryCard{width:min(420px,74%)}
+.numberEntryDisplay{
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#07101e;
+  border:1px solid #405273;
+  border-radius:12px;
+  font-size:34px;
+  font-weight:900;
+  margin-bottom:10px;
+  letter-spacing:.5px;
+}
+.numberKeypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.numberKeypad button{margin:0;min-height:44px;padding:7px;font-size:17px}
+.numberKeypad .numberBackspace{grid-column:1/2}
+.numberKeypad .numberConfirm{grid-column:2/4;background:#5eead4;color:#05201c}
+#numberEntryError{min-height:18px;margin-top:7px}
+
+.stage8ErrorCard{width:min(600px,84%)}
+.stage8ErrorBody{font-size:15px;line-height:1.45;color:#e7edf8;max-height:50vh;overflow:auto}
+.stage8ErrorNext{margin-top:12px}
+
+/* Stage 8 side inputs become launchers for the modal keypad. */
+body.landscapeGameplay #s8 input.v9ModalInput{
+  cursor:pointer;
+  font-size:10px !important;
+  text-overflow:ellipsis;
+}
+
+@media (max-height:390px) and (orientation:landscape){
+  #realTrainer .trainerStatsModalCard{width:min(590px,91%);max-height:92%;padding:10px}
+  .numberEntryCard{width:min(390px,70%);max-height:92%;padding:10px}
+  .numberEntryDisplay{min-height:44px;font-size:28px;margin-bottom:7px}
+  .numberKeypad{gap:4px}
+  .numberKeypad button{min-height:36px;font-size:15px;padding:4px}
+  .stage8ErrorCard{width:min(560px,84%);max-height:92%;padding:10px}
+  .stage8ErrorBody{font-size:12px;max-height:48vh}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2309,7 +2475,7 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v7 safe-landscape-larger-cards -->
+<!-- Blackjack Academy build: v9 betting-modal-stats-stage8-input -->
 
 <div class="app">
 
@@ -2662,6 +2828,7 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
       <button data-bet="25" onclick="trainerSetBet(25)">$25</button>
       <button data-bet="50" onclick="trainerSetBet(50)">$50</button>
       <button data-bet="100" onclick="trainerSetBet(100)">$100</button>
+      <button id="trainerOtherBetBtn" type="button" onclick="trainerOpenOtherBet()">Other</button>
     </div>
     <button id="trainerDealBtn" class="trainerDealBtn" type="button" onclick="trainerConfirmDeal()">Deal — $10</button>
     <div id="trainerBetPrompt" class="small center trainerBetPrompt">Choose or confirm your bet before the cards are dealt.</div>
@@ -2670,24 +2837,6 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
     </p>
   </div>
 
-  <div class="lesson tableSizeControls">
-    <b>Players at the table</b>
-    <p class="small" style="margin-bottom:6px">
-      Add simulated players to make card counting more realistic. Your seat stays in the center of the player arc, directly in front of you, while the other players act one at a time and expose extra cards to count.
-    </p>
-    <label class="small" for="trainerOtherPlayersSelect">Other players:</label>
-    <select id="trainerOtherPlayersSelect" onchange="trainerSetOtherPlayers(this.value)">
-      <option value="0">0 — heads-up</option>
-      <option value="1">1 other player</option>
-      <option value="2">2 other players</option>
-      <option value="3">3 other players</option>
-      <option value="4">4 other players</option>
-      <option value="5">5 other players</option>
-    </select>
-    <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">
-      Simulated seats play automatically one at a time and may Hit, Stand, Double or Split. Their bankroll is not tracked.
-    </p>
-  </div>
 
   </div>
 
@@ -2772,8 +2921,8 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
     <button onclick="trainerShowHint()">Hint</button>
   </div>
 
-  <button id="trainerNextBtn" class="secondary hidden" onclick="trainerNewRound()">
-    Deal Next Hand
+  <button id="trainerNextBtn" class="secondary hidden" type="button" aria-hidden="true" tabindex="-1" onclick="trainerNewRound()">
+    Next Hand
   </button>
 
   <div id="trainerDecisionFeedback" class="coachBox trainerDecisionFeedback hidden" aria-live="polite"></div>
@@ -2782,8 +2931,29 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
     Make your decision. The explanation will appear here after you act.
   </div>
 
+  <div class="lesson tableSizeControls trainerTableSizeRight">
+    <b>Players at the table</b>
+    <label class="small" for="trainerOtherPlayersSelect">Other players:</label>
+    <select id="trainerOtherPlayersSelect" onchange="trainerSetOtherPlayers(this.value)">
+      <option value="0">0 — heads-up</option>
+      <option value="1">1 other player</option>
+      <option value="2">2 other players</option>
+      <option value="3">3 other players</option>
+      <option value="4">4 other players</option>
+      <option value="5">5 other players</option>
+    </select>
+    <p id="trainerOtherPlayersNote" class="small center" style="margin-bottom:0">Table size applies to the next hand.</p>
+  </div>
+
   <button id="trainerStatsToggle" class="secondary trainerStatsToggle" type="button" onclick="trainerToggleStats()">📊 Stats</button>
-  <div id="trainerStatsPanel" class="trainerStatsPanel hidden">
+  <div id="trainerStatsPanel" class="trainerStatsPanel hidden" role="dialog" aria-modal="true" aria-label="Table statistics">
+    <div class="trainerStatsModalCard">
+      <div class="trainerStatsModalHeader"><b>📊 Table Statistics</b><button type="button" class="trainerStatsClose" onclick="trainerCloseStats()">✕ Close</button></div>
+      <div class="trainerStatsGrid trainerStatsSummaryGrid">
+        <div class="trainerMiniStat"><b id="trainerStatsBankroll">$1000</b>Bankroll</div>
+        <div class="trainerMiniStat"><b id="trainerStatsProfit">$0</b>Session P/L</div>
+        <div class="trainerMiniStat"><b id="trainerStatsDecisionAcc">—</b>Decision accuracy</div>
+      </div>
     <div class="trainerStatsGrid">
       <div class="trainerMiniStat"><b id="trainerHandsStat">0</b>Hands</div>
       <div class="trainerMiniStat"><b id="trainerWinsStat">0</b>Wins</div>
@@ -2794,6 +2964,7 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
       <div class="trainerMiniStat"><b id="trainerAccuracyStat">—</b>Accuracy</div>
     </div>
     <button class="secondary trainerResetInsideStats" onclick="trainerResetStats()">Reset Table Stats &amp; Bankroll</button>
+    </div>
   </div>
 
   <button class="secondary trainerBackToCourse" onclick="showLesson(progress.stage||1)">
@@ -3615,6 +3786,32 @@ body.landscapeGameplay #realTrainer .trainerDecisionFeedback{
 
 </div>
 
+<!-- V9 reusable keypad modal: avoids the iPhone landscape keyboard covering inputs. -->
+<div id="numberEntryModal" class="appModal hidden" role="dialog" aria-modal="true" aria-labelledby="numberEntryTitle">
+  <div class="appModalBackdrop" onclick="numberModalCancel()"></div>
+  <div class="appModalCard numberEntryCard">
+    <div class="appModalHeader"><b id="numberEntryTitle">Enter value</b><button type="button" class="appModalClose" onclick="numberModalCancel()">✕</button></div>
+    <div id="numberEntryDisplay" class="numberEntryDisplay">0</div>
+    <div class="numberKeypad" aria-label="Numeric keypad">
+      <button type="button" onclick="numberModalKey('1')">1</button><button type="button" onclick="numberModalKey('2')">2</button><button type="button" onclick="numberModalKey('3')">3</button>
+      <button type="button" onclick="numberModalKey('4')">4</button><button type="button" onclick="numberModalKey('5')">5</button><button type="button" onclick="numberModalKey('6')">6</button>
+      <button type="button" onclick="numberModalKey('7')">7</button><button type="button" onclick="numberModalKey('8')">8</button><button type="button" onclick="numberModalKey('9')">9</button>
+      <button id="numberEntrySign" type="button" onclick="numberModalToggleSign()">±</button><button type="button" onclick="numberModalKey('0')">0</button><button id="numberEntryDecimal" type="button" onclick="numberModalKey('.')">.</button>
+      <button type="button" class="secondary numberBackspace" onclick="numberModalBackspace()">⌫</button>
+      <button id="numberEntryConfirm" type="button" class="numberConfirm" onclick="numberModalConfirm()">Confirm</button>
+    </div>
+    <div id="numberEntryError" class="small center bad"></div>
+  </div>
+</div>
+
+<div id="stage8ErrorModal" class="appModal hidden" role="dialog" aria-modal="true" aria-labelledby="stage8ErrorTitle">
+  <div class="appModalBackdrop"></div>
+  <div class="appModalCard stage8ErrorCard">
+    <div class="appModalHeader"><b id="stage8ErrorTitle" class="bad">Not quite — streak reset to 0</b></div>
+    <div id="stage8ErrorBody" class="stage8ErrorBody"></div>
+    <button type="button" class="secondary stage8ErrorNext" onclick="stage8NextAfterMistake()">Next Table</button>
+  </div>
+</div>
 
 <div id="passScreen" class="box pageScreen hidden">
 
@@ -8956,7 +9153,7 @@ function trainerShowDecisionFeedback(action,recommended,correct,oldHand,extra){
 }
 
 /* Each hand starts at a betting screen. No cards exist until Deal is tapped. */
-function trainerPrepareBettingPhase(){
+function trainerPrepareBettingPhase(preserveFeedback){
   if(trainerShufflePending){ return; }
   trainerOtherSequenceId++;
   trainerOtherBusy=false;
@@ -8972,7 +9169,7 @@ function trainerPrepareBettingPhase(){
   trainerHandIndex=0;
   trainerUserHandsSnapshot=[];
   trainerUserBetsSnapshot=[];
-  trainerClearDecisionFeedback();
+  if(!preserveFeedback){ trainerClearDecisionFeedback(); }
 
   document.getElementById('trainerActions').classList.add('hidden');
   document.getElementById('trainerSpecialActions').classList.add('hidden');
@@ -9146,6 +9343,255 @@ var _trainerToggleStatsInit=function(){
 setTimeout(function(){
   _trainerToggleStatsInit();
   trainerUpdateBetUI();
+},0);
+
+
+
+/* ==========================================================
+   V9 — BETTING / MODALS / STAGE 8 MOBILE INPUT
+   ========================================================== */
+var trainerNextBetTimer=null;
+var numberModalState=null;
+
+function trainerIsPresetBet(value){
+  return [5,10,25,50,100].includes(Number(value));
+}
+
+/* Replace V8 bet UI so a custom Other wager is remembered and highlighted. */
+trainerUpdateBetUI=function(){
+  var controls=document.getElementById('trainerBetControls');
+  if(controls){
+    Array.from(controls.querySelectorAll('button[data-bet]')).forEach(function(btn){
+      var bet=Number(btn.getAttribute('data-bet'));
+      btn.classList.toggle('betSelected',bet===Number(trainerCurrentBet));
+      btn.disabled=!trainerBettingPhase;
+    });
+  }
+  var other=document.getElementById('trainerOtherBetBtn');
+  if(other){
+    var custom=!trainerIsPresetBet(trainerCurrentBet);
+    other.classList.toggle('betSelected',custom);
+    other.disabled=!trainerBettingPhase;
+    other.innerText=custom?'Other '+trainerMoney(trainerCurrentBet):'Other';
+  }
+  var deal=document.getElementById('trainerDealBtn');
+  if(deal){
+    deal.innerText='Deal — '+trainerMoney(trainerCurrentBet);
+    deal.classList.toggle('hidden',!trainerBettingPhase);
+    deal.disabled=!trainerBettingPhase || trainerCurrentBet<=0 || trainerCurrentBet>trainerStats.bankroll;
+  }
+  var prompt=document.getElementById('trainerBetPrompt');
+  if(prompt){ prompt.classList.toggle('hidden',!trainerBettingPhase); }
+};
+
+function trainerOpenOtherBet(){
+  if(!trainerBettingPhase){ return; }
+  openNumberModal({
+    title:'Custom Bet',
+    value:String(trainerCurrentBet||''),
+    allowNegative:false,
+    allowDecimal:true,
+    confirmText:'Use Bet',
+    validate:function(v){
+      if(!(v>0)){ return 'Enter a wager greater than $0.'; }
+      if(v>trainerStats.bankroll){ return 'Your bankroll is '+trainerMoney(trainerStats.bankroll)+'.'; }
+      return '';
+    },
+    onConfirm:function(v){
+      trainerSetBet(Math.round(v*100)/100);
+      trainerUpdateBetUI();
+    }
+  });
+}
+
+/* Stats modal blocks the table until explicitly closed. */
+trainerToggleStats=function(){
+  trainerStatsOpen=!trainerStatsOpen;
+  var panel=document.getElementById('trainerStatsPanel');
+  if(panel){ panel.classList.toggle('hidden',!trainerStatsOpen); }
+  if(trainerStatsOpen){ trainerRenderStats(); }
+};
+function trainerCloseStats(){
+  trainerStatsOpen=false;
+  var panel=document.getElementById('trainerStatsPanel');
+  if(panel){ panel.classList.add('hidden'); }
+}
+
+var _trainerRenderStatsV9=trainerRenderStats;
+trainerRenderStats=function(){
+  _trainerRenderStatsV9();
+  var profit=trainerStats.bankroll-trainerStats.startingBankroll;
+  var decisions=trainerStats.correctDecisions+trainerStats.mistakes;
+  var acc=decisions?Math.round(trainerStats.correctDecisions/decisions*100)+'%':'—';
+  var b=document.getElementById('trainerStatsBankroll'); if(b){ b.innerText=trainerMoney(trainerStats.bankroll); }
+  var p=document.getElementById('trainerStatsProfit'); if(p){ p.innerText=(profit>0?'+':'')+trainerMoney(profit); }
+  var a=document.getElementById('trainerStatsDecisionAcc'); if(a){ a.innerText=acc; }
+};
+
+/* No separate Start/Next button: after the result, automatically enter the
+   next betting phase. The previous wager remains selected, but cards wait
+   for Deal. Decision feedback remains visible while choosing the next bet. */
+trainerEndControls=function(){
+  document.getElementById('trainerActions').classList.add('hidden');
+  document.getElementById('trainerSpecialActions').classList.add('hidden');
+  document.getElementById('trainerInsuranceBox').classList.add('hidden');
+  var next=document.getElementById('trainerNextBtn'); if(next){ next.classList.add('hidden'); }
+  clearTimeout(trainerNextBetTimer);
+  trainerNextBetTimer=setTimeout(function(){
+    if(trainerRoundFinished && !trainerBettingPhase && !trainerShufflePending){
+      trainerPrepareBettingPhase(true);
+    }
+  },900);
+};
+
+/* Generic no-keyboard numeric modal. */
+function openNumberModal(config){
+  numberModalState={
+    title:config.title||'Enter value',
+    value:String(config.value==null?'':config.value),
+    allowNegative:config.allowNegative!==false,
+    allowDecimal:config.allowDecimal!==false,
+    confirmText:config.confirmText||'Confirm',
+    validate:config.validate||null,
+    onConfirm:config.onConfirm||function(){}
+  };
+  var modal=document.getElementById('numberEntryModal');
+  document.getElementById('numberEntryTitle').innerText=numberModalState.title;
+  document.getElementById('numberEntryConfirm').innerText=numberModalState.confirmText;
+  document.getElementById('numberEntrySign').classList.toggle('hidden',!numberModalState.allowNegative);
+  document.getElementById('numberEntryDecimal').classList.toggle('hidden',!numberModalState.allowDecimal);
+  document.getElementById('numberEntryError').innerText='';
+  numberModalRefresh();
+  modal.classList.remove('hidden');
+}
+function numberModalRefresh(){
+  if(!numberModalState){ return; }
+  document.getElementById('numberEntryDisplay').innerText=numberModalState.value||'0';
+}
+function numberModalKey(k){
+  if(!numberModalState){ return; }
+  var v=numberModalState.value||'';
+  if(k==='.'){
+    if(!numberModalState.allowDecimal || v.includes('.')){ return; }
+    if(v==='' || v==='-'){ v+=(v==='-'?'0.':'0.'); } else { v+='.'; }
+  }else{
+    if(v==='0'){ v=k; }
+    else if(v==='-0'){ v='-'+k; }
+    else if(v.length<10){ v+=k; }
+  }
+  numberModalState.value=v;
+  numberModalRefresh();
+}
+function numberModalToggleSign(){
+  if(!numberModalState || !numberModalState.allowNegative){ return; }
+  var v=numberModalState.value||'';
+  numberModalState.value=v.startsWith('-')?v.slice(1):('-'+v);
+  if(numberModalState.value==='-'){ numberModalState.value='-0'; }
+  numberModalRefresh();
+}
+function numberModalBackspace(){
+  if(!numberModalState){ return; }
+  numberModalState.value=(numberModalState.value||'').slice(0,-1);
+  numberModalRefresh();
+}
+function numberModalCancel(){
+  var modal=document.getElementById('numberEntryModal');
+  if(modal){ modal.classList.add('hidden'); }
+  numberModalState=null;
+}
+function numberModalConfirm(){
+  if(!numberModalState){ return; }
+  var value=Number(numberModalState.value);
+  var err=!Number.isFinite(value)?'Enter a valid number.':'';
+  if(!err && numberModalState.validate){ err=numberModalState.validate(value)||''; }
+  if(err){ document.getElementById('numberEntryError').innerText=err; return; }
+  var cb=numberModalState.onConfirm;
+  numberModalCancel();
+  cb(value);
+}
+
+/* Stage 8: tap the side field to use the in-app keypad instead of iOS's
+   landscape keyboard. Confirming from the modal checks the answer directly. */
+function stage8OpenNumberEntry(kind){
+  if(stage8WaitingForNext || !stage8Current){ return; }
+  var isRC=kind==='rc';
+  var input=document.getElementById(isRC?'stage8RCInput':'stage8TCInput');
+  if(!input || input.disabled){ return; }
+  openNumberModal({
+    title:isRC?'Enter Running Count':'Enter True Count',
+    value:input.value,
+    allowNegative:true,
+    allowDecimal:!isRC,
+    confirmText:isRC?'Check Running Count':'Check True Count',
+    onConfirm:function(v){
+      input.value=String(v);
+      if(isRC){ stage8CheckRC(); }else{ stage8CheckTC(); }
+    }
+  });
+}
+function stage8InstallModalInputs(){
+  var rc=document.getElementById('stage8RCInput');
+  var tc=document.getElementById('stage8TCInput');
+  [[rc,'rc'],[tc,'tc']].forEach(function(pair){
+    var el=pair[0]; if(!el || el.dataset.v9Modal==='1'){ return; }
+    el.dataset.v9Modal='1';
+    el.readOnly=true;
+    el.setAttribute('inputmode','none');
+    el.classList.add('v9ModalInput');
+    el.addEventListener('click',function(e){ e.preventDefault(); stage8OpenNumberEntry(pair[1]); });
+    el.addEventListener('focus',function(){ el.blur(); stage8OpenNumberEntry(pair[1]); });
+  });
+}
+
+/* Full Stage 8 mistake explanation in a blocking modal, with Next Table
+   always visible. The underlying legacy explanation remains for continuity. */
+stage8Fail=function(message,explanation){
+  progress.stage8Score=0;
+  save();
+  document.getElementById('stage8Score').innerText=0;
+  document.getElementById('stage8Message').innerText=message+' — streak reset to 0';
+  document.getElementById('stage8Message').className='center bad';
+  setExplain('stage8Explain',explanation,true);
+  stage8WaitingForNext=true;
+  document.getElementById('stage8RCSection').classList.add('hidden');
+  document.getElementById('stage8TCSection').classList.add('hidden');
+  document.getElementById('stage8NextBtn').classList.add('hidden');
+  var modal=document.getElementById('stage8ErrorModal');
+  var body=document.getElementById('stage8ErrorBody');
+  var title=document.getElementById('stage8ErrorTitle');
+  if(title){ title.innerText=message+' — streak reset to 0'; }
+  if(body){ body.innerHTML=explanation; }
+  if(modal){ modal.classList.remove('hidden'); }
+};
+
+var _stage8NextAfterMistakeV9=stage8NextAfterMistake;
+stage8NextAfterMistake=function(){
+  var modal=document.getElementById('stage8ErrorModal');
+  if(modal){ modal.classList.add('hidden'); }
+  if(!stage8WaitingForNext){ return; }
+  stage8LoadScenario();
+};
+
+var _stage8LoadScenarioV9=stage8LoadScenario;
+stage8LoadScenario=function(){
+  var modal=document.getElementById('stage8ErrorModal');
+  if(modal){ modal.classList.add('hidden'); }
+  _stage8LoadScenarioV9();
+  stage8InstallModalInputs();
+};
+
+/* Keep Stats closed whenever a fresh trainer session opens. */
+var _openRealGameV9=openRealGame;
+openRealGame=function(){
+  trainerCloseStats();
+  _openRealGameV9();
+  setTimeout(function(){ trainerUpdateBetUI(); },0);
+};
+
+setTimeout(function(){
+  stage8InstallModalInputs();
+  trainerUpdateBetUI();
+  trainerRenderStats();
 },0);
 
 </script>
