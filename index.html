@@ -2577,6 +2577,216 @@ body.landscapeGameplay #s8 .stage8DealerLabel{margin-top:4px!important}
   body.landscapeGameplay #realTrainer .trainerSeatArc{height:145px!important}
   #trainerStatsPanel.v10GlobalModal{padding:24px 54px!important}
 }
+
+
+/* ==========================================================
+   V11 — WIDER SEAT SPACING, PANEL REBALANCE, COMPACT STATS
+   ========================================================== */
+
+/* In landscape, give the felt the largest share of the screen while keeping
+   both side rails comfortably tappable. */
+body.landscapeGameplay #realTrainer{
+  grid-template-columns:minmax(132px,.70fr) minmax(500px,4.10fr) minmax(132px,.70fr) !important;
+  gap:5px !important;
+}
+
+/* Side rails: left = feedback/settings, right = wager/current actions. */
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft,
+body.landscapeGameplay #realTrainer .trainerLandscapeRight{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  scrollbar-width:none;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft{
+  padding:44px 3px 4px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight{
+  padding:3px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .trainerDecisionFeedback,
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft #trainerCoach{
+  margin:4px 0 !important;
+  padding:7px !important;
+  font-size:9px !important;
+  line-height:1.22 !important;
+  border-radius:9px !important;
+  max-height:88px !important;
+  overflow-y:auto !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .trainerTableSizeRight,
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .trainerSpeedControl,
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .trainerStatsToggle{
+  margin:4px 0 !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeLeft .trainerStatsToggle{
+  width:100% !important;
+  min-height:34px !important;
+  padding:6px !important;
+  font-size:9px !important;
+}
+
+/* Betting lives on the right. Keep its 2x3 button grid compact and readable. */
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .trainerBetPanelV11{
+  margin:2px 0 5px !important;
+  padding:6px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .trainerBetPanelV11 .betControls{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:4px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .trainerBetPanelV11 .betControls button{
+  min-height:38px !important;
+  font-size:10px !important;
+  padding:6px 2px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .trainerBetPanelV11 .trainerDealBtn{
+  min-height:40px !important;
+  font-size:11px !important;
+  margin-top:5px !important;
+}
+body.landscapeGameplay #realTrainer .trainerLandscapeRight .trainerBetPanelV11 .trainerBetPrompt{
+  font-size:8px !important;
+  line-height:1.15 !important;
+  margin:4px 0 0 !important;
+}
+
+/* Fixed seats use the entire felt. One seat can grow vertically without
+   moving any neighbour. */
+body.landscapeGameplay #realTrainer .trainerSeatArc{
+  left:5px !important;
+  right:5px !important;
+  bottom:6px !important;
+  height:164px !important;
+}
+body.landscapeGameplay #realTrainer #trainerOtherPlayers .otherPlayerSeat{
+  width:clamp(62px,13.2%,78px) !important;
+  min-width:0 !important;
+  max-width:78px !important;
+  padding:3px 2px !important;
+  box-sizing:border-box !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat{
+  width:clamp(74px,15%,92px) !important;
+  max-width:92px !important;
+  bottom:34px !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  bottom:30px !important;
+}
+
+/* Cards wrap inside the seat only. 3 cards per row -> 2nd and 3rd rows appear
+   automatically as a hand grows. */
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCards,
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCards,
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards{
+  display:grid !important;
+  grid-template-columns:repeat(3,max-content) !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:1px !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:visible !important;
+}
+body.landscapeGameplay #realTrainer .otherPlayerSeat .miniCard{
+  width:22px !important;
+  height:33px !important;
+  font-size:8.5px !important;
+  margin:0 !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat .miniCard,
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .miniCards .miniCard{
+  width:25px !important;
+  height:36px !important;
+  font-size:10px !important;
+  margin:0 !important;
+}
+body.landscapeGameplay #realTrainer .otherSplitHand{
+  width:100% !important;
+  margin:2px 0 !important;
+  transform:none !important;
+}
+body.landscapeGameplay #realTrainer .otherSplitLabel,
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack > .handBetLabel{
+  font-size:6px !important;
+  line-height:1.05 !important;
+  margin:1px 0 !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
+  gap:3px !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+/* Compact Stats modal: still blocks/pauses the game, but no longer dominates
+   the entire landscape screen. */
+#trainerStatsPanel.v10GlobalModal{
+  padding:24px 58px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatsModalCard{
+  width:min(500px,68%) !important;
+  max-height:78% !important;
+  padding:10px !important;
+  border-radius:14px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatsModalHeader{
+  margin-bottom:6px !important;
+  font-size:13px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatsClose{
+  min-width:64px !important;
+  min-height:32px !important;
+  padding:5px 8px !important;
+  font-size:10px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatsSummaryGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:5px !important;
+  margin:4px 0 5px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerStatsModalCard > .trainerStatsGrid:not(.trainerStatsSummaryGrid){
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:5px !important;
+  margin:4px 0 !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerMiniStat{
+  min-height:54px !important;
+  padding:6px 3px !important;
+  font-size:8px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerMiniStat b{
+  font-size:14px !important;
+}
+#trainerStatsPanel.v10GlobalModal .trainerResetInsideStats{
+  min-height:32px !important;
+  margin-top:5px !important;
+  padding:5px !important;
+  font-size:9px !important;
+}
+
+/* Disable double-tap zoom throughout gameplay and its overlays while keeping
+   normal taps and scrolling responsive. */
+#realTrainer,
+#s8,
+#trainerStatsPanel,
+.appModal,
+#realTrainer button,
+#s8 button,
+#realTrainer .miniCard,
+#s8 .miniCard{
+  touch-action:manipulation;
+}
+
+@media (max-height:390px) and (orientation:landscape){
+  body.landscapeGameplay #realTrainer{
+    grid-template-columns:minmax(122px,.66fr) minmax(455px,4.05fr) minmax(124px,.67fr) !important;
+  }
+  body.landscapeGameplay #realTrainer .trainerSeatArc{height:152px !important}
+  body.landscapeGameplay #realTrainer .trainerYouSeat{bottom:30px !important}
+  #trainerStatsPanel.v10GlobalModal .trainerStatsModalCard{width:min(475px,66%) !important;max-height:80% !important}
+  #trainerStatsPanel.v10GlobalModal .trainerMiniStat{min-height:47px !important}
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2586,7 +2796,7 @@ body.landscapeGameplay #s8 .stage8DealerLabel{margin-top:4px!important}
 </head>
 
 <body>
-<!-- Blackjack Academy build: v10 paced-deal-fixed-seats-paused-stats -->
+<!-- Blackjack Academy build: v11 wide-seats-panel-rebalance-compact-stats -->
 
 <div class="app">
 
@@ -10151,6 +10361,110 @@ trainerShowTableShuffle=function(done){
     if(typeof done==='function'){done();}
   },function(){return trainerDealSequenceId;},marker);
 };
+
+
+/* ==========================================================
+   V11 — PANEL LAYOUT, WIDE FIXED SEATS, NO DOUBLE-TAP ZOOM
+   ========================================================== */
+
+function trainerV11ArrangePanels(){
+  var real=document.getElementById('realTrainer');
+  if(!real){ return; }
+  var left=real.querySelector('.trainerLandscapeLeft');
+  var right=real.querySelector('.trainerLandscapeRight');
+  if(!left || !right){ return; }
+
+  var betControls=document.getElementById('trainerBetControls');
+  var betPanel=betControls ? betControls.closest('.lesson') : null;
+  if(betPanel){
+    betPanel.classList.add('trainerBetPanelV11');
+    if(betPanel.parentNode!==right){ right.insertBefore(betPanel,right.firstChild); }
+  }
+
+  var feedback=document.getElementById('trainerDecisionFeedback');
+  var coach=document.getElementById('trainerCoach');
+  var tableSize=document.querySelector('#realTrainer .trainerTableSizeRight');
+  var speed=document.getElementById('trainerSpeedControl');
+  var stats=document.getElementById('trainerStatsToggle');
+  [feedback,coach,tableSize,speed,stats].forEach(function(el){
+    if(el && el.parentNode!==left){ left.appendChild(el); }
+  });
+}
+
+/* Spread fixed seats across the whole arc. Positions are independent of hand
+   height, split state, or cards held by any neighbour. */
+function trainerV11SeatCoordinates(count){
+  var layouts={
+    0:[],
+    1:[{x:22,b:58}],
+    2:[{x:15,b:60},{x:85,b:60}],
+    3:[{x:8,b:66},{x:32,b:43},{x:84,b:60}],
+    4:[{x:7,b:66},{x:30,b:43},{x:70,b:43},{x:93,b:66}],
+    5:[{x:5,b:68},{x:21,b:52},{x:36,b:39},{x:68,b:42},{x:91,b:66}]
+  };
+  return layouts[Math.max(0,Math.min(5,count))] || [];
+}
+trainerV10LayoutSeats=function(){
+  var others=Array.from(document.querySelectorAll('#trainerOtherPlayers .otherPlayerSeat'));
+  var coords=trainerV11SeatCoordinates(others.length);
+  others.forEach(function(seat,idx){
+    var p=coords[idx] || {x:50,b:44};
+    seat.style.gridColumn='auto';
+    seat.style.left=p.x+'%';
+    seat.style.bottom=p.b+'px';
+    seat.style.transform='translateX(-50%)';
+  });
+  var you=document.getElementById('trainerYouSeat');
+  if(you){
+    you.style.left='50%';
+    you.style.bottom=trainerHands.length>1?'30px':'34px';
+    you.style.transform='translateX(-50%)';
+  }
+};
+
+/* V10 render already calls trainerV10LayoutSeats; arrange the side rails as
+   well after every render so later UI transitions can never undo the layout. */
+var _trainerRenderV11=trainerRender;
+trainerRender=function(){
+  _trainerRenderV11();
+  trainerV11ArrangePanels();
+  trainerV10LayoutSeats();
+};
+
+/* Prevent double-tap zoom anywhere in the two gameplay views and their
+   overlays. First taps remain normal; only the second tap in a quick pair is
+   cancelled. */
+(function installV11NoDoubleTapZoom(){
+  if(window.__v11NoDoubleTapZoomInstalled){ return; }
+  window.__v11NoDoubleTapZoomInstalled=true;
+  function inGameSurface(target){
+    return !!(target && target.closest && target.closest('#realTrainer,#s8,#trainerStatsPanel,.appModal'));
+  }
+  document.addEventListener('dblclick',function(e){
+    if(inGameSurface(e.target)){ e.preventDefault(); }
+  },{passive:false});
+  var lastTap=0;
+  document.addEventListener('touchend',function(e){
+    if(!inGameSurface(e.target)){ return; }
+    var now=Date.now();
+    if(now-lastTap<300){ e.preventDefault(); lastTap=0; }
+    else{ lastTap=now; }
+  },{passive:false});
+})();
+
+/* Ensure the new panel/seat layout is already correct on first entry. */
+var _openRealGameV11=openRealGame;
+openRealGame=function(){
+  _openRealGameV11();
+  trainerV11ArrangePanels();
+  trainerV10LayoutSeats();
+};
+
+setTimeout(function(){
+  trainerV11ArrangePanels();
+  trainerV10LayoutSeats();
+},0);
+
 </script>
 
 </body>
