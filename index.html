@@ -2993,6 +2993,50 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerHandR
   padding:1px 4px !important;
 }
 
+
+/* ==========================================================
+   V14 — DYNAMIC SEATING / CLEAN BANKROLL / DEEPER RIGHT SHIFT
+   ========================================================== */
+
+/* The compact game rail now shows only the money currently available.
+   Current bet, session P/L and decision accuracy remain available where
+   appropriate (bet panel / Stats) but no longer consume this top summary. */
+#realTrainer .bankrollGrid{
+  grid-template-columns:1fr !important;
+}
+#realTrainer .bankrollGrid .bankrollStat:nth-child(2),
+#realTrainer .bankrollGrid .bankrollStat:nth-child(3),
+#realTrainer .bankrollGrid .bankrollStat:nth-child(4){
+  display:none !important;
+}
+
+/* Move both landscape practice screens substantially farther toward the
+   phone's visual right edge. In the CSS-rotated portrait view local -Y maps
+   to screen-right. This supersedes V13's smaller 10px adjustment. */
+body.landscapeGameplay.forceRotateLandscape #realTrainer,
+body.landscapeGameplay.forceRotateLandscape #s8{
+  position:relative !important;
+  top:-48px !important;
+}
+body.landscapeGameplay.nativeLandscape #realTrainer,
+body.landscapeGameplay.nativeLandscape #s8{
+  position:relative !important;
+  left:34px !important;
+  width:calc(100% - 34px) !important;
+}
+
+/* YOU is a normal seat in the arc now. Keep the highlight, but remove old
+   translate-Y rules that made its coordinate behave differently and caused
+   overlap when even numbers of total seats were shown. */
+body.landscapeGameplay #realTrainer .trainerYouSeat{
+  width:clamp(74px,14%,84px) !important;
+  max-width:84px !important;
+  transform:translateX(-50%) !important;
+}
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  transform:translateX(-50%) !important;
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -3002,7 +3046,7 @@ body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerHandR
 </head>
 
 <body>
-<!-- Blackjack Academy build: v13 even-seat-symmetry-dealer-clearance-safe-shift -->
+<!-- Blackjack Academy build: v14 dynamic-seating-split-hit-clean-bankroll-deeper-right-shift -->
 
 <div class="app">
 
@@ -11039,6 +11083,145 @@ trainerRender=function(){
 var _openRealGameV13=openRealGame;
 openRealGame=function(){
   _openRealGameV13();
+  trainerV10LayoutSeats();
+};
+setTimeout(function(){ trainerV10LayoutSeats(); },0);
+
+
+/* ==========================================================
+   V14 — DYNAMIC USER SEAT + SPLIT HAND 2 HIT FIX
+   ========================================================== */
+
+/* Seat coordinates are symmetric as a group, but YOU is no longer forced to
+   be the center seat. The chosen YOU index changes with table size so it is
+   simply one natural seat on the arc. */
+function trainerV14SeatPlan(otherCount){
+  var total=Math.max(1,Math.min(6,Number(otherCount||0)+1));
+  var xs={
+    1:[50],
+    2:[28,72],
+    3:[16,50,84],
+    4:[8,35,65,92],
+    5:[5,27,50,73,95],
+    6:[5,23,41,59,77,95]
+  }[total];
+  var youByTotal={1:0,2:1,3:1,4:2,5:3,6:3};
+  var youIndex=youByTotal[total];
+  var otherPositionIndices=[];
+  for(var i=0;i<total;i++){
+    if(i!==youIndex){ otherPositionIndices.push(i); }
+  }
+  return {total:total,xs:xs,youIndex:youIndex,otherPositionIndices:otherPositionIndices};
+}
+
+function trainerV14SeatBottom(x){
+  var d=Math.min(1,Math.abs(x-50)/45);
+  return Math.max(30,Math.round(38+31*Math.pow(d,1.35)));
+}
+
+trainerV10LayoutSeats=function(){
+  var others=Array.from(document.querySelectorAll('#trainerOtherPlayers .otherPlayerSeat'));
+  var plan=trainerV14SeatPlan(others.length);
+  others.forEach(function(seat,idx){
+    var posIndex=plan.otherPositionIndices[idx];
+    var x=plan.xs[posIndex];
+    seat.style.gridColumn='auto';
+    seat.style.left=x+'%';
+    seat.style.bottom=trainerV14SeatBottom(x)+'px';
+    seat.style.transform='translateX(-50%)';
+  });
+  var you=document.getElementById('trainerYouSeat');
+  if(you){
+    var ux=plan.xs[plan.youIndex];
+    you.style.setProperty('left',ux+'%','important');
+    /* Preserve the already-tested low split position; otherwise YOU follows
+       exactly the same arc calculation as every other seat. */
+    var userBottom=trainerHands.length>1 ? 8 : trainerV14SeatBottom(ux);
+    you.style.setProperty('bottom',userBottom+'px','important');
+    you.style.setProperty('transform','translateX(-50%)','important');
+  }
+};
+
+trainerSeatSides=function(){
+  var plan=trainerV14SeatPlan(trainerOtherHands.length);
+  var left=[],right=[];
+  plan.otherPositionIndices.forEach(function(posIndex,otherIdx){
+    if(posIndex<plan.youIndex){ left.push(otherIdx); }
+    else if(posIndex>plan.youIndex){ right.push(otherIdx); }
+  });
+  return {left:left,right:right};
+};
+
+/* V13 exposed a repeatable edge case on the final split hand: after Hit to a
+   live total such as 18–20, the turn could close instead of waiting for the
+   player's next choice. Handle a Hit on the last split hand explicitly. */
+var _trainerActionV14=trainerAction;
+trainerAction=function(action){
+  var isFinalSplitHit=(
+    action==='hit' &&
+    !trainerBettingPhase &&
+    !trainerRoundFinished &&
+    !trainerInsurancePending &&
+    !trainerOtherBusy &&
+    trainerHands.length>1 &&
+    trainerHandIndex===trainerHands.length-1
+  );
+
+  if(!isFinalSplitHit){
+    return _trainerActionV14(action);
+  }
+
+  var hand=trainerHands[trainerHandIndex];
+  if(!hand){ return; }
+
+  var recommended=trainerRecommendation(hand);
+  var correct=(action===recommended);
+  var oldHand=hand.slice();
+
+  trainerRecordDecision(correct);
+  trainerFirstDecision=false;
+
+  var coach=document.getElementById('trainerCoach');
+  if(coach){
+    coach.className='coachBox '+(correct?'goodCoach':'badCoach');
+    coach.innerHTML=
+      '<b class="'+(correct?'good':'bad')+'">'+
+      (correct?'Correct decision ✓':'Not the best decision')+
+      '</b><br>You chose <b>HIT</b>. '+
+      (correct?'Basic strategy agrees with that play.':'The recommended play is <b>'+recommended.toUpperCase()+'</b>.')+
+      '<br><br><b>Why:</b> '+trainerDecisionWhy(recommended,oldHand);
+  }
+
+  hand.push(trainerDraw(true));
+  var hitTotal=trainerHandValue(hand).total;
+
+  if(hitTotal>21){
+    if(coach){ coach.innerHTML+='<br><br><b>Result:</b> This hand busted.'; }
+    trainerShowDecisionFeedback('hit',recommended,correct,oldHand,'This hand busted.');
+    trainerAdvanceHand();
+  }else if(hitTotal===21){
+    if(coach){ coach.innerHTML+='<br><br><b>21:</b> this hand automatically stands.'; }
+    trainerShowDecisionFeedback('hit',recommended,correct,oldHand,'21 — this hand automatically stands.');
+    trainerAdvanceHand();
+  }else{
+    /* Critical V14 behavior: 18, 19, 20 (and every other live total below
+       21) remains the active hand. Hit / Stand stay available for the user. */
+    trainerShowDecisionFeedback('hit',recommended,correct,oldHand,'Hand total: <b>'+hitTotal+'</b>. Choose your next action.');
+  }
+
+  trainerRender();
+  trainerSave();
+};
+
+/* Re-apply the final seat geometry after all older version hooks. */
+var _trainerRenderV14=trainerRender;
+trainerRender=function(){
+  _trainerRenderV14();
+  trainerV10LayoutSeats();
+};
+var _openRealGameV14=openRealGame;
+openRealGame=function(){
+  _openRealGameV14();
   trainerV10LayoutSeats();
 };
 setTimeout(function(){ trainerV10LayoutSeats(); },0);
