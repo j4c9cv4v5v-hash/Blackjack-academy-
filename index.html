@@ -2937,6 +2937,62 @@ body.landscapeGameplay #realTrainer .trainerYouSeat{width:clamp(78px,15%,96px) !
   body.landscapeGameplay #s8 #stage8Scenario.stage8ScenarioOnTable{min-width:145px !important;max-width:176px !important;font-size:10px !important;padding:8px !important}
 }
 
+
+
+/* ==========================================================
+   V13 — EVEN-SEAT SYMMETRY / DEALER CLEARANCE / SAFE SHIFT
+   ========================================================== */
+
+/* Shift the two landscape gameplay canvases slightly toward the phone's
+   visual right side so the upper system blur / safe-area does not sit on top
+   of the controls. In the CSS-rotated view local -Y maps to screen-right. */
+body.landscapeGameplay.forceRotateLandscape #realTrainer,
+body.landscapeGameplay.forceRotateLandscape #s8{
+  position:relative !important;
+  top:-10px !important;
+}
+body.landscapeGameplay.nativeLandscape #realTrainer,
+body.landscapeGameplay.nativeLandscape #s8{
+  position:relative !important;
+  left:10px !important;
+  width:calc(100% - 10px) !important;
+}
+
+/* Dealer always remains visually protected above YOU, including split hands. */
+body.landscapeGameplay #realTrainer .dealerTableLabel,
+body.landscapeGameplay #realTrainer .dealerTableCards,
+body.landscapeGameplay #realTrainer .dealerTableTotal{
+  position:relative !important;
+  z-index:30 !important;
+}
+
+/* Split hands may grow upward, but stay low enough to preserve a clear dealer
+   zone. Long hands already wrap to additional rows inside their own hand. */
+body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.splitStack){
+  bottom:8px !important;
+  z-index:7 !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack{
+  gap:2px !important;
+  max-height:132px !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerUserHand{
+  gap:1px !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerUserHandCards .miniCard{
+  width:23px !important;
+  height:33px !important;
+  font-size:9px !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerHandMeta{
+  font-size:7px !important;
+  gap:4px !important;
+}
+body.landscapeGameplay #realTrainer #trainerPlayerCards.splitStack .trainerHandResult{
+  font-size:7px !important;
+  padding:1px 4px !important;
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -2946,7 +3002,7 @@ body.landscapeGameplay #realTrainer .trainerYouSeat{width:clamp(78px,15%,96px) !
 </head>
 
 <body>
-<!-- Blackjack Academy build: v12 symmetric-seats-feedback-modal-hand-results -->
+<!-- Blackjack Academy build: v13 even-seat-symmetry-dealer-clearance-safe-shift -->
 
 <div class="app">
 
@@ -10910,6 +10966,82 @@ setTimeout(function(){
   trainerV10LayoutSeats();
   trainerV12RenderUserHands();
 },0);
+
+
+
+/* ==========================================================
+   V13 — TRUE SYMMETRY FOR EVEN TOTAL PLAYER COUNTS
+   ========================================================== */
+function trainerV13SeatPlan(otherCount){
+  var total=Math.max(1,Math.min(6,Number(otherCount||0)+1));
+  var xs={
+    1:[50],
+    2:[31,69],
+    3:[20,50,80],
+    4:[15,38,62,85],
+    5:[8,29,50,71,92],
+    6:[9,25,41,59,75,91]
+  }[total];
+  /* Odd totals: YOU owns the true center seat.
+     Even totals: there is deliberately no center seat; YOU occupies the
+     inner-left seat so the six/four/two seats remain geometrically balanced. */
+  var youIndex=(total%2===1) ? Math.floor(total/2) : (total/2-1);
+  var otherPositionIndices=[];
+  for(var i=0;i<total;i++){
+    if(i!==youIndex){ otherPositionIndices.push(i); }
+  }
+  return {total:total,xs:xs,youIndex:youIndex,otherPositionIndices:otherPositionIndices};
+}
+function trainerV13SeatBottom(x,isYou,total){
+  var d=Math.min(1,Math.abs(x-50)/42);
+  var b=38+30*Math.pow(d,1.35);
+  /* Only a genuinely centered YOU seat sits a little lower. On even totals
+     YOU follows the same arc as every other seat instead of looking like a
+     separate middle seat. */
+  if(isYou && total%2===1){ b-=7; }
+  return Math.max(27,Math.round(b));
+}
+trainerV10LayoutSeats=function(){
+  var others=Array.from(document.querySelectorAll('#trainerOtherPlayers .otherPlayerSeat'));
+  var plan=trainerV13SeatPlan(others.length);
+  others.forEach(function(seat,idx){
+    var posIndex=plan.otherPositionIndices[idx];
+    var x=plan.xs[posIndex];
+    seat.style.gridColumn='auto';
+    seat.style.left=x+'%';
+    seat.style.bottom=trainerV13SeatBottom(x,false,plan.total)+'px';
+    seat.style.transform='translateX(-50%)';
+  });
+  var you=document.getElementById('trainerYouSeat');
+  if(you){
+    var ux=plan.xs[plan.youIndex];
+    you.style.left=ux+'%';
+    you.style.bottom=trainerV13SeatBottom(ux,true,plan.total)+'px';
+    you.style.transform='translateX(-50%)';
+  }
+};
+trainerSeatSides=function(){
+  var plan=trainerV13SeatPlan(trainerOtherHands.length);
+  var left=[],right=[];
+  plan.otherPositionIndices.forEach(function(posIndex,otherIdx){
+    if(posIndex<plan.youIndex){ left.push(otherIdx); }
+    else if(posIndex>plan.youIndex){ right.push(otherIdx); }
+  });
+  return {left:left,right:right};
+};
+
+/* Re-apply the corrected layout after every render and on first entry. */
+var _trainerRenderV13=trainerRender;
+trainerRender=function(){
+  _trainerRenderV13();
+  trainerV10LayoutSeats();
+};
+var _openRealGameV13=openRealGame;
+openRealGame=function(){
+  _openRealGameV13();
+  trainerV10LayoutSeats();
+};
+setTimeout(function(){ trainerV10LayoutSeats(); },0);
 
 </script>
 
