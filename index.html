@@ -3040,31 +3040,28 @@ body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.spli
 
 
 /* ==========================================================
-   V15 — RESTORE HORIZONTAL POSITION + MOVE GAMEPLAY DOWN
+   V16 — MOVE REAL BLACKJACK + STAGE 8 SLIGHTLY BACK UP
    ========================================================== */
 
-/* V14 moved the gameplay toward the phone's visual right edge. The intended
-   change was vertical on the physical iPhone screen. Restore the V13
-   horizontal position, then move the full gameplay canvas downward.
-
-   In the CSS-rotated portrait view, local X maps to physical screen-down and
-   local Y maps to physical screen-left/right. */
+/* Keep the current horizontal placement logic, but reduce the downward
+   shift from V15. In the CSS-rotated portrait view, local X maps to the
+   phone's physical vertical direction, so a smaller left offset moves the
+   full gameplay canvas back upward. */
 body.landscapeGameplay.forceRotateLandscape #realTrainer,
 body.landscapeGameplay.forceRotateLandscape #s8{
   position:relative !important;
-  top:-10px !important;   /* restore V13 horizontal placement */
-  left:112px !important;  /* move toward the phone's physical bottom */
+  top:-10px !important;   /* keep the good horizontal alignment */
+  left:72px !important;   /* V15 was 112px: move the canvas back up */
 }
 
-/* Native landscape uses normal screen axes. Keep the earlier horizontal
-   placement and move the same screens down by a smaller landscape-safe
-   amount so controls remain inside the viewport. */
+/* Native landscape uses normal screen axes. Apply the same correction with
+   a smaller positive top offset. */
 body.landscapeGameplay.nativeLandscape #realTrainer,
 body.landscapeGameplay.nativeLandscape #s8{
   position:relative !important;
   left:10px !important;
   width:calc(100% - 10px) !important;
-  top:28px !important;
+  top:14px !important;    /* V15 was 28px: move back up */
 }
 
 </style>
@@ -3076,7 +3073,7 @@ body.landscapeGameplay.nativeLandscape #s8{
 </head>
 
 <body>
-<!-- Blackjack Academy build: v15 dynamic-seating-split-hit-clean-bankroll-down-shift -->
+<!-- Blackjack Academy build: v16 dynamic-seating-split-hit-clean-bankroll-position-tune -->
 
 <div class="app">
 
