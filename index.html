@@ -3037,6 +3037,36 @@ body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.spli
   transform:translateX(-50%) !important;
 }
 
+
+
+/* ==========================================================
+   V15 — RESTORE HORIZONTAL POSITION + MOVE GAMEPLAY DOWN
+   ========================================================== */
+
+/* V14 moved the gameplay toward the phone's visual right edge. The intended
+   change was vertical on the physical iPhone screen. Restore the V13
+   horizontal position, then move the full gameplay canvas downward.
+
+   In the CSS-rotated portrait view, local X maps to physical screen-down and
+   local Y maps to physical screen-left/right. */
+body.landscapeGameplay.forceRotateLandscape #realTrainer,
+body.landscapeGameplay.forceRotateLandscape #s8{
+  position:relative !important;
+  top:-10px !important;   /* restore V13 horizontal placement */
+  left:112px !important;  /* move toward the phone's physical bottom */
+}
+
+/* Native landscape uses normal screen axes. Keep the earlier horizontal
+   placement and move the same screens down by a smaller landscape-safe
+   amount so controls remain inside the viewport. */
+body.landscapeGameplay.nativeLandscape #realTrainer,
+body.landscapeGameplay.nativeLandscape #s8{
+  position:relative !important;
+  left:10px !important;
+  width:calc(100% - 10px) !important;
+  top:28px !important;
+}
+
 </style>
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.PNG">
@@ -3046,7 +3076,7 @@ body.landscapeGameplay #realTrainer .trainerYouSeat:has(#trainerPlayerCards.spli
 </head>
 
 <body>
-<!-- Blackjack Academy build: v14 dynamic-seating-split-hit-clean-bankroll-deeper-right-shift -->
+<!-- Blackjack Academy build: v15 dynamic-seating-split-hit-clean-bankroll-down-shift -->
 
 <div class="app">
 
