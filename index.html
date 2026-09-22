@@ -11147,6 +11147,13 @@ setTimeout(function(){ trainerV10LayoutSeats(); },0);
 
 
 /* ==========================================================
+   V18 — FULL-TABLE EDGE SEAT CLEARANCE
+   When 5 other players are shown (6 seats total), pull only the two
+   outermost seats slightly inward so 3+ card hands stay inside the felt.
+   Interior seats and YOU remain unchanged.
+   ========================================================== */
+
+/* ==========================================================
    V14 — DYNAMIC USER SEAT + SPLIT HAND 2 HIT FIX
    ========================================================== */
 
@@ -11161,7 +11168,7 @@ function trainerV14SeatPlan(otherCount){
     3:[16,50,84],
     4:[8,35,65,92],
     5:[5,27,50,73,95],
-    6:[5,23,41,59,77,95]
+    6:[9,23,41,59,77,91]
   }[total];
   var youByTotal={1:0,2:1,3:1,4:2,5:3,6:3};
   var youIndex=youByTotal[total];
